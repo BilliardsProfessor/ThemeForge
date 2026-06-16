@@ -1,0 +1,26 @@
+.sample-article {
+  max-width: 760px;
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  color: var(--color-secondary);
+  font-size: 0.85rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sample-article h2 {
+  margin: 0 0 1rem;
+  font-size: calc(var(--font-size-base) * var(--heading-scale) * 1.6);
+  line-height: 1.05;
+}
+
+.sample-article p {
+  line-height: 1.7;
+}
+
+.sample-article p + p {
+  margin-top: 1rem;
+}
