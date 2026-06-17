@@ -45,31 +45,56 @@
 }
 
 .sample-card {
-  padding: 1rem;
-  border: var(--border-width) solid var(--color-border);
+  --card-state-color: var(--color-border);
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: var(--border-width) solid var(--card-state-color);
   border-radius: var(--radius);
   background: var(--color-surface);
   box-shadow: var(--shadow-soft);
 }
 
-.sample-card h4 {
-  margin: 0.75rem 0 0.35rem;
+.sample-card.success {
+  --card-state-color: var(--color-success);
+}
+
+.sample-card.warning {
+  --card-state-color: var(--color-warning);
+}
+
+.sample-card.danger {
+  --card-state-color: var(--color-danger);
+}
+
+.sample-card.info {
+  --card-state-color: var(--color-info);
+}
+
+.sample-card-header {
+  padding: 0.65rem 1rem;
+  background: color-mix(in srgb, var(--card-state-color), transparent 84%);
+  color: var(--card-state-color);
+  font-weight: 800;
+}
+
+.sample-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.sample-card-body h4 {
+  margin: 0.25rem 0 0.35rem;
   font-size: 1rem;
 }
 
-.sample-card p {
-  margin: 0;
+.sample-card-body p {
+  margin: 0 0 1rem 0;
   color: var(--color-muted-text);
-}
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-  padding: 0.25rem 0.55rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 750;
+  line-height: normal;
 }
 
 .status-badge.success {
@@ -129,6 +154,102 @@
   border-radius: var(--radius);
   background: color-mix(in srgb, var(--color-info), transparent 90%);
   color: var(--color-text);
+}
+
+.toast-demo-button {
+  align-self: center;
+  width: fit-content;
+  margin-top: auto;
+  padding: 0.3rem 0.7rem;
+  border: 0;
+  border-radius: var(--radius);
+  color: white;
+  font-weight: 750;
+}
+
+.toast-demo-button.success {
+  background: var(--color-success);
+}
+
+.toast-demo-button.warning {
+  background: var(--color-warning);
+}
+
+.toast-demo-button.danger {
+  background: var(--color-danger);
+}
+
+.toast-demo-button.info {
+  background: var(--color-info);
+}
+
+.preview-panel {
+  position: relative;
+}
+
+.preview-toast-region {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+  display: grid;
+  gap: 0.75rem;
+  width: min(24rem, calc(100% - 2rem));
+}
+
+.preview-toast {
+  padding: 0.9rem 1rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+}
+
+.preview-toast strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.preview-toast p {
+  margin: 0;
+  line-height: 1.45;
+}
+
+.preview-toast-soft {
+  border: var(--border-width) solid var(--color-border);
+  border-left: 0.4rem solid var(--toast-color);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.preview-toast-soft strong,
+.preview-toast-outline strong {
+  color: var(--toast-color);
+}
+
+.preview-toast-outline {
+  border: var(--border-width) solid var(--toast-color);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.preview-toast-solid {
+  background: var(--toast-color);
+  color: white;
+}
+
+.preview-toast-success {
+  --toast-color: var(--color-success);
+}
+
+.preview-toast-warning {
+  --toast-color: var(--color-warning);
+}
+
+.preview-toast-danger {
+  --toast-color: var(--color-danger);
+}
+
+.preview-toast-info {
+  --toast-color: var(--color-info);
 }
 
 @media (max-width: 1000px) {

@@ -271,28 +271,63 @@
             <h3>Status overview</h3>
 
             <div class="sample-card-grid">
-              <article class="sample-card">
-                <span class="status-badge success">Success</span>
-                <h4>Theme saved</h4>
-                <p>Your latest theme changes are ready to export.</p>
+              <article class="sample-card success">
+                <div class="sample-card-header">
+                  Success
+                </div>
+
+                <div class="sample-card-body">
+                  <h4>Theme saved</h4>
+                  <p>Your latest theme changes are ready to export.</p>
+
+                  <button type="button" class="toast-demo-button success" data-toast-demo="success">
+                    Show toasts
+                  </button>
+                </div>
               </article>
 
-              <article class="sample-card">
-                <span class="status-badge warning">Warning</span>
-                <h4>Contrast check</h4>
-                <p>Some text combinations may need adjustment.</p>
+              <article class="sample-card warning">
+                <div class="sample-card-header">
+                  Warning
+                </div>
+
+                <div class="sample-card-body">
+                  <h4>Contrast Check</h4>
+                  <p>Some text combinations may need adjustment.</p>
+
+                  <button type="button" class="toast-demo-button warning" data-toast-demo="warning">
+                    Show toasts
+                  </button>
+                </div>
               </article>
 
-              <article class="sample-card">
-                <span class="status-badge danger">Danger</span>
-                <h4>Missing token</h4>
-                <p>A required UI token has not been configured.</p>
+              <article class="sample-card danger">
+                <div class="sample-card-header">
+                  Danger
+                </div>
+
+                <div class="sample-card-body">
+                  <h4>Missing token</h4>
+                  <p>A required UI token has not been configured.</p>
+
+                  <button type="button" class="toast-demo-button danger" data-toast-demo="danger">
+                    Show toasts
+                  </button>
+                </div>
               </article>
 
-              <article class="sample-card">
-                <span class="status-badge info">Info</span>
-                <h4>Export ready</h4>
-                <p>CSS and JSON exports will use the selected format.</p>
+              <article class="sample-card info">
+                <div class="sample-card-header">
+                  Info
+                </div>
+
+                <div class="sample-card-body">
+                  <h4>Export ready</h4>
+                  <p>CSS and JSON exports will use the selected format.</p>
+                  <button type="button" class="toast-demo-button info" data-toast-demo="info">
+                    Show toasts
+                  </button>
+                </div>
               </article>
             </div>
           </section>
@@ -321,6 +356,8 @@
             </p>
           </section>
         </div>
+
+        <div class="preview-toast-region" aria-live="polite" aria-label="Preview notifications"></div>
       </section>
     </section>
   </main>
