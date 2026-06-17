@@ -4,12 +4,13 @@ function updateThemeFromControls() {
 
   ThemeForge.theme.shape.radius = Number(document.querySelector("#radiusControl").value);
   ThemeForge.theme.shape.borderWidth = Number(document.querySelector("#borderWidthControl").value);
+  ThemeForge.theme.shape.overlayBlur = Number(document.querySelector("#overlayBlurControl").value);
 
   ThemeForge.applyTheme();
 }
 
 function bindControls() {
-  const controls = document.querySelectorAll("#baseFontSize, #headingScale, #radiusControl, #borderWidthControl");
+  const controls = document.querySelectorAll("#baseFontSize, #headingScale, #radiusControl, #borderWidthControl, #overlayBlurControl");
 
   controls.forEach((control) => {
     control.addEventListener("input", updateThemeFromControls);

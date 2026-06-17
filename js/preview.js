@@ -17,6 +17,8 @@ const toastMessages = {
   },
 };
 
+let lastModalTrigger = null;
+
 function showToastSet(type) {
   const region = document.querySelector(".preview-toast-region");
   const message = toastMessages[type];
@@ -44,10 +46,47 @@ function showToastSet(type) {
   });
 }
 
+function openPreviewModal() {
+  const modalLayer = document.querySelector("#previewModalLayer");
+  const closeButton = modalLayer.querySelector("[data-close-preview-modal]");
+
+  lastModalTrigger = document.activeElement;
+  modalLayer.hidden = false;
+  closeButton.focus();
+}
+
+function closePreviewModal() {
+  document.querySelector("#previewModalLayer").hidden = true;
+
+  if (lastModalTrigger) {
+    lastModalTrigger.focus();
+    lastModalTrigger = null;
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("[data-toast-demo]").forEach((button) => {
     button.addEventListener("click", () => {
       showToastSet(button.dataset.toastDemo);
     });
+  });
+
+  document.querySelector("#openPreviewModal")?.addEventListener("click", openPreviewModal);
+
+  document.querySelectorAll("[data-close-preview-modal]").forEach((button) => {
+    button.addEventListener("click", closePreviewModal);
+  });
+
+  document.querySelector("#previewModalLayer")?.addEventListener("click", (event) => {
+    if (event.target.id === "previewModalLayer") {
+      //uncomment the line below to enable closing the modal by clicking outside of it
+      //closePreviewModal();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closePreviewModal();
+    }
   });
 });

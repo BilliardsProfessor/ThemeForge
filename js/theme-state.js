@@ -20,11 +20,16 @@ const ThemeForge = {
       border: { h: 214, s: 32, l: 91, a: 1, locked: false },
       focus: { h: 221, s: 83, l: 53, a: 1, locked: false },
       shadowTint: { h: 222, s: 47, l: 11, a: 0.08, locked: false },
+      overlay: { h: 222, s: 47, l: 11, a: 0.55, locked: false },
     },
 
     typography: { baseFontSize: 16, headingScale: 1.35 },
 
-    shape: { radius: 10, borderWidth: 1 },
+    shape: {
+      radius: 10,
+      borderWidth: 1,
+      overlayBlur: 2,
+    },
   },
 
   getColorValue(colorToken, format = "hsl") {
@@ -78,6 +83,7 @@ const ThemeForge = {
 
     root.style.setProperty("--color-border", ThemeForge.getColorValue(colors.border));
     root.style.setProperty("--color-focus", ThemeForge.getColorValue(colors.focus));
+    root.style.setProperty("--color-overlay", ThemeForge.getColorValue(colors.overlay));
     root.style.setProperty("--shadow-soft", `0 12px 30px ${ThemeForge.getColorValue(colors.shadowTint)}`);
 
     root.style.setProperty("--font-size-base", `${typography.baseFontSize}px`);
@@ -85,5 +91,6 @@ const ThemeForge = {
 
     root.style.setProperty("--radius", `${shape.radius}px`);
     root.style.setProperty("--border-width", `${shape.borderWidth}px`);
+    root.style.setProperty("--overlay-blur", `${shape.overlayBlur}px`);
   },
 };
