@@ -333,8 +333,8 @@
                 </div>
 
                 <div class="sample-card-body">
-                  <h4>Export ready</h4>
-                  <p>CSS and JSON exports will use the selected format.</p>
+                  <h4>Simulation complete</h4>
+                  <p>No data was harmed in this simulation.</p>
                   <button type="button" class="toast-demo-button info" data-toast-demo="info">
                     Show toasts
                   </button>
@@ -379,7 +379,7 @@
             <header class="preview-modal-header">
               <div>
                 <p class="eyebrow">Modal Preview</p>
-                <h3 id="previewModalTitle">Export this theme?</h3>
+                <h3 id="previewModalTitle">Run theme audit?</h3>
               </div>
 
               <button type="button" class="preview-modal-close" data-close-preview-modal aria-label="Close modal">
@@ -389,12 +389,33 @@
 
             <div class="preview-modal-body">
               <p>
-                This modal uses the current surface, text, border, radius, shadow, and button tokens.
-                The overlay is temporary and will become configurable later.
+                This simulated audit checks how the current theme handles common interface patterns,
+                including forms, alerts, buttons, overlays, and focus states.
               </p>
 
-              <p class="sample-alert warning">
-                This is a preview-only dialog. No theme files will be exported yet.
+              <div class="preview-modal-form">
+                <label>
+                  Audit type
+                  <select>
+                    <option>Quick visual scan</option>
+                    <option>Accessibility pass</option>
+                    <option>Component stress test</option>
+                  </select>
+                </label>
+
+                <label>
+                  Notes
+                  <textarea rows="3">Check modal contrast, spacing, and focus visibility.</textarea>
+                </label>
+
+                <label class="preview-checkbox">
+                  <input type="checkbox" checked />
+                  Include simulated recommendations
+                </label>
+              </div>
+
+              <p class="sample-alert info">
+                This is only a preview interaction. No settings or theme data will be changed.
               </p>
             </div>
 
@@ -403,8 +424,8 @@
                 Cancel
               </button>
 
-              <button type="button" class="primary-button" data-close-preview-modal>
-                Export theme
+              <button type="button" class="primary-button" id="runPreviewSimulation">
+                Run audit
               </button>
             </footer>
           </div>

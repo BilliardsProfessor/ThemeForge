@@ -331,6 +331,47 @@
   background: color-mix(in srgb, var(--color-background), var(--color-surface) 60%);
 }
 
+.preview-modal-form {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.preview-modal-form label {
+  display: grid;
+  gap: 0.4rem;
+  color: var(--color-muted-text);
+  font-weight: 650;
+}
+
+.preview-modal-form input,
+.preview-modal-form select,
+.preview-modal-form textarea {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.preview-modal-form textarea {
+  resize: vertical;
+}
+
+.preview-modal-form input:focus,
+.preview-modal-form select:focus,
+.preview-modal-form textarea:focus {
+  outline: 3px solid color-mix(in srgb, var(--color-focus), transparent 70%);
+  outline-offset: 2px;
+  border-color: var(--color-focus);
+}
+
+.preview-checkbox {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+}
+
 @media (max-width: 1000px) {
   .sample-card-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

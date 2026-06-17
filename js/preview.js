@@ -12,8 +12,8 @@ const toastMessages = {
     message: "A required theme token is missing or invalid.",
   },
   info: {
-    title: "Info",
-    message: "Your theme is ready to preview and export.",
+    title: "Simulation complete",
+    message: "No data was harmed in this simulation.",
   },
 };
 
@@ -64,6 +64,11 @@ function closePreviewModal() {
   }
 }
 
+function runPreviewSimulation() {
+  closePreviewModal();
+  showToastSet("info");
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("[data-toast-demo]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -72,6 +77,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.querySelector("#openPreviewModal")?.addEventListener("click", openPreviewModal);
+
+  document.querySelector("#runPreviewSimulation")?.addEventListener("click", runPreviewSimulation);
 
   document.querySelectorAll("[data-close-preview-modal]").forEach((button) => {
     button.addEventListener("click", closePreviewModal);
