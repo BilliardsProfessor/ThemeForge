@@ -119,9 +119,58 @@ button {
   box-shadow: var(--shadow-soft);
 }
 
-.control-card h2 {
-  margin: 0 0 var(--space-2);
+.control-card > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+  margin: calc(var(--space-2) * -1);
+  padding: var(--space-2);
+  border-radius: calc(var(--radius) - var(--border-width));
+  color: var(--color-text);
+  cursor: pointer;
+  list-style: none;
+}
+
+.control-card[open] > summary {
+  margin-bottom: var(--space-2);
+  border-bottom: 1px solid #e2e8f0;
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+  background: #f8fafc;
+}
+
+.control-card > summary:hover {
+  background: #f8fafc;
+}
+
+.control-card > summary:focus-visible {
+  outline: 3px solid rgb(37 99 235 / 0.35);
+  outline-offset: 2px;
+}
+
+.control-card > summary::marker,
+.control-card > summary::-webkit-details-marker {
+  display: none;
+  content: "";
+}
+
+.control-card > summary::after {
+  content: "›";
+  font-size: 1.25rem;
+  font-weight: 750;
+  line-height: 1;
+  transform: rotate(0deg);
+  transition: transform 160ms ease;
+}
+
+.control-card[open] > summary::after {
+  transform: rotate(90deg);
+}
+
+.control-card-title {
   font-size: 1rem;
+  font-weight: 750;
 }
 
 .control-card label {
@@ -305,6 +354,21 @@ a {
   border-radius: 0.65rem;
   background: #ffffff;
   cursor: pointer;
+  overflow: hidden;
+}
+
+#colorNativePicker::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+#colorNativePicker::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(0.65rem - 5px);
+}
+
+#colorNativePicker::-moz-color-swatch {
+  border: 0;
+  border-radius: calc(0.65rem - 5px);
 }
 
 #colorNativePicker::-webkit-color-swatch-wrapper {
