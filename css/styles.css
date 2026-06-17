@@ -409,3 +409,32 @@ a {
   color: #0f172a;
   box-shadow: 0 1px 3px rgb(15 23 42 / 0.16);
 }
+
+.color-group-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.25rem;
+  margin-bottom: var(--space-2);
+  padding: 0.25rem;
+  border-radius: 0.65rem;
+  background: #e2e8f0;
+}
+
+.color-group-tabs button {
+  border: 0;
+  border-radius: 0.45rem;
+  padding: 0.45rem 0.5rem;
+  background: transparent;
+  color: #334155;
+  font-weight: 700;
+}
+
+.color-group-tabs button.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 1px 3px rgb(15 23 42 / 0.16);
+}
+
+.color-token[hidden] {
+  display: none;
+}

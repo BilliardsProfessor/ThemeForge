@@ -1,11 +1,19 @@
 ThemeForge.colorEditor = {
   activeColorKey: "primary",
+  activeColorGroup: "core",
+  activeColorKeysByGroup: {
+    core: "primary",
+    states: "success",
+    text: "text",
+    ui: "border",
+  },
 
   init() {
     ThemeForge.ui = ThemeForge.ui || {};
     ThemeForge.ui.preferredColorFormat = localStorage.getItem("themeForge.preferredColorFormat") || "hsl";
 
     this.bindTokenButtons();
+    this.bindGroupTabs();
     this.bindEditorControls();
     this.render();
   },
@@ -18,6 +26,24 @@ ThemeForge.colorEditor = {
     document.querySelectorAll("[data-color-token]").forEach((button) => {
       button.addEventListener("click", () => {
         this.activeColorKey = button.dataset.colorToken;
+        this.activeColorKeysByGroup[this.activeColorGroup] = this.activeColorKey;
+        this.render();
+      });
+    });
+  },
+
+  bindGroupTabs() {
+    document.querySelectorAll("[data-color-group-tab]").forEach((button) => {
+      button.addEventListener("click", () => {
+        this.activeColorGroup = button.dataset.colorGroupTab;
+
+        const rememberedColorKey = this.activeColorKeysByGroup[this.activeColorGroup];
+        const rememberedToken = document.querySelector(`[data-color-token="${rememberedColorKey}"][data-color-group="${this.activeColorGroup}"]`);
+
+        const firstTokenInGroup = document.querySelector(`[data-color-token][data-color-group="${this.activeColorGroup}"]`);
+
+        this.activeColorKey = rememberedToken ? rememberedToken.dataset.colorToken : firstTokenInGroup.dataset.colorToken;
+
         this.render();
       });
     });
@@ -126,7 +152,12 @@ ThemeForge.colorEditor = {
       panel.hidden = panel.dataset.formatPanel !== format;
     });
 
+    document.querySelectorAll("[data-color-group-tab]").forEach((button) => {
+      button.classList.toggle("active", button.dataset.colorGroupTab === this.activeColorGroup);
+    });
+
     document.querySelectorAll("[data-color-token]").forEach((button) => {
+      button.hidden = button.dataset.colorGroup !== this.activeColorGroup;
       const token = button.dataset.colorToken;
       const tokenColor = ThemeForge.theme.colors[token];
       const swatch = button.querySelector(".color-token-swatch");
