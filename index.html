@@ -377,7 +377,64 @@
         <div class="preview-tab-panel" data-preview-panel="form" hidden>
           <section class="sample-section">
             <h3>Form preview</h3>
-            <p class="sample-alert info">Form preview coming next.</p>
+
+            <div class="preview-form">
+              <label>
+                Display name
+                <input type="text" value="Aurora Dashboard" />
+              </label>
+
+              <label>
+                Theme category
+                <select>
+                  <option>Admin dashboard</option>
+                  <option>Marketing site</option>
+                  <option>Documentation</option>
+                  <option>Experimental UI</option>
+                </select>
+              </label>
+
+              <label class="preview-form-full">
+                Notes
+                <textarea rows="4">Testing form colors, spacing, radius, focus states, and control contrast.</textarea>
+              </label>
+
+              <fieldset class="preview-form-full">
+                <legend>Density</legend>
+
+                <label class="preview-choice">
+                  <input type="radio" name="density" checked />
+                  Comfortable
+                </label>
+
+                <label class="preview-choice">
+                  <input type="radio" name="density" />
+                  Compact
+                </label>
+              </fieldset>
+
+              <label class="preview-choice preview-form-full">
+                <input type="checkbox" checked />
+                Include themed focus and validation states
+              </label>
+
+              <label>
+                Disabled field
+                <input type="text" value="Read-only sample" disabled />
+              </label>
+
+              <label>
+                Error state
+                <input class="preview-input-error" type="text" value="Needs attention"
+                  aria-describedby="formErrorSample" />
+                <span class="preview-field-error" id="formErrorSample">This sample shows an error message.</span>
+              </label>
+            </div>
+
+            <div class="button-row">
+              <button type="button" class="primary-button">Save changes</button>
+              <button type="button" class="secondary-button">Cancel</button>
+            </div>
           </section>
         </div>
 

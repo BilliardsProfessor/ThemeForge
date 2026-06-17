@@ -1,3 +1,6 @@
+.preview-tab-panel[hidden] {
+  display: none;
+}
 .sample-page {
   display: grid;
   gap: 2rem;
@@ -370,6 +373,92 @@
 .preview-checkbox {
   grid-template-columns: auto 1fr;
   align-items: center;
+}
+
+.preview-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.preview-form label,
+.preview-form fieldset {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+  color: var(--color-muted-text);
+  font-weight: 650;
+}
+
+.preview-form fieldset {
+  padding: 1rem;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.preview-form legend {
+  padding: 0 0.35rem;
+  color: var(--color-text);
+  font-weight: 750;
+}
+
+.preview-form-full {
+  grid-column: 1 / -1;
+}
+
+.preview-form input,
+.preview-form select,
+.preview-form textarea {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.preview-form textarea {
+  resize: vertical;
+}
+
+.preview-form input:focus,
+.preview-form select:focus,
+.preview-form textarea:focus {
+  outline: 3px solid color-mix(in srgb, var(--color-focus), transparent 70%);
+  outline-offset: 2px;
+  border-color: var(--color-focus);
+}
+
+.preview-form input:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.preview-choice {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  width: fit-content;
+}
+
+.preview-choice input {
+  width: auto;
+}
+
+.preview-input-error {
+  border-color: var(--color-danger) !important;
+}
+
+.preview-field-error {
+  color: var(--color-danger);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .preview-form {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 1000px) {
