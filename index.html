@@ -276,6 +276,38 @@
               <button type="button" class="primary-button">Primary action</button>
               <button type="button" class="secondary-button">Secondary action</button>
             </div>
+
+            <div class="sample-hero-visual" aria-hidden="true">
+              <div class="hero-window">
+                <div class="hero-window-bar">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+
+                <div class="hero-window-body">
+                  <div class="hero-sidebar">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+
+                  <div class="hero-content-card">
+                    <div class="hero-line wide"></div>
+                    <div class="hero-line medium"></div>
+                    <div class="hero-pill-row">
+                      <span class="hero-pill primary"></span>
+                      <span class="hero-pill secondary"></span>
+                      <span class="hero-pill success"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="hero-floating-card top"></div>
+              <div class="hero-floating-card bottom"></div>
+            </div>
+
           </section>
 
           <section class="sample-section">
@@ -441,14 +473,195 @@
         <div class="preview-tab-panel" data-preview-panel="table" hidden>
           <section class="sample-section">
             <h3>Table preview</h3>
-            <p class="sample-alert info">Table preview coming next.</p>
+
+            <div class="preview-table-wrapper">
+              <table class="preview-table">
+                <thead>
+                  <tr>
+                    <th>Project</th>
+                    <th>Owner</th>
+                    <th>Status</th>
+                    <th class="numeric">Issues</th>
+                    <th class="numeric">Caffeine</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr>
+                    <td>Aurora Dashboard</td>
+                    <td>Michael</td>
+                    <td><span class="table-badge success">Stable</span></td>
+                    <td class="numeric">2</td>
+                    <td class="numeric">☕☕☕☕</td>
+                  </tr>
+
+                  <tr>
+                    <td>Project Icarus</td>
+                    <td>Dave</td>
+                    <td><span class="table-badge danger">On Fire</span></td>
+                    <td class="numeric">37</td>
+                    <td class="numeric">☕☕☕☕☕☕</td>
+                  </tr>
+
+                  <tr class="selected">
+                    <td>Theme Forge</td>
+                    <td>You</td>
+                    <td><span class="table-badge info">Building</span></td>
+                    <td class="numeric">0</td>
+                    <td class="numeric">☕☕☕</td>
+                  </tr>
+
+                  <tr>
+                    <td>Quantum Toaster</td>
+                    <td>Janet</td>
+                    <td><span class="table-badge warning">Uncertain</span></td>
+                    <td class="numeric">12</td>
+                    <td class="numeric">☕☕☕☕☕</td>
+                  </tr>
+
+                  <tr>
+                    <td>Operation Cat Herding</td>
+                    <td>Steve</td>
+                    <td><span class="table-badge danger">Impossible</span></td>
+                    <td class="numeric">999</td>
+                    <td class="numeric">∞</td>
+                  </tr>
+                </tbody>
+
+                <tfoot>
+                  <tr>
+                    <td colspan="3">Active projects</td>
+                    <td class="numeric">1050</td>
+                    <td class="numeric">13 cups/day</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
           </section>
         </div>
 
         <div class="preview-tab-panel" data-preview-panel="cards" hidden>
           <section class="sample-section">
             <h3>Cards preview</h3>
-            <p class="sample-alert info">Cards preview coming next.</p>
+
+            <div class="preview-cards-grid">
+
+              <article class="preview-demo-card">
+                <div class="preview-demo-card-header">
+                  <span class="table-badge success">Online</span>
+                </div>
+
+                <h4>AI Core</h4>
+
+                <p>
+                  Successfully resisting the urge to become self-aware before lunch.
+                </p>
+
+                <button type="button" class="secondary-button">
+                  View status
+                </button>
+              </article>
+
+              <article class="preview-demo-card">
+                <div class="preview-demo-card-header">
+                  <span class="table-badge warning">Warning</span>
+                </div>
+
+                <h4>Quantum Toaster</h4>
+
+                <p>
+                  Toast quality has exceeded expectations. Reality stability has not.
+                </p>
+
+                <div class="preview-stat">
+                  <strong>97%</strong>
+                  <span>Burn accuracy</span>
+                </div>
+              </article>
+
+              <article class="preview-demo-card">
+                <div class="preview-demo-card-header">
+                  <span class="table-badge danger">Critical</span>
+                </div>
+
+                <h4>Project Icarus</h4>
+
+                <p>
+                  Management requested a status report. The project requested a lawyer.
+                </p>
+
+                <ul class="preview-card-list">
+                  <li>37 open issues</li>
+                  <li>12 meetings scheduled</li>
+                  <li>0 volunteers</li>
+                </ul>
+              </article>
+
+              <article class="preview-demo-card feature">
+                <p class="eyebrow">Featured</p>
+
+                <h4>Theme Forge</h4>
+
+                <p>
+                  Build, test, randomize, evaluate, and export themes without sacrificing
+                  innocent CSS.
+                </p>
+
+                <div class="button-row">
+                  <button type="button" class="primary-button">
+                    Launch
+                  </button>
+
+                  <button type="button" class="secondary-button">
+                    Learn more
+                  </button>
+                </div>
+              </article>
+
+              <article class="preview-demo-card framed">
+                <header class="preview-card-band">
+                  <span class="table-badge info">Report</span>
+                  <strong>Weekly Weirdness</strong>
+                </header>
+
+                <div>
+                  <h4>Office Gravity Audit</h4>
+                  <p>
+                    Three chairs rolled uphill, one pen escaped, and the conference room
+                    plant has begun issuing demands.
+                  </p>
+                </div>
+
+                <footer class="preview-card-footer">
+                  <span>Last checked: 4:20 PM</span>
+                  <button type="button" class="secondary-button">Review</button>
+                </footer>
+              </article>
+
+              <article class="preview-demo-card checklist">
+                <h4>Launch checklist</h4>
+
+                <ul class="preview-task-list">
+                  <li>
+                    <input type="checkbox" checked />
+                    Name the buttons something sensible
+                  </li>
+                  <li>
+                    <input type="checkbox" checked />
+                    Pretend the first draft was intentional
+                  </li>
+                  <li>
+                    <input type="checkbox" />
+                    Remove console logs before anyone notices
+                  </li>
+                </ul>
+
+                <p class="sample-alert warning">
+                  Final approval pending one heroic cup of coffee.
+                </p>
+              </article>
+
+            </div>
           </section>
         </div>
 
