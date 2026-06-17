@@ -244,36 +244,82 @@
 
     <section class="preview-area" aria-label="Theme preview">
       <nav class="preview-tabs" aria-label="Preview tabs">
-        <button type="button" class="active">Article</button>
+        <button type="button" class="active">Page</button>
         <button type="button">Form</button>
         <button type="button">Table</button>
         <button type="button">Cards</button>
       </nav>
 
       <section class="preview-panel">
-        <article class="sample-article">
-          <p class="eyebrow">Preview Article</p>
-          <h2>Design systems should feel useful, not precious</h2>
-          <p>
-            This preview area shows headings, paragraphs, buttons, links,
-            cards, forms, and tables using the current theme settings.
-          </p>
+        <div class="sample-page">
+          <section class="sample-hero">
+            <p class="eyebrow">Theme Preview</p>
+            <h2>Build interfaces that feel clear, useful, and alive.</h2>
+            <p>
+              This sample page shows common UI elements using the current theme tokens.
+              Change colors, typography, and shape controls to see the preview update.
+            </p>
 
-          <p>
-            Here is a <a href="#">sample link</a> inside body text. It should
-            be readable, obvious, and not make anyone squint like they’re
-            decoding a hostage note.
-          </p>
+            <div class="button-row">
+              <button type="button" class="primary-button">Primary action</button>
+              <button type="button" class="secondary-button">Secondary action</button>
+            </div>
+          </section>
 
-          <div class="button-row">
-            <button type="button" class="primary-button">
-              Primary action
-            </button>
-            <button type="button" class="secondary-button">
-              Secondary action
-            </button>
-          </div>
-        </article>
+          <section class="sample-section">
+            <h3>Status overview</h3>
+
+            <div class="sample-card-grid">
+              <article class="sample-card">
+                <span class="status-badge success">Success</span>
+                <h4>Theme saved</h4>
+                <p>Your latest theme changes are ready to export.</p>
+              </article>
+
+              <article class="sample-card">
+                <span class="status-badge warning">Warning</span>
+                <h4>Contrast check</h4>
+                <p>Some text combinations may need adjustment.</p>
+              </article>
+
+              <article class="sample-card">
+                <span class="status-badge danger">Danger</span>
+                <h4>Missing token</h4>
+                <p>A required UI token has not been configured.</p>
+              </article>
+
+              <article class="sample-card">
+                <span class="status-badge info">Info</span>
+                <h4>Export ready</h4>
+                <p>CSS and JSON exports will use the selected format.</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="sample-section">
+            <h3>Interactive controls</h3>
+
+            <div class="sample-form-row">
+              <label>
+                Project name
+                <input type="text" value="Aurora Dashboard" />
+              </label>
+
+              <label>
+                Theme type
+                <select>
+                  <option>Marketing site</option>
+                  <option>Admin dashboard</option>
+                  <option>Documentation</option>
+                </select>
+              </label>
+            </div>
+
+            <p class="sample-alert info">
+              This preview will eventually trigger modals, overlays, and toast messages.
+            </p>
+          </section>
+        </div>
       </section>
     </section>
   </main>
