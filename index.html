@@ -1,328 +1,213 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Theme Forge</title>
 
-    <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="css/preview.css" />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Theme Forge</title>
 
-    <script src="js/color-utils.js" defer></script>
-    <script src="js/theme-state.js" defer></script>
-    <script src="js/color-editor.js" defer></script>
-    <script src="js/history.js" defer></script>
-    <script src="js/export.js" defer></script>
-    <script src="js/accessibility.js" defer></script>
-    <script src="js/randomizer.js" defer></script>
-    <script src="js/app.js" defer></script>
-  </head>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/preview.css" />
 
-  <body>
-    <header class="app-header">
-      <div>
-        <h1>Theme Forge</h1>
-        <p>Build, test, randomize, and export design themes.</p>
-      </div>
+  <script src="js/color-utils.js" defer></script>
+  <script src="js/theme-state.js" defer></script>
+  <script src="js/color-editor.js" defer></script>
+  <script src="js/history.js" defer></script>
+  <script src="js/export.js" defer></script>
+  <script src="js/accessibility.js" defer></script>
+  <script src="js/randomizer.js" defer></script>
+  <script src="js/app.js" defer></script>
+</head>
 
-      <div class="header-actions">
-        <button type="button" id="undoBtn">Undo</button>
-        <button type="button" id="redoBtn">Redo</button>
-        <button type="button" id="randomizeBtn">Randomize</button>
-        <button type="button" id="exportCssBtn">Export CSS</button>
-        <button type="button" id="exportJsonBtn">Export JSON</button>
-        <button type="button" class="score-badge" id="scoreBadge">
-          A11y 100
-        </button>
-      </div>
-    </header>
+<body>
+  <header class="app-header">
+    <div>
+      <h1>Theme Forge</h1>
+      <p>Build, test, randomize, and export design themes.</p>
+    </div>
 
-    <main class="app-shell">
-      <aside class="control-panel" aria-label="Theme controls">
-        <section class="control-card">
-          <h2>Colors</h2>
+    <div class="header-actions">
+      <button type="button" id="undoBtn">Undo</button>
+      <button type="button" id="redoBtn">Redo</button>
+      <button type="button" id="randomizeBtn">Randomize</button>
+      <button type="button" id="exportCssBtn">Export CSS</button>
+      <button type="button" id="exportJsonBtn">Export JSON</button>
+      <button type="button" class="score-badge" id="scoreBadge">
+        A11y 100
+      </button>
+    </div>
+  </header>
 
-          <div class="color-token-list">
-            <button
-              type="button"
-              class="color-token active"
-              data-color-token="primary"
-            >
-              <span class="color-token-name">Primary</span>
-              <span class="color-token-swatch"></span>
-              <span class="color-token-value">#2563eb</span>
+  <main class="app-shell">
+    <aside class="control-panel" aria-label="Theme controls">
+      <section class="control-card">
+        <h2>Colors</h2>
+
+        <div class="color-token-list">
+          <button type="button" class="color-token active" data-color-token="primary">
+            <span class="color-token-name">Primary</span>
+            <span class="color-token-swatch"></span>
+            <span class="color-token-value">#2563eb</span>
+          </button>
+
+          <button type="button" class="color-token" data-color-token="secondary">
+            <span class="color-token-name">Secondary</span>
+            <span class="color-token-swatch"></span>
+            <span class="color-token-value">#7c3aed</span>
+          </button>
+
+          <button type="button" class="color-token" data-color-token="background">
+            <span class="color-token-name">Background</span>
+            <span class="color-token-swatch"></span>
+            <span class="color-token-value">#f8fafc</span>
+          </button>
+
+          <button type="button" class="color-token" data-color-token="surface">
+            <span class="color-token-name">Surface</span>
+            <span class="color-token-swatch"></span>
+            <span class="color-token-value">#ffffff</span>
+          </button>
+
+          <button type="button" class="color-token" data-color-token="text">
+            <span class="color-token-name">Text</span>
+            <span class="color-token-swatch"></span>
+            <span class="color-token-value">#0f172a</span>
+          </button>
+        </div>
+
+        <div class="color-editor">
+          <h3>Editing: <span id="activeColorName">Primary</span></h3>
+
+          <input type="color" id="colorNativePicker" value="#2563eb" />
+
+          <div class="segmented-control" aria-label="Color format">
+            <button type="button" class="active" data-color-format="hex">
+              HEX
             </button>
-
-            <button
-              type="button"
-              class="color-token"
-              data-color-token="secondary"
-            >
-              <span class="color-token-name">Secondary</span>
-              <span class="color-token-swatch"></span>
-              <span class="color-token-value">#7c3aed</span>
-            </button>
-
-            <button
-              type="button"
-              class="color-token"
-              data-color-token="background"
-            >
-              <span class="color-token-name">Background</span>
-              <span class="color-token-swatch"></span>
-              <span class="color-token-value">#f8fafc</span>
-            </button>
-
-            <button
-              type="button"
-              class="color-token"
-              data-color-token="surface"
-            >
-              <span class="color-token-name">Surface</span>
-              <span class="color-token-swatch"></span>
-              <span class="color-token-value">#ffffff</span>
-            </button>
-
-            <button type="button" class="color-token" data-color-token="text">
-              <span class="color-token-name">Text</span>
-              <span class="color-token-swatch"></span>
-              <span class="color-token-value">#0f172a</span>
-            </button>
+            <button type="button" data-color-format="rgb">RGB</button>
+            <button type="button" data-color-format="hsl">HSL</button>
           </div>
 
-          <div class="color-editor">
-            <h3>Editing: <span id="activeColorName">Primary</span></h3>
-
-            <input type="color" id="colorNativePicker" value="#2563eb" />
-
-            <div class="segmented-control" aria-label="Color format">
-              <button type="button" class="active" data-color-format="hex">
-                HEX
-              </button>
-              <button type="button" data-color-format="rgb">RGB</button>
-              <button type="button" data-color-format="hsl">HSL</button>
-            </div>
-
-            <div data-format-panel="hex">
-              <label>
-                HEX
-                <input type="text" id="hexValue" value="#2563eb" />
-              </label>
-            </div>
-
-            <div data-format-panel="rgb" hidden>
-              <label>
-                R
-                <input
-                  type="range"
-                  id="rgbR"
-                  min="0"
-                  max="255"
-                  value="37"
-                  data-rgb-channel="r"
-                />
-                <input
-                  type="number"
-                  id="rgbRNumber"
-                  min="0"
-                  max="255"
-                  value="37"
-                  data-rgb-channel="r"
-                />
-              </label>
-
-              <label>
-                G
-                <input
-                  type="range"
-                  id="rgbG"
-                  min="0"
-                  max="255"
-                  value="99"
-                  data-rgb-channel="g"
-                />
-                <input
-                  type="number"
-                  id="rgbGNumber"
-                  min="0"
-                  max="255"
-                  value="99"
-                  data-rgb-channel="g"
-                />
-              </label>
-
-              <label>
-                B
-                <input
-                  type="range"
-                  id="rgbB"
-                  min="0"
-                  max="255"
-                  value="235"
-                  data-rgb-channel="b"
-                />
-                <input
-                  type="number"
-                  id="rgbBNumber"
-                  min="0"
-                  max="255"
-                  value="235"
-                  data-rgb-channel="b"
-                />
-              </label>
-            </div>
-
-            <div data-format-panel="hsl" hidden>
-              <label>
-                H
-                <input
-                  type="range"
-                  id="hslH"
-                  min="0"
-                  max="359"
-                  value="217"
-                  data-hsl-channel="h"
-                />
-                <input
-                  type="number"
-                  id="hslHNumber"
-                  min="0"
-                  max="359"
-                  value="217"
-                  data-hsl-channel="h"
-                />
-              </label>
-
-              <label>
-                S
-                <input
-                  type="range"
-                  id="hslS"
-                  min="0"
-                  max="100"
-                  value="91"
-                  data-hsl-channel="s"
-                />
-                <input
-                  type="number"
-                  id="hslSNumber"
-                  min="0"
-                  max="100"
-                  value="91"
-                  data-hsl-channel="s"
-                />
-              </label>
-
-              <label>
-                L
-                <input
-                  type="range"
-                  id="hslL"
-                  min="0"
-                  max="100"
-                  value="60"
-                  data-hsl-channel="l"
-                />
-                <input
-                  type="number"
-                  id="hslLNumber"
-                  min="0"
-                  max="100"
-                  value="60"
-                  data-hsl-channel="l"
-                />
-              </label>
-            </div>
+          <div data-format-panel="hex">
+            <label>
+              HEX
+              <input type="text" id="hexValue" value="#2563eb" />
+            </label>
           </div>
-        </section>
 
-        <section class="control-card">
-          <h2>Typography</h2>
+          <div data-format-panel="rgb" hidden>
+            <label>
+              R
+              <input type="range" id="rgbR" min="0" max="255" value="37" data-rgb-channel="r" />
+              <input type="number" id="rgbRNumber" min="0" max="255" value="37" data-rgb-channel="r" />
+            </label>
 
-          <label>
-            Base size
-            <input
-              type="range"
-              id="baseFontSize"
-              min="14"
-              max="22"
-              value="16"
-            />
+            <label>
+              G
+              <input type="range" id="rgbG" min="0" max="255" value="99" data-rgb-channel="g" />
+              <input type="number" id="rgbGNumber" min="0" max="255" value="99" data-rgb-channel="g" />
+            </label>
+
+            <label>
+              B
+              <input type="range" id="rgbB" min="0" max="255" value="235" data-rgb-channel="b" />
+              <input type="number" id="rgbBNumber" min="0" max="255" value="235" data-rgb-channel="b" />
+            </label>
+          </div>
+
+          <div data-format-panel="hsl" hidden>
+            <label>
+              H
+              <input type="range" id="hslH" min="0" max="359" value="217" data-hsl-channel="h" />
+              <input type="number" id="hslHNumber" min="0" max="359" value="217" data-hsl-channel="h" />
+            </label>
+
+            <label>
+              S
+              <input type="range" id="hslS" min="0" max="100" value="91" data-hsl-channel="s" />
+              <input type="number" id="hslSNumber" min="0" max="100" value="91" data-hsl-channel="s" />
+            </label>
+
+            <label>
+              L
+              <input type="range" id="hslL" min="0" max="100" value="60" data-hsl-channel="l" />
+              <input type="number" id="hslLNumber" min="0" max="100" value="60" data-hsl-channel="l" />
+            </label>
+          </div>
+
+          <label class="alpha-control">
+            Alpha
+            <input type="range" id="alphaValue" min="0" max="1" step="0.01" value="1">
+            <input type="number" id="alphaNumber" min="0" max="1" step="0.01" value="1">
           </label>
 
-          <label>
-            Heading scale
-            <input
-              type="range"
-              id="headingScale"
-              min="110"
-              max="180"
-              value="135"
-            />
-          </label>
-        </section>
-
-        <section class="control-card">
-          <h2>Shape</h2>
-
-          <label>
-            Radius
-            <input
-              type="range"
-              id="radiusControl"
-              min="0"
-              max="32"
-              value="10"
-            />
-          </label>
-
-          <label>
-            Border width
-            <input
-              type="range"
-              id="borderWidthControl"
-              min="0"
-              max="4"
-              value="1"
-            />
-          </label>
-        </section>
-      </aside>
-
-      <section class="preview-area" aria-label="Theme preview">
-        <nav class="preview-tabs" aria-label="Preview tabs">
-          <button type="button" class="active">Article</button>
-          <button type="button">Form</button>
-          <button type="button">Table</button>
-          <button type="button">Cards</button>
-        </nav>
-
-        <section class="preview-panel">
-          <article class="sample-article">
-            <p class="eyebrow">Preview Article</p>
-            <h2>Design systems should feel useful, not precious</h2>
-            <p>
-              This preview area shows headings, paragraphs, buttons, links,
-              cards, forms, and tables using the current theme settings.
-            </p>
-
-            <p>
-              Here is a <a href="#">sample link</a> inside body text. It should
-              be readable, obvious, and not make anyone squint like they’re
-              decoding a hostage note.
-            </p>
-
-            <div class="button-row">
-              <button type="button" class="primary-button">
-                Primary action
-              </button>
-              <button type="button" class="secondary-button">
-                Secondary action
-              </button>
-            </div>
-          </article>
-        </section>
+        </div>
       </section>
-    </main>
-  </body>
+
+      <section class="control-card">
+        <h2>Typography</h2>
+
+        <label>
+          Base size
+          <input type="range" id="baseFontSize" min="14" max="22" value="16" />
+        </label>
+
+        <label>
+          Heading scale
+          <input type="range" id="headingScale" min="110" max="180" value="135" />
+        </label>
+      </section>
+
+      <section class="control-card">
+        <h2>Shape</h2>
+
+        <label>
+          Radius
+          <input type="range" id="radiusControl" min="0" max="32" value="10" />
+        </label>
+
+        <label>
+          Border width
+          <input type="range" id="borderWidthControl" min="0" max="4" value="1" />
+        </label>
+      </section>
+    </aside>
+
+    <section class="preview-area" aria-label="Theme preview">
+      <nav class="preview-tabs" aria-label="Preview tabs">
+        <button type="button" class="active">Article</button>
+        <button type="button">Form</button>
+        <button type="button">Table</button>
+        <button type="button">Cards</button>
+      </nav>
+
+      <section class="preview-panel">
+        <article class="sample-article">
+          <p class="eyebrow">Preview Article</p>
+          <h2>Design systems should feel useful, not precious</h2>
+          <p>
+            This preview area shows headings, paragraphs, buttons, links,
+            cards, forms, and tables using the current theme settings.
+          </p>
+
+          <p>
+            Here is a <a href="#">sample link</a> inside body text. It should
+            be readable, obvious, and not make anyone squint like they’re
+            decoding a hostage note.
+          </p>
+
+          <div class="button-row">
+            <button type="button" class="primary-button">
+              Primary action
+            </button>
+            <button type="button" class="secondary-button">
+              Secondary action
+            </button>
+          </div>
+        </article>
+      </section>
+    </section>
+  </main>
+</body>
+
 </html>
