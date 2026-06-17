@@ -51,9 +51,9 @@ function rgbToHsl({ r, g, b }) {
   }
 
   return {
-    h: Math.round((h + 360) % 360),
-    s: Math.round(s * 100),
-    l: Math.round(l * 100),
+    h: Number(((h + 360) % 360).toFixed(2)),
+    s: Number((s * 100).toFixed(2)),
+    l: Number((l * 100).toFixed(2)),
   };
 }
 

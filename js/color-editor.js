@@ -77,11 +77,11 @@ ThemeForge.colorEditor = {
 
     document.querySelectorAll("[data-rgb-channel]").forEach((input) => {
       input.addEventListener("input", () => {
-        const rgb = {
-          r: Number(document.querySelector("#rgbR").value),
-          g: Number(document.querySelector("#rgbG").value),
-          b: Number(document.querySelector("#rgbB").value),
-        };
+        const rgb = hslToRgb(this.getActiveColor());
+        const channel = input.dataset.rgbChannel;
+        const value = Math.max(0, Math.min(255, Number(input.value)));
+
+        rgb[channel] = value;
 
         Object.assign(this.getActiveColor(), rgbToHsl(rgb), { a: this.getActiveColor().a });
         ThemeForge.applyTheme();
