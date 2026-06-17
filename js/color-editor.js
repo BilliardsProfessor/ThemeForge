@@ -78,10 +78,10 @@ ThemeForge.colorEditor = {
 
     document.querySelectorAll("#alphaValue, #alphaNumber").forEach((input) => {
       input.addEventListener("input", () => {
-        const alpha = Number(input.value);
-        const clampedAlpha = Math.max(0, Math.min(1, alpha));
+        const alphaPercent = Number(input.value);
+        const clampedAlphaPercent = Math.max(0, Math.min(100, alphaPercent));
 
-        this.getActiveColor().a = clampedAlpha;
+        this.getActiveColor().a = clampedAlphaPercent / 100;
 
         ThemeForge.applyTheme();
         this.render();
@@ -113,8 +113,10 @@ ThemeForge.colorEditor = {
     document.querySelector("#hslL").value = color.l;
     document.querySelector("#hslLNumber").value = color.l;
 
-    document.querySelector("#alphaValue").value = color.a;
-    document.querySelector("#alphaNumber").value = color.a;
+    const alphaPercent = Math.round(color.a * 100);
+
+    document.querySelector("#alphaValue").value = alphaPercent;
+    document.querySelector("#alphaNumber").value = alphaPercent;
 
     document.querySelectorAll("[data-color-format]").forEach((button) => {
       button.classList.toggle("active", button.dataset.colorFormat === format);
