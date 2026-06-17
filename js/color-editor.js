@@ -143,6 +143,7 @@ ThemeForge.colorEditor = {
 
     document.querySelector("#alphaValue").value = alphaPercent;
     document.querySelector("#alphaNumber").value = alphaPercent;
+    document.querySelector(".segmented-control").dataset.activeFormat = format;
 
     document.querySelectorAll("[data-color-format]").forEach((button) => {
       button.classList.toggle("active", button.dataset.colorFormat === format);
@@ -151,6 +152,8 @@ ThemeForge.colorEditor = {
     document.querySelectorAll("[data-format-panel]").forEach((panel) => {
       panel.hidden = panel.dataset.formatPanel !== format;
     });
+
+    document.querySelector(".color-group-tabs").dataset.activeGroup = this.activeColorGroup;
 
     document.querySelectorAll("[data-color-group-tab]").forEach((button) => {
       button.classList.toggle("active", button.dataset.colorGroupTab === this.activeColorGroup);

@@ -46,7 +46,7 @@
           <span class="control-card-title">Colors</span>
         </summary>
 
-        <div class="color-group-tabs" aria-label="Color token groups">
+        <div class="color-group-tabs" aria-label="Color token groups" data-active-group="core">
           <button type="button" class="active" data-color-group-tab="core">Core</button>
           <button type="button" data-color-group-tab="states">States</button>
           <button type="button" data-color-group-tab="text">Text</button>
@@ -152,7 +152,7 @@
 
             <input type="color" id="colorNativePicker" value="#2563eb" />
 
-            <div class="segmented-control" aria-label="Color format">
+            <div class="segmented-control" aria-label="Color format" data-active-format="hex">
               <button type="button" class="active" data-color-format="hex">
                 HEX
               </button>
@@ -255,15 +255,15 @@
     </aside>
 
     <section class="preview-area" aria-label="Theme preview">
-      <nav class="preview-tabs" aria-label="Preview tabs">
-        <button type="button" class="active">Page</button>
-        <button type="button">Form</button>
-        <button type="button">Table</button>
-        <button type="button">Cards</button>
+      <nav class="preview-tabs" aria-label="Preview tabs" data-active-preview-tab="page">
+        <button type="button" class="active" data-preview-tab="page">Page</button>
+        <button type="button" data-preview-tab="form">Form</button>
+        <button type="button" data-preview-tab="table">Table</button>
+        <button type="button" data-preview-tab="cards">Cards</button>
       </nav>
 
       <section class="preview-panel">
-        <div class="sample-page">
+        <div class="preview-tab-panel sample-page" data-preview-panel="page">
           <section class="sample-hero">
             <p class="eyebrow">Theme Preview</p>
             <h2>Build interfaces that feel clear, useful, and alive.</h2>
@@ -371,6 +371,27 @@
             <p class="sample-alert info">
               This preview will eventually trigger modals, overlays, and toast messages.
             </p>
+          </section>
+        </div>
+
+        <div class="preview-tab-panel" data-preview-panel="form" hidden>
+          <section class="sample-section">
+            <h3>Form preview</h3>
+            <p class="sample-alert info">Form preview coming next.</p>
+          </section>
+        </div>
+
+        <div class="preview-tab-panel" data-preview-panel="table" hidden>
+          <section class="sample-section">
+            <h3>Table preview</h3>
+            <p class="sample-alert info">Table preview coming next.</p>
+          </section>
+        </div>
+
+        <div class="preview-tab-panel" data-preview-panel="cards" hidden>
+          <section class="sample-section">
+            <h3>Cards preview</h3>
+            <p class="sample-alert info">Cards preview coming next.</p>
           </section>
         </div>
 

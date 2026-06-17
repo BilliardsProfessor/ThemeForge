@@ -77,7 +77,6 @@ button {
 }
 
 .header-actions button,
-.preview-tabs button,
 .primary-button,
 .secondary-button {
   border: var(--border-width) solid var(--color-border);
@@ -88,7 +87,6 @@ button {
 }
 
 .header-actions button:hover,
-.preview-tabs button:hover,
 .secondary-button:hover {
   border-color: var(--color-primary);
 }
@@ -192,15 +190,57 @@ button {
 }
 
 .preview-tabs {
-  display: flex;
-  gap: 0.5rem;
+  --active-index: 0;
+
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.25rem;
   margin-bottom: var(--space-2);
+  padding: 0.25rem;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--color-border), var(--color-surface) 45%);
 }
 
-.preview-tabs .active {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: white;
+.preview-tabs::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset-block: 0.25rem;
+  inset-inline-start: 0.25rem;
+  inline-size: calc((100% - 1.25rem) / 4);
+  border-radius: calc(var(--radius) - 3px);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+  transform: translateX(calc(var(--active-index) * (100% + 0.25rem)));
+  transition: transform 180ms ease;
+}
+
+.preview-tabs[data-active-preview-tab="form"] {
+  --active-index: 1;
+}
+
+.preview-tabs[data-active-preview-tab="table"] {
+  --active-index: 2;
+}
+
+.preview-tabs[data-active-preview-tab="cards"] {
+  --active-index: 3;
+}
+
+.preview-tabs button {
+  border: 0;
+  border-radius: calc(var(--radius) - 3px);
+  padding: 0.45rem 0.5rem;
+  background: transparent;
+  color: var(--color-muted-text);
+  font-weight: 700;
+}
+
+.preview-tabs button:hover,
+.preview-tabs button.active {
+  color: var(--color-text);
 }
 
 .preview-panel {
@@ -386,6 +426,10 @@ a {
 }
 
 .segmented-control {
+  --active-index: 0;
+
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.25rem;
@@ -393,6 +437,28 @@ a {
   padding: 0.25rem;
   border-radius: 0.65rem;
   background: #e2e8f0;
+}
+
+.segmented-control::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset-block: 0.25rem;
+  inset-inline-start: 0.25rem;
+  inline-size: calc((100% - 1rem) / 3);
+  border-radius: 0.45rem;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgb(15 23 42 / 0.16);
+  transform: translateX(calc(var(--active-index) * (100% + 0.25rem)));
+  transition: transform 180ms ease;
+}
+
+.segmented-control[data-active-format="rgb"] {
+  --active-index: 1;
+}
+
+.segmented-control[data-active-format="hsl"] {
+  --active-index: 2;
 }
 
 .segmented-control button {
@@ -404,13 +470,16 @@ a {
   font-weight: 700;
 }
 
+.segmented-control button:hover,
 .segmented-control button.active {
-  background: #ffffff;
   color: #0f172a;
-  box-shadow: 0 1px 3px rgb(15 23 42 / 0.16);
 }
 
 .color-group-tabs {
+  --active-index: 0;
+
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0.25rem;
@@ -418,6 +487,32 @@ a {
   padding: 0.25rem;
   border-radius: 0.65rem;
   background: #e2e8f0;
+}
+
+.color-group-tabs::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset-block: 0.25rem;
+  inset-inline-start: 0.25rem;
+  inline-size: calc((100% - 1.25rem) / 4);
+  border-radius: 0.45rem;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgb(15 23 42 / 0.16);
+  transform: translateX(calc(var(--active-index) * (100% + 0.25rem)));
+  transition: transform 180ms ease;
+}
+
+.color-group-tabs[data-active-group="states"] {
+  --active-index: 1;
+}
+
+.color-group-tabs[data-active-group="text"] {
+  --active-index: 2;
+}
+
+.color-group-tabs[data-active-group="ui"] {
+  --active-index: 3;
 }
 
 .color-group-tabs button {
@@ -429,12 +524,19 @@ a {
   font-weight: 700;
 }
 
+.color-group-tabs button:hover,
 .color-group-tabs button.active {
-  background: #ffffff;
   color: #0f172a;
-  box-shadow: 0 1px 3px rgb(15 23 42 / 0.16);
 }
 
 .color-token[hidden] {
   display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preview-tabs::before,
+  .color-group-tabs::before,
+  .segmented-control::before {
+    transition: none;
+  }
 }

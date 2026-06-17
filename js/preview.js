@@ -76,6 +76,22 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  document.querySelectorAll("[data-preview-tab]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const previewTabs = button.closest(".preview-tabs");
+
+      previewTabs.dataset.activePreviewTab = button.dataset.previewTab;
+
+      previewTabs.querySelectorAll("[data-preview-tab]").forEach((tabButton) => {
+        tabButton.classList.toggle("active", tabButton === button);
+      });
+
+      document.querySelectorAll("[data-preview-panel]").forEach((panel) => {
+        panel.hidden = panel.dataset.previewPanel !== button.dataset.previewTab;
+      });
+    });
+  });
+
   document.querySelector("#openPreviewModal")?.addEventListener("click", openPreviewModal);
 
   document.querySelector("#runPreviewSimulation")?.addEventListener("click", runPreviewSimulation);
