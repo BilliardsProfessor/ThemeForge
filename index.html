@@ -40,8 +40,10 @@
 
   <main class="app-shell">
     <aside class="control-panel" aria-label="Theme controls">
-      <section class="control-card">
-        <h2>Colors</h2>
+      <details class="control-card" open>
+        <summary>
+          <span class="control-card-title">Colors</span>
+        </summary>
 
         <div class="color-token-list">
           <button type="button" class="color-token active" data-color-token="primary">
@@ -142,10 +144,12 @@
           </label>
 
         </div>
-      </section>
+      </details>
 
-      <section class="control-card">
-        <h2>Typography</h2>
+      <details class="control-card">
+        <summary>
+          <span class="control-card-title">Typography</span>
+        </summary>
 
         <label>
           Base size
@@ -156,10 +160,12 @@
           Heading scale
           <input type="range" id="headingScale" min="110" max="180" value="135" />
         </label>
-      </section>
+      </details>
 
-      <section class="control-card">
-        <h2>Shape</h2>
+      <details class="control-card">
+        <summary>
+          <span class="control-card-title">Shape</span>
+        </summary>
 
         <label>
           Radius
@@ -170,7 +176,7 @@
           Border width
           <input type="range" id="borderWidthControl" min="0" max="4" value="1" />
         </label>
-      </section>
+      </details>
     </aside>
 
     <section class="preview-area" aria-label="Theme preview">
