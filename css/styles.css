@@ -209,7 +209,7 @@ a {
   grid-template-columns: 1fr auto;
   grid-template-areas:
     "name swatch"
-    "value value";
+    "value swatch";
   align-items: center;
   gap: 0.35rem 0.75rem;
   width: 100%;
@@ -236,9 +236,9 @@ a {
   grid-area: swatch;
   justify-self: end;
   width: 3rem;
-  height: 0.85rem;
+  height: 2rem;
   border: 1px solid #94a3b8;
-  border-radius: 999px;
+  border-radius: 20%;
 }
 
 .color-token-value {
@@ -299,11 +299,26 @@ a {
 #colorNativePicker {
   width: 100%;
   height: 2.75rem;
-  padding: 0;
+  padding: 5px;
+  overflow: hidden;
   border: 1px solid #cbd5e1;
   border-radius: 0.65rem;
   background: #ffffff;
   cursor: pointer;
+}
+
+#colorNativePicker::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+#colorNativePicker::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(0.65rem - 5px);
+}
+
+#colorNativePicker::-moz-color-swatch {
+  border: 0;
+  border-radius: calc(0.65rem - 5px);
 }
 
 .segmented-control {
