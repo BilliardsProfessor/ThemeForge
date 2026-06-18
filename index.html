@@ -32,8 +32,21 @@
       <button type="button" id="undoBtn">Undo</button>
       <button type="button" id="redoBtn">Redo</button>
       <button type="button" id="randomizeBtn">Randomize</button>
-      <button type="button" id="exportCssBtn">Export CSS</button>
-      <button type="button" id="exportJsonBtn">Export JSON</button>
+      <div class="export-menu" data-export-menu>
+        <button
+          type="button"
+          id="exportMenuBtn"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Export
+        </button>
+
+        <div class="export-menu-list" data-export-menu-list hidden>
+          <button type="button" data-export-type="json">JSON Theme</button>
+          <button type="button" data-export-type="css">CSS Variables</button>
+        </div>
+      </div>
       <button type="button" class="score-badge" id="scoreBadge">
         A11y 100
       </button>
