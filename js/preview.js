@@ -70,7 +70,11 @@ function runPreviewSimulation() {
 }
 
 function lightTheBeacons() {
-  document.querySelector("#beaconDialog")?.showModal();
+  const dialogLayer = document.querySelector("#beaconDialogLayer");
+  const dialog = document.querySelector("#beaconDialog");
+
+  dialogLayer.hidden = false;
+  dialog.show();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -101,6 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("[data-close-beacon-dialog]").forEach((button) => {
     button.addEventListener("click", () => {
       document.querySelector("#beaconDialog")?.close();
+      document.querySelector("#beaconDialogLayer").hidden = true;
     });
   });
 
