@@ -69,6 +69,10 @@ function runPreviewSimulation() {
   showToastSet("info");
 }
 
+function lightTheBeacons() {
+  document.querySelector("#beaconDialog")?.showModal();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("[data-toast-demo]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -89,6 +93,14 @@ document.addEventListener("DOMContentLoaded", () => {
       document.querySelectorAll("[data-preview-panel]").forEach((panel) => {
         panel.hidden = panel.dataset.previewPanel !== button.dataset.previewTab;
       });
+    });
+  });
+
+  document.querySelector("#lightTheBeaconsBtn")?.addEventListener("click", lightTheBeacons);
+
+  document.querySelectorAll("[data-close-beacon-dialog]").forEach((button) => {
+    button.addEventListener("click", () => {
+      document.querySelector("#beaconDialog")?.close();
     });
   });
 

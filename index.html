@@ -265,16 +265,19 @@
       <section class="preview-panel">
         <div class="preview-tab-panel sample-page" data-preview-panel="page">
           <section class="sample-hero">
-            <p class="eyebrow">Theme Preview</p>
-            <h2>Build interfaces that feel clear, useful, and alive.</h2>
+            <p class="eyebrow">Theme Forge</p>
+
+            <h2>Forge themes worthy of warning beacons and questionable meetings.</h2>
+
             <p>
-              This sample page shows common UI elements using the current theme tokens.
-              Change colors, typography, and shape controls to see the preview update.
+              Shape colors, typography, states, overlays, cards, forms, and tables in one
+              living preview. No frameworks. No build step. No innocent CSS harmed.
             </p>
 
             <div class="button-row">
-              <button type="button" class="primary-button">Primary action</button>
-              <button type="button" class="secondary-button">Secondary action</button>
+              <button type="button" class="primary-button" id="lightTheBeaconsBtn">
+                Light the beacons
+              </button>
             </div>
 
             <div class="sample-hero-visual" aria-hidden="true">
@@ -307,102 +310,76 @@
               <div class="hero-floating-card top"></div>
               <div class="hero-floating-card bottom"></div>
             </div>
-
           </section>
 
           <section class="sample-section">
-            <h3>Status overview</h3>
+            <h3>Toast signals</h3>
 
-            <div class="sample-card-grid">
-              <article class="sample-card success">
-                <div class="sample-card-header">
-                  Success
-                </div>
+            <p>
+              Test the same message pattern across success, warning, danger, and info states.
+              Like smoke signals, but with fewer mountains and more CSS variables.
+            </p>
 
-                <div class="sample-card-body">
-                  <h4>Theme saved</h4>
-                  <p>Your latest theme changes are ready to export.</p>
+            <div class="toast-button-grid">
+              <button type="button" class="toast-demo-button success" data-toast-demo="success">
+                Success
+              </button>
 
-                  <button type="button" class="toast-demo-button success" data-toast-demo="success">
-                    Show toasts
-                  </button>
-                </div>
-              </article>
+              <button type="button" class="toast-demo-button warning" data-toast-demo="warning">
+                Warning
+              </button>
 
-              <article class="sample-card warning">
-                <div class="sample-card-header">
-                  Warning
-                </div>
+              <button type="button" class="toast-demo-button danger" data-toast-demo="danger">
+                Danger
+              </button>
 
-                <div class="sample-card-body">
-                  <h4>Contrast Check</h4>
-                  <p>Some text combinations may need adjustment.</p>
-
-                  <button type="button" class="toast-demo-button warning" data-toast-demo="warning">
-                    Show toasts
-                  </button>
-                </div>
-              </article>
-
-              <article class="sample-card danger">
-                <div class="sample-card-header">
-                  Danger
-                </div>
-
-                <div class="sample-card-body">
-                  <h4>Missing token</h4>
-                  <p>A required UI token has not been configured.</p>
-
-                  <button type="button" class="toast-demo-button danger" data-toast-demo="danger">
-                    Show toasts
-                  </button>
-                </div>
-              </article>
-
-              <article class="sample-card info">
-                <div class="sample-card-header">
-                  Info
-                </div>
-
-                <div class="sample-card-body">
-                  <h4>Simulation complete</h4>
-                  <p>No data was harmed in this simulation.</p>
-                  <button type="button" class="toast-demo-button info" data-toast-demo="info">
-                    Show toasts
-                  </button>
-                </div>
-              </article>
-            </div>
-          </section>
-
-          <section class="sample-section">
-            <h3>Interactive controls</h3>
-
-            <div class="sample-form-row">
-              <label>
-                Project name
-                <input type="text" value="Aurora Dashboard" />
-              </label>
-
-              <label>
-                Theme type
-                <select>
-                  <option>Marketing site</option>
-                  <option>Admin dashboard</option>
-                  <option>Documentation</option>
-                </select>
-              </label>
-            </div>
-
-            <div class="modal-demo-actions">
-              <button type="button" class="primary-button" id="openPreviewModal">
-                Open modal
+              <button type="button" class="toast-demo-button info" data-toast-demo="info">
+                Info
               </button>
             </div>
+          </section>
 
-            <p class="sample-alert info">
-              This preview will eventually trigger modals, overlays, and toast messages.
+          <section class="preview-article-grid">
+            <article class="preview-article">
+              <p class="eyebrow">Color Systems</p>
+              <h3>Every token earns its keep.</h3>
+              <p>
+                Preview real interface pieces while tuning surfaces, borders, focus rings,
+                overlays, and state colors.
+              </p>
+            </article>
+
+            <article class="preview-article">
+              <p class="eyebrow">Component Checks</p>
+              <h3>Pretty is suspicious. Test it.</h3>
+              <p>
+                Cards, forms, tables, modals, and toast messages reveal where a theme shines
+                and where it quietly trips over a rake.
+              </p>
+            </article>
+          </section>
+
+          <blockquote class="preview-quote">
+            <p>
+              “A theme should look good when nothing is happening, and still make sense
+              when everything is on fire.”
             </p>
+            <cite>Probably someone in a meeting</cite>
+          </blockquote>
+
+          <section class="sample-section">
+            <h3>Modal preview</h3>
+
+            <p>
+              Open a harmless simulated audit dialog to test overlays, modal surfaces,
+              form controls, and action buttons.
+            </p>
+
+            <div class="button-row">
+              <button type="button" class="secondary-button" id="openPreviewModal">
+                Open modal preview
+              </button>
+            </div>
           </section>
         </div>
 
@@ -664,7 +641,40 @@
             </div>
           </section>
         </div>
+        <div class="beacon-dialog-layer" id="beaconDialogLayer" hidden>
+          <dialog class="beacon-dialog" id="beaconDialog">
+            <header class="beacon-dialog-header">
+              <div class="beacon-dialog-title">
+                <p class="eyebrow">Emergency Notification System</p>
+                <h3>The beacons are lit!</h3>
+              </div>
 
+              <button type="button" class="preview-modal-close" data-close-beacon-dialog aria-label="Close dialog">
+                ×
+              </button>
+            </header>
+
+            <div class="beacon-dialog-body">
+              <p>
+                Gondor calls for aid. Check your Teams inbox.
+              </p>
+
+              <p class="sample-alert info">
+                This is a simulated alert to test dialog styles. No actual beacons have been lit, and no
+                meetings have been scheduled. Contact HR if you see real beacons.
+              </p>
+            </div>
+
+            <footer class="beacon-dialog-footer">
+              <button type="button" class="secondary-button" data-close-beacon-dialog>
+                Let them Fall
+              </button>
+              <button type="button" class="primary-button" data-close-beacon-dialog>
+                Answer the Call
+              </button>
+            </footer>
+          </dialog>
+        </div>
         <div class="preview-modal-layer" id="previewModalLayer" hidden>
           <div class="preview-modal" role="dialog" aria-modal="true" aria-labelledby="previewModalTitle">
             <header class="preview-modal-header">
@@ -721,7 +731,6 @@
             </footer>
           </div>
         </div>
-
         <div class="preview-toast-region" aria-live="polite" aria-label="Preview notifications"></div>
       </section>
     </section>
