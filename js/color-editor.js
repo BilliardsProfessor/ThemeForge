@@ -54,6 +54,7 @@ ThemeForge.colorEditor = {
       const rgb = hexToRgb(event.target.value);
       Object.assign(this.getActiveColor(), rgbToHsl(rgb), { a: this.getActiveColor().a });
       ThemeForge.applyTheme();
+      ThemeForge.accessibility.updateScoreBadge();
       this.render();
     });
 
@@ -64,6 +65,7 @@ ThemeForge.colorEditor = {
 
       Object.assign(this.getActiveColor(), rgbToHsl(rgb), { a: this.getActiveColor().a });
       ThemeForge.applyTheme();
+      ThemeForge.accessibility.updateScoreBadge();
       this.render();
     });
 
@@ -98,6 +100,7 @@ ThemeForge.colorEditor = {
         });
 
         ThemeForge.applyTheme();
+        ThemeForge.accessibility.updateScoreBadge();
         this.render();
       });
     });
@@ -110,6 +113,7 @@ ThemeForge.colorEditor = {
         this.getActiveColor().a = clampedAlphaPercent / 100;
 
         ThemeForge.applyTheme();
+        ThemeForge.accessibility.updateScoreBadge();
         this.render();
       });
     });

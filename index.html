@@ -735,6 +735,30 @@
       </section>
     </section>
   </main>
+  <div class="app-modal-layer" id="accessibilityModalLayer" hidden>
+    <div class="app-modal app-accessibility-modal" role="dialog" aria-modal="true"
+      aria-labelledby="accessibilityModalTitle">
+      <header class="app-modal-header">
+        <div>
+          <p class="app-modal-eyebrow">Theme audit</p>
+          <h2 id="accessibilityModalTitle">Accessibility Report</h2>
+        </div>
+
+        <button type="button" class="app-modal-close" data-close-accessibility-modal
+          aria-label="Close accessibility report">
+          ×
+        </button>
+      </header>
+
+      <div class="app-modal-body" id="accessibilityReportContent"></div>
+
+      <footer class="app-modal-footer">
+        <button type="button" data-close-accessibility-modal>
+          Close
+        </button>
+      </footer>
+    </div>
+  </div>
 </body>
 
 </html>

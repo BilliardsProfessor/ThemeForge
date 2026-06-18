@@ -7,6 +7,7 @@ function updateThemeFromControls() {
   ThemeForge.theme.shape.overlayBlur = Number(document.querySelector("#overlayBlurControl").value);
 
   ThemeForge.applyTheme();
+  ThemeForge.accessibility.updateScoreBadge();
 }
 
 function bindControls() {
@@ -21,4 +22,5 @@ document.addEventListener("DOMContentLoaded", () => {
   bindControls();
   ThemeForge.applyTheme();
   ThemeForge.colorEditor.init();
+  ThemeForge.accessibility.init();
 });
