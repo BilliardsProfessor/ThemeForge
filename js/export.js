@@ -28,9 +28,16 @@ ThemeForge.export = {
     });
   },
 
-  startJsonExport() {
+  async startJsonExport() {
     const suggestedName = this.generateThemeNameSuggestion();
-    const themeName = window.prompt("Name this theme:", suggestedName);
+    const themeName = await ThemeForge.appModal.prompt({
+      eyebrow: "Export theme",
+      title: "Name this theme",
+      label: "Theme name",
+      value: suggestedName,
+      confirmText: "Export JSON",
+      cancelText: "Cancel",
+    });
 
     if (themeName === null) return;
 

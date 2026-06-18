@@ -110,6 +110,8 @@ button {
 }
 
 .app-modal {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   width: min(46rem, 100%);
   max-height: min(42rem, calc(100vh - 4rem));
   overflow: hidden;
@@ -165,7 +167,7 @@ button {
 }
 
 .app-modal-body {
-  max-height: calc(100vh - 13rem);
+  min-height: 0;
   overflow: auto;
   padding: var(--space-2);
 }
@@ -182,6 +184,43 @@ button {
   padding: 0.55rem 0.8rem;
   background: var(--color-surface);
   color: var(--color-text);
+}
+
+.app-modal-footer .app-modal-primary-action {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+.app-modal-footer .app-modal-secondary-action:hover {
+  border-color: var(--color-primary);
+}
+
+.app-modal-form {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.app-modal-field {
+  display: grid;
+  gap: 0.4rem;
+  color: var(--color-muted);
+  font-weight: 650;
+}
+
+.app-modal-field input {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.app-modal-field input:focus {
+  outline: 3px solid rgb(37 99 235 / 0.25);
+  outline-offset: 2px;
+  border-color: var(--color-primary);
 }
 
 .accessibility-summary {

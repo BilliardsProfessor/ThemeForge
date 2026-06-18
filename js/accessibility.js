@@ -1,6 +1,4 @@
 ThemeForge.accessibility = {
-  lastTrigger: null,
-
   checks: [
     {
       name: "Text on surface",
@@ -69,61 +67,32 @@ ThemeForge.accessibility = {
       this.openReport();
     });
 
-    document.querySelectorAll("[data-close-accessibility-modal]").forEach((button) => {
-      button.addEventListener("click", () => {
-        this.closeReport();
-      });
-    });
-
-    document.querySelector("#accessibilityModalLayer")?.addEventListener("click", (event) => {
-      if (event.target.id === "accessibilityModalLayer") {
-        this.closeReport();
-      }
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
-        this.closeReport();
-      }
-    });
-
     this.updateScoreBadge();
   },
 
   openReport() {
-    const modalLayer = document.querySelector("#accessibilityModalLayer");
-    const closeButton = modalLayer?.querySelector("[data-close-accessibility-modal]");
+    const closeButton = document.createElement("button");
 
-    if (!modalLayer) return;
+    closeButton.type = "button";
+    closeButton.textContent = "Close";
+    closeButton.addEventListener("click", () => {
+      ThemeForge.appModal.close();
+    });
 
-    this.lastTrigger = document.activeElement;
-    this.renderReport();
-
-    modalLayer.hidden = false;
-    closeButton?.focus();
+    ThemeForge.appModal.open({
+      eyebrow: "Theme audit",
+      title: "Accessibility Report",
+      body: this.createReportContent(),
+      footer: [closeButton],
+      initialFocusElement: closeButton,
+      modalClass: "app-accessibility-modal",
+    });
   },
 
-  closeReport() {
-    const modalLayer = document.querySelector("#accessibilityModalLayer");
-
-    if (!modalLayer || modalLayer.hidden) return;
-
-    modalLayer.hidden = true;
-
-    if (this.lastTrigger) {
-      this.lastTrigger.focus();
-      this.lastTrigger = null;
-    }
-  },
-
-  renderReport() {
-    const reportContent = document.querySelector("#accessibilityReportContent");
+  createReportContent() {
+    const reportContent = document.createElement("div");
     const results = this.getContrastResults();
     const score = this.getScore(results);
-
-    if (!reportContent) return;
-
-    reportContent.innerHTML = "";
 
     const summary = document.createElement("section");
     summary.className = "accessibility-summary";
@@ -144,6 +113,8 @@ ThemeForge.accessibility = {
     });
 
     reportContent.append(summary, list);
+
+    return reportContent;
   },
 
   createResultCard(result) {

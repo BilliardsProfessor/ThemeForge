@@ -11,6 +11,7 @@
 
   <script src="js/color-utils.js" defer></script>
   <script src="js/theme-state.js" defer></script>
+  <script src="js/app-modal.js" defer></script>
   <script src="js/color-editor.js" defer></script>
   <script src="js/history.js" defer></script>
   <script src="js/export.js" defer></script>
@@ -735,28 +736,22 @@
       </section>
     </section>
   </main>
-  <div class="app-modal-layer" id="accessibilityModalLayer" hidden>
-    <div class="app-modal app-accessibility-modal" role="dialog" aria-modal="true"
-      aria-labelledby="accessibilityModalTitle">
+  <div class="app-modal-layer" id="appModalLayer" hidden>
+    <div class="app-modal" id="appModal" role="dialog" aria-modal="true" aria-labelledby="appModalTitle">
       <header class="app-modal-header">
         <div>
-          <p class="app-modal-eyebrow">Theme audit</p>
-          <h2 id="accessibilityModalTitle">Accessibility Report</h2>
+          <p class="app-modal-eyebrow" id="appModalEyebrow"></p>
+          <h2 id="appModalTitle"></h2>
         </div>
 
-        <button type="button" class="app-modal-close" data-close-accessibility-modal
-          aria-label="Close accessibility report">
+        <button type="button" class="app-modal-close" data-app-modal-close aria-label="Close dialog">
           ×
         </button>
       </header>
 
-      <div class="app-modal-body" id="accessibilityReportContent"></div>
+      <div class="app-modal-body" id="appModalBody"></div>
 
-      <footer class="app-modal-footer">
-        <button type="button" data-close-accessibility-modal>
-          Close
-        </button>
-      </footer>
+      <footer class="app-modal-footer" id="appModalFooter"></footer>
     </div>
   </div>
 </body>
