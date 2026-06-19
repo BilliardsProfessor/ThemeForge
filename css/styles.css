@@ -199,6 +199,10 @@ button {
   line-height: 1;
 }
 
+.app-modal-close .fa-solid {
+  pointer-events: none;
+}
+
 .app-modal-close:hover {
   background: rgb(239 68 68 / 0.22);
 }
