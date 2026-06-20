@@ -1,7 +1,9 @@
 :root {
   --app-header-height: 72px;
   --control-panel-width: 300px;
-  --preview-width: 1200px;
+  --drawer-tab-width: 2.75rem;
+  --left-drawer-peek-width: 3.5rem;
+  --preview-width: 900px;
   --workbench-gutter: clamp(1rem, 2vw, 2rem);
 
   --color-primary: #2563eb;
@@ -377,20 +379,111 @@ button {
   line-height: 1.5;
 }
 
+body {
+  --left-drawer-x: 0px;
+  --left-drawer-tab-left: var(--control-panel-width);
+}
+
+body[data-left-drawer-state="peek"] {
+  --left-drawer-x: calc(var(--left-drawer-peek-width) - var(--control-panel-width));
+  --left-drawer-tab-left: var(--left-drawer-peek-width);
+}
+
+body[data-left-drawer-state="closed"] {
+  --left-drawer-x: calc(var(--control-panel-width) * -1);
+  --left-drawer-tab-left: 0px;
+}
+
 .app-shell {
   display: grid;
-  grid-template-columns: var(--control-panel-width) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   height: calc(100vh - var(--app-header-height));
   margin-top: var(--app-header-height);
   overflow: hidden;
 }
 
 .control-panel {
-  min-height: 0;
+  position: fixed;
+  top: var(--app-header-height);
+  bottom: 0;
+  left: 0;
+  z-index: 40;
+  width: var(--control-panel-width);
+  min-width: var(--control-panel-width);
   padding: var(--space-2);
   border-right: var(--border-width) solid var(--color-border);
   background: color-mix(in srgb, var(--color-surface), var(--color-background) 35%);
+  box-shadow: var(--shadow-soft);
   overflow: auto;
+  transform: translateX(var(--left-drawer-x));
+  transition: transform 180ms ease;
+}
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+}
+
+.drawer-title {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.drawer-close {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-muted);
+}
+
+.drawer-close:hover,
+.drawer-close:focus-visible {
+  border-color: var(--color-primary);
+  color: var(--color-text);
+}
+
+.drawer-close .icon {
+  pointer-events: none;
+}
+
+.drawer-tab {
+  position: fixed;
+  top: calc(var(--app-header-height) + var(--space-2));
+  left: var(--left-drawer-tab-left);
+  z-index: 45;
+  display: grid;
+  place-items: center;
+  width: var(--drawer-tab-width);
+  min-height: 7rem;
+  padding: 0.75rem 0.35rem;
+  border: var(--border-width) solid var(--color-border);
+  border-left: 0;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-soft);
+  transition: left 180ms ease;
+}
+
+.drawer-tab:hover,
+.drawer-tab:focus-visible {
+  border-color: var(--color-primary);
+}
+
+.drawer-tab-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .control-card {
@@ -470,6 +563,7 @@ button {
 .preview-area {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
+  height: 100%;
   gap: var(--space-2);
   min-width: 0;
   min-height: 0;
@@ -588,11 +682,6 @@ a {
     display: none;
   }
 
-  .app-shell {
-    grid-template-columns: var(--control-panel-width) minmax(0, 1fr);
-    height: calc(100vh - var(--app-header-height));
-  }
-
   .preview-panel {
     padding: var(--space-3);
   }
@@ -609,7 +698,7 @@ a {
   grid-template-columns: 1fr auto;
   grid-template-areas:
     "name swatch"
-    "value swatch";
+    "value value";
   align-items: center;
   gap: 0.35rem 0.75rem;
   width: 100%;
@@ -636,9 +725,9 @@ a {
   grid-area: swatch;
   justify-self: end;
   width: 3rem;
-  height: 2rem;
+  height: 1rem;
   border: 1px solid #94a3b8;
-  border-radius: 20%;
+  border-radius: 999px;
 }
 
 .color-token-value {
@@ -845,6 +934,8 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .control-panel,
+  .drawer-tab,
   .preview-tabs::before,
   .color-group-tabs::before,
   .segmented-control::before {

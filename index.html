@@ -18,10 +18,11 @@
   <script src="js/accessibility.js" defer></script>
   <script src="js/randomizer.js" defer></script>
   <script src="js/preview.js" defer></script>
+  <script src="js/drawers.js" defer></script>
   <script src="js/app.js" defer></script>
 </head>
 
-<body>
+<body data-left-drawer-state="open">
   <header class="app-header">
     <div>
       <h1>Theme Forge</h1>
@@ -49,7 +50,21 @@
   </header>
 
   <main class="app-shell">
-    <aside class="control-panel" aria-label="Theme controls">
+    <button type="button" class="drawer-tab drawer-tab-left" data-drawer-tab="left" aria-controls="leftDrawerPanel"
+      aria-expanded="true" aria-label="Collapse controls drawer">
+      <span class="drawer-tab-text">Controls</span>
+    </button>
+    <aside class="control-panel drawer drawer-left" id="leftDrawerPanel" aria-label="Theme controls">
+
+      <div class="drawer-header">
+        <h2 class="drawer-title">Controls</h2>
+
+        <button type="button" class="drawer-close" data-drawer-close="left" aria-label="Close controls drawer">
+          <svg class="icon icon-x-mark" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+            <path d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
       <details class="control-card" open>
         <summary>
           <span class="control-card-title">Colors</span>
