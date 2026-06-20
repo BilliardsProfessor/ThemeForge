@@ -19,10 +19,11 @@
   <script src="js/randomizer.js" defer></script>
   <script src="js/preview.js" defer></script>
   <script src="js/drawers.js" defer></script>
+  <script src="js/full-preview.js" defer></script>
   <script src="js/app.js" defer></script>
 </head>
 
-<body data-left-drawer-state="open">
+<body data-left-drawer-state="open" data-preview-mode="workbench">
   <header class="app-header">
     <div>
       <h1>Theme Forge</h1>
@@ -33,6 +34,7 @@
       <button type="button" id="undoBtn">Undo</button>
       <button type="button" id="redoBtn">Redo</button>
       <button type="button" id="randomizeBtn">Randomize</button>
+      <button type="button" id="fullPreviewBtn">Full Preview</button>
       <div class="export-menu" data-export-menu>
         <button type="button" id="exportMenuBtn" aria-haspopup="true" aria-expanded="false">
           Export
@@ -763,6 +765,12 @@
       </section>
     </section>
   </main>
+
+  <button type="button" class="restore-workbench-button" id="restoreWorkbenchBtn" title="ESC to restore"
+    aria-label="Restore workbench. ESC also works." hidden>
+    Restore
+  </button>
+
   <div class="app-modal-layer" id="appModalLayer" hidden>
     <div class="app-modal" id="appModal" role="dialog" aria-modal="true" aria-labelledby="appModalTitle">
       <header class="app-modal-header">

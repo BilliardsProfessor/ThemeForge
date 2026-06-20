@@ -644,6 +644,65 @@ body[data-left-drawer-state="closed"] {
     0 0 0 1px rgb(255 255 255 / 0.65);
 }
 
+.restore-workbench-button {
+  position: fixed;
+  top: var(--space-2);
+  right: var(--space-2);
+  z-index: 80;
+  border: var(--border-width) solid color-mix(in srgb, var(--color-border), transparent 25%);
+  border-radius: var(--radius);
+  padding: 0.55rem 0.8rem;
+  background: color-mix(in srgb, var(--color-surface), transparent 35%);
+  color: color-mix(in srgb, var(--color-text), transparent 15%);
+  box-shadow: var(--shadow-soft);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-0.25rem);
+  transition:
+    opacity 500ms ease,
+    transform 500ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.restore-workbench-button.is-visible {
+  opacity: 0.45;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.restore-workbench-button:hover,
+.restore-workbench-button:focus-visible {
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-surface), transparent 12%);
+  color: var(--color-text);
+  opacity: 1;
+}
+
+body[data-preview-mode="full"] .app-header,
+body[data-preview-mode="full"] .control-panel,
+body[data-preview-mode="full"] .drawer-tab,
+body[data-preview-mode="full"] .preview-tabs {
+  display: none;
+}
+
+body[data-preview-mode="full"] .app-shell {
+  height: 100vh;
+  margin-top: 0;
+}
+
+body[data-preview-mode="full"] .preview-area {
+  grid-template-rows: minmax(0, 1fr);
+  height: 100vh;
+  padding: var(--workbench-gutter);
+}
+
+body[data-preview-mode="full"] .preview-panel {
+  width: min(var(--preview-width), 100%);
+  max-height: 100%;
+}
+
 .primary-button {
   background: var(--color-primary);
   border-color: var(--color-primary);
@@ -936,6 +995,7 @@ a {
 @media (prefers-reduced-motion: reduce) {
   .control-panel,
   .drawer-tab,
+  .restore-workbench-button,
   .preview-tabs::before,
   .color-group-tabs::before,
   .segmented-control::before {
