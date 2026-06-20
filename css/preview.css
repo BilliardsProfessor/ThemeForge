@@ -462,6 +462,10 @@
   line-height: 1;
 }
 
+.preview-modal-close .icon {
+  pointer-events: none;
+}
+
 .preview-modal-close,
 .beacon-dialog-close {
   border-color: color-mix(in srgb, var(--color-danger), transparent 50%);
