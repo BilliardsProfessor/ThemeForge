@@ -2,3 +2,9 @@
 .DS_Store
 Thumbs.db
 export-diff.txt
+
+# Patch files
+*.patch
+
+# Zip files in the root directory
+/*.zip
