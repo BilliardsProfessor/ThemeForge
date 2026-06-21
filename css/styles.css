@@ -1033,9 +1033,8 @@ body[data-preview-mode="full"] .preview-area {
 
 .preview-panel {
   flex: 1 1 auto;
-  width: min(var(--preview-width), 100%);
+  width: 100%;
   min-height: 0;
-  align-self: center;
   overflow: auto;
   padding: var(--space-4);
   background: var(--color-surface);
@@ -1045,6 +1044,77 @@ body[data-preview-mode="full"] .preview-area {
     0 24px 60px rgb(15 23 42 / 0.14),
     0 0 0 1px rgb(255 255 255 / 0.65);
   transition: width var(--preview-width-transition);
+}
+
+.preview-resize-frame {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: min(var(--preview-width), 100%);
+  min-width: 0;
+  align-self: center;
+  flex: 1 1 auto;
+  min-height: 0;
+  transition: width var(--preview-width-transition);
+}
+
+.preview-resize-frame .preview-panel {
+  width: 100%;
+}
+
+.preview-resize-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 5;
+  display: none;
+  width: 1rem;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: ew-resize;
+}
+
+.preview-resize-handle::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 0.25rem;
+  height: 3rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-primary), transparent 35%);
+  opacity: 0.45;
+  transform: translateY(-50%);
+  transition:
+    opacity 160ms ease,
+    background-color 160ms ease;
+}
+
+.preview-resize-handle-left {
+  left: -0.5rem;
+}
+
+.preview-resize-handle-left::before {
+  left: 0.35rem;
+}
+
+.preview-resize-handle-right {
+  right: -0.5rem;
+}
+
+.preview-resize-handle-right::before {
+  right: 0.35rem;
+}
+
+.preview-resize-handle:hover::before,
+.preview-resize-handle:focus-visible::before,
+body.is-resizing-preview .preview-resize-handle::before {
+  opacity: 1;
+  background: var(--color-primary);
+}
+
+.preview-resize-frame .preview-resize-handle {
+  display: block;
 }
 
 .restore-workbench-button {
@@ -1100,7 +1170,7 @@ body[data-preview-mode="full"] .preview-area {
 }
 
 body[data-preview-mode="full"] .preview-panel {
-  width: min(var(--preview-width), 100%);
+  width: 100%;
   max-height: 100%;
 }
 

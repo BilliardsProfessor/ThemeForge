@@ -6,6 +6,7 @@
   const previewCustomToolbar = document.getElementById("previewCustomToolbar");
   const previewCustomWidthInput = document.getElementById("previewCustomWidthInput");
   const previewCustomResetBtn = document.getElementById("previewCustomResetBtn");
+  const previewResizeHandles = document.querySelectorAll("[data-preview-resize-handle]");
 
   const minCustomWidth = 320;
 
@@ -14,6 +15,7 @@
   }
 
   const root = document.documentElement;
+  const body = document.body;
   const rootStyles = window.getComputedStyle(root);
   const desktopWidth = rootStyles.getPropertyValue("--preview-width").trim() || "900px";
   const desktopWidthValue = parseWidthValue(desktopWidth) || 900;
@@ -24,6 +26,8 @@
     mobile: "390px",
     fluid: "100%",
   };
+
+  let activeResize = null;
 
   function parseWidthValue(value) {
     const numericValue = Number.parseInt(String(value).replace("px", ""), 10);
@@ -148,6 +152,7 @@
     const nextSizeName = sizeName === "custom" || Object.prototype.hasOwnProperty.call(previewSizes, sizeName) ? sizeName : "desktop";
 
     previewSizeSelect.value = nextSizeName;
+    body.dataset.previewSize = nextSizeName;
     window.localStorage.setItem(previewSizeStorageKey, nextSizeName);
 
     if (nextSizeName === "custom") {
@@ -160,6 +165,52 @@
 
     showCustomToolbar(false);
     setPreviewWidth(previewSizes[nextSizeName]);
+  }
+
+  function beginPreviewResize(event) {
+    const handle = event.currentTarget;
+    const side = handle.dataset.previewResizeHandle;
+    const startWidth = getCurrentRenderedPreviewWidth();
+
+    if (previewSizeSelect.value !== "custom") {
+      window.localStorage.setItem(customWidthStorageKey, String(startWidth));
+      setPreviewSize("custom");
+    }
+
+    activeResize = {
+      side,
+      startX: event.clientX,
+      startWidth,
+    };
+
+    body.classList.add("is-resizing-preview");
+    handle.setPointerCapture(event.pointerId);
+    event.preventDefault();
+  }
+
+  function updatePreviewResize(event) {
+    if (!activeResize) {
+      return;
+    }
+
+    const deltaX = event.clientX - activeResize.startX;
+    const widthDelta = activeResize.side === "left" ? deltaX * -2 : deltaX * 2;
+    const nextWidth = activeResize.startWidth + widthDelta;
+
+    setCustomWidth(nextWidth);
+  }
+
+  function endPreviewResize(event) {
+    if (!activeResize) {
+      return;
+    }
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+
+    activeResize = null;
+    body.classList.remove("is-resizing-preview");
   }
 
   previewSizeSelect.addEventListener("change", function () {
@@ -187,6 +238,13 @@
       setCustomWidth(desktopWidthValue);
     });
   }
+
+  previewResizeHandles.forEach(function (handle) {
+    handle.addEventListener("pointerdown", beginPreviewResize);
+    handle.addEventListener("pointermove", updatePreviewResize);
+    handle.addEventListener("pointerup", endPreviewResize);
+    handle.addEventListener("pointercancel", endPreviewResize);
+  });
 
   window.addEventListener("resize", function () {
     if (previewSizeSelect.value !== "custom") {
