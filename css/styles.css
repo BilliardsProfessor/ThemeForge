@@ -1,8 +1,7 @@
 :root {
   --app-header-height: 72px;
   --control-panel-width: 300px;
-  --drawer-tab-width: 2.75rem;
-  --left-drawer-peek-width: 3.5rem;
+  --drawer-rail-width: 3.25rem;
   --preview-width: 900px;
   --workbench-gutter: clamp(1rem, 2vw, 2rem);
   --tooltip-offset: 0.65rem;
@@ -464,33 +463,90 @@ button {
   line-height: 1.5;
 }
 
-body {
-  --left-drawer-x: 0px;
-  --left-drawer-tab-left: var(--control-panel-width);
-}
-
-body[data-left-drawer-state="peek"] {
-  --left-drawer-x: calc(var(--left-drawer-peek-width) - var(--control-panel-width));
-  --left-drawer-tab-left: var(--left-drawer-peek-width);
-}
-
-body[data-left-drawer-state="closed"] {
-  --left-drawer-x: calc(var(--control-panel-width) * -1);
-  --left-drawer-tab-left: 0px;
-}
-
 .app-shell {
+  position: relative;
+  display: flex;
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
 }
 
+.drawer-rail {
+  position: relative;
+  z-index: 45;
+  display: flex;
+  flex: 0 0 var(--drawer-rail-width);
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  width: var(--drawer-rail-width);
+  min-width: var(--drawer-rail-width);
+  padding: 0.65rem 0.4rem;
+  border-right: var(--border-width) solid var(--color-border);
+  background: color-mix(in srgb, var(--color-surface), var(--color-background) 20%);
+  box-shadow: var(--shadow-soft);
+}
+
+.drawer-rail-button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border: var(--border-width) solid transparent;
+  border-radius: calc(var(--radius) * 0.8);
+  background: transparent;
+  color: var(--color-muted);
+  font-weight: 800;
+}
+
+.drawer-rail-button:hover,
+.drawer-rail-button:focus-visible {
+  border-color: color-mix(in srgb, var(--color-primary), transparent 55%);
+  background: color-mix(in srgb, var(--color-primary), transparent 88%);
+  color: var(--color-text);
+}
+
+.drawer-rail-home {
+  margin-bottom: 0.35rem;
+}
+
+.drawer-logo {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: calc(var(--radius) * 0.65);
+  background: var(--color-primary);
+  color: #ffffff;
+  font-size: 0.75rem;
+  letter-spacing: -0.05em;
+}
+
+.drawer-sidebar-icon {
+  display: none;
+}
+
+.drawer-rail-home:hover .drawer-logo,
+.drawer-rail-home:focus-visible .drawer-logo {
+  display: none;
+}
+
+.drawer-rail-home:hover .drawer-sidebar-icon,
+.drawer-rail-home:focus-visible .drawer-sidebar-icon {
+  display: block;
+}
+
+.drawer-rail-button .icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  pointer-events: none;
+}
+
 .control-panel {
-  position: fixed;
-  top: var(--app-header-height);
-  bottom: 0;
-  left: 0;
   z-index: 40;
+  display: flex;
+  flex-direction: column;
   width: var(--control-panel-width);
   min-width: var(--control-panel-width);
   padding: var(--space-2);
@@ -498,8 +554,39 @@ body[data-left-drawer-state="closed"] {
   background: color-mix(in srgb, var(--color-surface), var(--color-background) 35%);
   box-shadow: var(--shadow-soft);
   overflow: auto;
-  transform: translateX(var(--left-drawer-x));
-  transition: transform 180ms ease;
+  transition:
+    transform 180ms ease,
+    opacity 180ms ease;
+}
+
+body[data-left-drawer-state="collapsed"] .control-panel {
+  position: fixed;
+  top: var(--app-header-height);
+  bottom: 0;
+  left: var(--drawer-rail-width);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(calc(var(--control-panel-width) * -1));
+}
+
+body[data-left-drawer-state="temporary"] .control-panel {
+  position: fixed;
+  top: var(--app-header-height);
+  bottom: 0;
+  left: var(--drawer-rail-width);
+  opacity: 1;
+  transform: translateX(0);
+}
+
+body[data-left-drawer-state="pinned"] .control-panel {
+  position: relative;
+  top: auto;
+  bottom: auto;
+  left: auto;
+  flex: 0 0 var(--control-panel-width);
+  height: 100%;
+  opacity: 1;
+  transform: none;
 }
 
 .drawer-header {
@@ -515,57 +602,48 @@ body[data-left-drawer-state="closed"] {
   font-size: 1rem;
 }
 
-.drawer-close {
+.drawer-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.drawer-icon-button {
   display: inline-grid;
   place-items: center;
   width: 2rem;
   height: 2rem;
   border: var(--border-width) solid var(--color-border);
-  border-radius: 999px;
+  border-radius: calc(var(--radius) * 0.8);
   background: var(--color-surface);
   color: var(--color-muted);
 }
 
-.drawer-close:hover,
-.drawer-close:focus-visible {
+.drawer-icon-button:hover,
+.drawer-icon-button:focus-visible {
   border-color: var(--color-primary);
   color: var(--color-text);
 }
 
-.drawer-close .icon {
+.drawer-icon-button .icon {
+  width: 1.15rem;
+  height: 1.15rem;
   pointer-events: none;
 }
 
-.drawer-tab {
-  position: fixed;
-  top: calc(var(--app-header-height) + var(--space-2));
-  left: var(--left-drawer-tab-left);
-  z-index: 45;
-  display: grid;
-  place-items: center;
-  width: var(--drawer-tab-width);
-  min-height: 3.25rem;
-  padding: 0.75rem 0.35rem;
-  border: var(--border-width) solid var(--color-border);
-  border-left: 0;
-  border-radius: 0 var(--radius) var(--radius) 0;
-  background: var(--color-surface);
-  color: var(--color-text);
-  box-shadow: var(--shadow-soft);
-  transition: left 180ms ease;
+.drawer-unlock-icon {
+  display: none;
 }
 
-.drawer-tab:hover,
-.drawer-tab:focus-visible {
-  border-color: var(--color-primary);
+body[data-left-drawer-state="temporary"] .drawer-lock-icon {
+  display: none;
 }
 
-.drawer-tab .icon {
-  width: 1.35rem;
-  height: 1.35rem;
+body[data-left-drawer-state="temporary"] .drawer-unlock-icon {
+  display: block;
 }
 
-.has-tooltip:not(.drawer-tab):not(.restore-workbench-button) {
+.has-tooltip:not(.restore-workbench-button) {
   position: relative;
 }
 
@@ -961,7 +1039,7 @@ body[data-left-drawer-state="closed"] {
 
 body[data-preview-mode="full"] .app-header,
 body[data-preview-mode="full"] .control-panel,
-body[data-preview-mode="full"] .drawer-tab,
+body[data-preview-mode="full"] .drawer-rail,
 body[data-preview-mode="full"] .preview-tabs {
   display: none;
 }
@@ -1277,7 +1355,7 @@ a {
 
 @media (prefers-reduced-motion: reduce) {
   .control-panel,
-  .drawer-tab,
+  .drawer-rail-button,
   .restore-workbench-button,
   .has-tooltip::before,
   .has-tooltip::after,

@@ -24,7 +24,7 @@
   <script src="js/app.js" defer></script>
 </head>
 
-<body data-left-drawer-state="open" data-preview-mode="workbench">
+<body data-left-drawer-state="collapsed" data-preview-mode="workbench">
   <header class="app-header">
     <div class="app-title">
       <h1>Theme Forge</h1>
@@ -82,26 +82,64 @@
   </header>
 
   <main class="app-shell">
-    <button type="button" class="drawer-tab drawer-tab-left has-tooltip" data-drawer-tab="left" data-tooltip="Controls"
-      data-tooltip-position="right" aria-controls="leftDrawerPanel" aria-expanded="true"
-      aria-label="Collapse controls drawer">
-      <svg class="icon icon-adjustments-horizontal" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
-        <path
-          d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0M10.5 6a1.5 1.5 0 1 0-3 0M3.75 6H7.5m6 6h6.75m-6.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-6.75 0h6.75m6 6h6.75m-6.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-6.75 0h6.75" />
-      </svg>
-    </button>
+    <nav class="drawer-rail drawer-rail-left" aria-label="Theme Forge controls">
+      <button type="button" class="drawer-rail-button drawer-rail-home has-tooltip" data-drawer-open-pinned="left"
+        data-tooltip="Open controls" data-tooltip-position="right" aria-controls="leftDrawerPanel" aria-expanded="false"
+        aria-label="Open controls drawer">
+        <span class="drawer-logo" aria-hidden="true">TF</span>
+        <svg class="icon drawer-sidebar-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path
+            d="M4.5 5.25h15a1.5 1.5 0 0 1 1.5 1.5v10.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.25V6.75a1.5 1.5 0 0 1 1.5-1.5Z" />
+          <path d="M9 5.25v13.5" />
+        </svg>
+      </button>
+
+      <button type="button" class="drawer-rail-button has-tooltip" data-drawer-panel="colors" data-tooltip="Colors"
+        data-tooltip-position="right" aria-controls="leftDrawerPanel" aria-label="Open colors controls">
+        <span aria-hidden="true">🎨</span>
+      </button>
+
+      <button type="button" class="drawer-rail-button has-tooltip" data-drawer-panel="typography"
+        data-tooltip="Typography" data-tooltip-position="right" aria-controls="leftDrawerPanel"
+        aria-label="Open typography controls">
+        <span aria-hidden="true">Aa</span>
+      </button>
+
+      <button type="button" class="drawer-rail-button has-tooltip" data-drawer-panel="shape" data-tooltip="Shape"
+        data-tooltip-position="right" aria-controls="leftDrawerPanel" aria-label="Open shape controls">
+        <span aria-hidden="true">▢</span>
+      </button>
+    </nav>
+
     <aside class="control-panel drawer drawer-left" id="leftDrawerPanel" aria-label="Theme controls">
 
       <div class="drawer-header">
-        <h2 class="drawer-title">Controls</h2>
+        <h2 class="drawer-title">Theme Forge</h2>
 
-        <button type="button" class="drawer-close" data-drawer-close="left" aria-label="Close controls drawer">
-          <svg class="icon icon-x-mark" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
-            <path d="M6 18 18 6M6 6l12 12" />
-          </svg>
-        </button>
+        <div class="drawer-header-actions">
+          <button type="button" class="drawer-icon-button has-tooltip" data-drawer-mode-toggle="left"
+            data-tooltip="Unlock drawer" data-tooltip-position="bottom" aria-label="Unlock drawer">
+            <svg class="icon drawer-lock-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+              <rect x="5.25" y="10.5" width="13.5" height="9" rx="2" />
+              <path d="M8.25 10.5V8.25a3.75 3.75 0 0 1 7.5 0v2.25" />
+            </svg>
+            <svg class="icon drawer-unlock-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+              <rect x="5.25" y="10.5" width="13.5" height="9" rx="2" />
+              <path d="M8.25 10.5V8.25a3.75 3.75 0 0 1 6.45-2.6" />
+            </svg>
+          </button>
+
+          <button type="button" class="drawer-icon-button has-tooltip" data-drawer-close="left"
+            data-tooltip="Collapse drawer" data-tooltip-position="bottom" aria-label="Collapse controls drawer">
+            <svg class="icon icon-sidebar-left" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+              <path
+                d="M4.5 5.25h15a1.5 1.5 0 0 1 1.5 1.5v10.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.25V6.75a1.5 1.5 0 0 1 1.5-1.5Z" />
+              <path d="M9 5.25v13.5" />
+            </svg>
+          </button>
+        </div>
       </div>
-      <details class="control-card" open>
+      <details class="control-card" data-control-panel="colors" open>
         <summary>
           <span class="control-card-title">Colors</span>
         </summary>
@@ -276,7 +314,7 @@
           </div>
       </details>
 
-      <details class="control-card">
+      <details class="control-card" data-control-panel="typography">
         <summary>
           <span class="control-card-title">Typography</span>
         </summary>
@@ -292,7 +330,7 @@
         </label>
       </details>
 
-      <details class="control-card">
+      <details class="control-card" data-control-panel="shape">
         <summary>
           <span class="control-card-title">Shape</span>
         </summary>
@@ -339,7 +377,7 @@
       <section class="preview-panel">
         <div class="preview-tab-panel sample-page" data-preview-panel="page">
           <section class="sample-hero">
-            <p class="eyebrow">Theme Forge</p>
+            <p class="eyebrow">Control Panel</p>
 
             <h2>Forge themes worthy of warning beacons and questionable meetings.</h2>
 
