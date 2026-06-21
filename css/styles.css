@@ -561,6 +561,7 @@ button {
   background: color-mix(in srgb, var(--color-surface), var(--color-background) 35%);
   box-shadow: var(--shadow-soft);
   overflow: auto;
+  scrollbar-gutter: stable;
   transition:
     transform var(--drawer-transition),
     opacity var(--drawer-transition);
@@ -576,6 +577,10 @@ body[data-left-drawer-state="temporary"] .control-panel,
 body[data-left-drawer-state="pinned"] .control-panel {
   opacity: 1;
   transform: translateX(0);
+}
+
+body.drawer-is-initializing .app-shell {
+  visibility: hidden;
 }
 
 body.drawer-is-initializing .control-panel,
@@ -817,6 +822,28 @@ body[data-left-drawer-state="temporary"] .drawer-unlock-icon {
   border-end-start-radius: 0;
   border-end-end-radius: 0;
   background: #f8fafc;
+}
+
+.control-card-content {
+  overflow: visible;
+  opacity: 1;
+  transition:
+    height 260ms ease,
+    opacity 220ms ease;
+}
+
+.control-card.is-opening .control-card-content,
+.control-card.is-collapsing .control-card-content {
+  overflow: hidden;
+}
+
+.control-card.is-collapsing .control-card-content,
+.control-card:not([open]) .control-card-content {
+  opacity: 0;
+}
+
+body.drawer-is-initializing .control-card-content {
+  transition: none;
 }
 
 .control-card > summary:hover {

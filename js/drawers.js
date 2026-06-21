@@ -9,6 +9,7 @@
   const leftDrawerModeToggle = document.querySelector('[data-drawer-mode-toggle="left"]');
   const leftDrawerPanelButtons = document.querySelectorAll("[data-drawer-panel]");
   const leftControlPanels = document.querySelectorAll("[data-control-panel]");
+  const controlCardAnimationDuration = 260;
   const leftDrawerRail = document.querySelector(".drawer-rail-left");
 
   if (!leftDrawer || !leftDrawerPinnedOpen) {
@@ -62,13 +63,86 @@
     leftDrawerModeToggle.dataset.tooltip = "Lock drawer";
   }
 
+  function getControlCardContent(panel) {
+    return panel.querySelector(".control-card-content");
+  }
+
+  function openControlCard(panel) {
+    const content = getControlCardContent(panel);
+
+    if (!content) {
+      panel.open = true;
+      return;
+    }
+
+    if (panel.open && !panel.classList.contains("is-collapsing")) {
+      return;
+    }
+
+    panel.classList.remove("is-collapsing");
+    panel.classList.add("is-opening");
+    panel.open = true;
+
+    content.style.height = "0px";
+    content.style.opacity = "0";
+
+    requestAnimationFrame(function () {
+      content.style.height = content.scrollHeight + "px";
+      content.style.opacity = "1";
+    });
+
+    window.setTimeout(function () {
+      if (!panel.open) {
+        return;
+      }
+
+      panel.classList.remove("is-opening");
+      content.style.height = "";
+      content.style.opacity = "";
+    }, controlCardAnimationDuration);
+  }
+
+  function closeControlCard(panel) {
+    const content = getControlCardContent(panel);
+
+    if (!content) {
+      panel.open = false;
+      return;
+    }
+
+    if (!panel.open || panel.classList.contains("is-collapsing")) {
+      return;
+    }
+
+    panel.classList.add("is-collapsing");
+    content.style.height = content.scrollHeight + "px";
+    content.style.opacity = "1";
+
+    requestAnimationFrame(function () {
+      content.style.height = "0px";
+      content.style.opacity = "0";
+    });
+
+    window.setTimeout(function () {
+      panel.open = false;
+      panel.classList.remove("is-collapsing");
+      content.style.height = "";
+      content.style.opacity = "";
+    }, controlCardAnimationDuration);
+  }
+
   function activatePanel(panelName) {
     if (!panelName) {
       return;
     }
 
     leftControlPanels.forEach(function (panel) {
-      panel.open = panel.dataset.controlPanel === panelName;
+      if (panel.dataset.controlPanel === panelName) {
+        openControlCard(panel);
+        return;
+      }
+
+      closeControlCard(panel);
     });
   }
 
@@ -143,6 +217,25 @@
     closeDrawer();
   }
 
+  leftControlPanels.forEach(function (panel) {
+    const summary = panel.querySelector("summary");
+
+    if (!summary) {
+      return;
+    }
+
+    summary.addEventListener("click", function (event) {
+      event.preventDefault();
+
+      if (panel.open) {
+        closeControlCard(panel);
+        return;
+      }
+
+      openControlCard(panel);
+    });
+  });
+
   leftDrawerPinnedOpen.addEventListener("click", togglePinnedDrawer);
 
   leftDrawerPanelButtons.forEach(function (button) {
@@ -165,6 +258,8 @@
   setLeftDrawerState(getLeftDrawerState());
 
   requestAnimationFrame(function () {
-    body.classList.remove("drawer-is-initializing");
+    requestAnimationFrame(function () {
+      body.classList.remove("drawer-is-initializing");
+    });
   });
 })();

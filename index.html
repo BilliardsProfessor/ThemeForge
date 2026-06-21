@@ -147,174 +147,174 @@
         <summary>
           <span class="control-card-title">Colors</span>
         </summary>
-
-        <div class="color-group-tabs" aria-label="Color token groups" data-active-group="core">
-          <button type="button" class="active" data-color-group-tab="core">Core</button>
-          <button type="button" data-color-group-tab="states">States</button>
-          <button type="button" data-color-group-tab="text">Text</button>
-          <button type="button" data-color-group-tab="ui">UI</button>
-        </div>
-
-        <div class="color-token-list">
-
-          <div class="color-token-list">
-            <button type="button" class="color-token active" data-color-token="primary" data-color-group="core">
-              <span class="color-token-name">Primary</span>
-              <span class="color-token-swatch"></span>
-              <span class="color-token-value">#2563eb</span>
-            </button>
-
-            <button type="button" class="color-token" data-color-token="secondary" data-color-group="core">
-              <span class="color-token-name">Secondary</span>
-              <span class="color-token-swatch"></span>
-              <span class="color-token-value">#7c3aed</span>
-            </button>
-
-            <button type="button" class="color-token" data-color-token="background" data-color-group="core">
-              <span class="color-token-name">Background</span>
-              <span class="color-token-swatch"></span>
-              <span class="color-token-value">#f8fafc</span>
-            </button>
-
-            <button type="button" class="color-token" data-color-token="surface" data-color-group="core">
-              <span class="color-token-name">Surface</span>
-              <span class="color-token-swatch"></span>
-              <span class="color-token-value">#ffffff</span>
-            </button>
-
-            <button type="button" class="color-token" data-color-token="success" data-color-group="states">
-              <span class="color-token-name">Success</span>
-              <span class="color-token-swatch"></span>
-              <span class="color-token-value">#22c55e</span>
-            </button>
-
-            <button type="button" class="color-token" data-color-token="warning" data-color-group="states">
-              <span class="color-token-name">Warning</span>
-              <span class="color-token-swatch"></span>
-              <span class="color-token-value">#f59e0b</span>
-            </button>
-
-            <button type="button" class="color-token" data-color-token="danger" data-color-group="states">
-              <span class="color-token-name">Danger</span>
-              <span class="color-token-swatch"></span>
-              <span class="color-token-value">#ef4444</span>
-            </button>
-
-            <button type="button" class="color-token" data-color-token="info" data-color-group="states">
-              <span class="color-token-name">Info</span>
-              <span class="color-token-swatch"></span>
-              <span class="color-token-value">#0ea5e9</span>
-            </button>
-
-            <button type="button" class="color-token" data-color-token="text" data-color-group="text">
-              <span class="color-token-name">Text</span>
-              <span class="color-token-swatch"></span>
-              <span class="color-token-value">#0f172a</span>
-            </button>
-
-            <button type="button" class="color-token" data-color-token="mutedText" data-color-group="text">
-              <span class="color-token-name">Muted Text</span>
-              <span class="color-token-swatch"></span>
-              <span class="color-token-value">#64748b</span>
-            </button>
-
-            <button type="button" class="color-token" data-color-token="link" data-color-group="text">
-              <span class="color-token-name">Link</span>
-              <span class="color-token-swatch"></span>
-              <span class="color-token-value">#2563eb</span>
-            </button>
-
-            <button type="button" class="color-token" data-color-token="border" data-color-group="ui">
-              <span class="color-token-name">Border</span>
-              <span class="color-token-swatch"></span>
-              <span class="color-token-value">#e2e8f0</span>
-            </button>
-
-            <button type="button" class="color-token" data-color-token="focus" data-color-group="ui">
-              <span class="color-token-name">Focus</span>
-              <span class="color-token-swatch"></span>
-              <span class="color-token-value">#2563eb</span>
-            </button>
-
-            <button type="button" class="color-token" data-color-token="overlay" data-color-group="ui">
-              <span class="color-token-name">Overlay</span>
-              <span class="color-token-swatch"></span>
-              <span class="color-token-value">hsl(222 47% 11% / 0.55)</span>
-            </button>
-
-            <button type="button" class="color-token" data-color-token="shadowTint" data-color-group="ui">
-              <span class="color-token-name">Shadow Tint</span>
-              <span class="color-token-swatch"></span>
-              <span class="color-token-value">hsl(222 47% 11% / 0.08)</span>
-            </button>
+        <div class="control-card-content">
+          <div class="color-group-tabs" aria-label="Color token groups" data-active-group="core">
+            <button type="button" class="active" data-color-group-tab="core">Core</button>
+            <button type="button" data-color-group-tab="states">States</button>
+            <button type="button" data-color-group-tab="text">Text</button>
+            <button type="button" data-color-group-tab="ui">UI</button>
           </div>
 
-          <div class="color-editor">
-            <h3>Editing: <span id="activeColorName">Primary</span></h3>
+          <div class="color-token-list">
 
-            <input type="color" id="colorNativePicker" value="#2563eb" />
-
-            <div class="segmented-control" aria-label="Color format" data-active-format="hex">
-              <button type="button" class="active" data-color-format="hex">
-                HEX
+            <div class="color-token-list">
+              <button type="button" class="color-token active" data-color-token="primary" data-color-group="core">
+                <span class="color-token-name">Primary</span>
+                <span class="color-token-swatch"></span>
+                <span class="color-token-value">#2563eb</span>
               </button>
-              <button type="button" data-color-format="rgb">RGB</button>
-              <button type="button" data-color-format="hsl">HSL</button>
+
+              <button type="button" class="color-token" data-color-token="secondary" data-color-group="core">
+                <span class="color-token-name">Secondary</span>
+                <span class="color-token-swatch"></span>
+                <span class="color-token-value">#7c3aed</span>
+              </button>
+
+              <button type="button" class="color-token" data-color-token="background" data-color-group="core">
+                <span class="color-token-name">Background</span>
+                <span class="color-token-swatch"></span>
+                <span class="color-token-value">#f8fafc</span>
+              </button>
+
+              <button type="button" class="color-token" data-color-token="surface" data-color-group="core">
+                <span class="color-token-name">Surface</span>
+                <span class="color-token-swatch"></span>
+                <span class="color-token-value">#ffffff</span>
+              </button>
+
+              <button type="button" class="color-token" data-color-token="success" data-color-group="states">
+                <span class="color-token-name">Success</span>
+                <span class="color-token-swatch"></span>
+                <span class="color-token-value">#22c55e</span>
+              </button>
+
+              <button type="button" class="color-token" data-color-token="warning" data-color-group="states">
+                <span class="color-token-name">Warning</span>
+                <span class="color-token-swatch"></span>
+                <span class="color-token-value">#f59e0b</span>
+              </button>
+
+              <button type="button" class="color-token" data-color-token="danger" data-color-group="states">
+                <span class="color-token-name">Danger</span>
+                <span class="color-token-swatch"></span>
+                <span class="color-token-value">#ef4444</span>
+              </button>
+
+              <button type="button" class="color-token" data-color-token="info" data-color-group="states">
+                <span class="color-token-name">Info</span>
+                <span class="color-token-swatch"></span>
+                <span class="color-token-value">#0ea5e9</span>
+              </button>
+
+              <button type="button" class="color-token" data-color-token="text" data-color-group="text">
+                <span class="color-token-name">Text</span>
+                <span class="color-token-swatch"></span>
+                <span class="color-token-value">#0f172a</span>
+              </button>
+
+              <button type="button" class="color-token" data-color-token="mutedText" data-color-group="text">
+                <span class="color-token-name">Muted Text</span>
+                <span class="color-token-swatch"></span>
+                <span class="color-token-value">#64748b</span>
+              </button>
+
+              <button type="button" class="color-token" data-color-token="link" data-color-group="text">
+                <span class="color-token-name">Link</span>
+                <span class="color-token-swatch"></span>
+                <span class="color-token-value">#2563eb</span>
+              </button>
+
+              <button type="button" class="color-token" data-color-token="border" data-color-group="ui">
+                <span class="color-token-name">Border</span>
+                <span class="color-token-swatch"></span>
+                <span class="color-token-value">#e2e8f0</span>
+              </button>
+
+              <button type="button" class="color-token" data-color-token="focus" data-color-group="ui">
+                <span class="color-token-name">Focus</span>
+                <span class="color-token-swatch"></span>
+                <span class="color-token-value">#2563eb</span>
+              </button>
+
+              <button type="button" class="color-token" data-color-token="overlay" data-color-group="ui">
+                <span class="color-token-name">Overlay</span>
+                <span class="color-token-swatch"></span>
+                <span class="color-token-value">hsl(222 47% 11% / 0.55)</span>
+              </button>
+
+              <button type="button" class="color-token" data-color-token="shadowTint" data-color-group="ui">
+                <span class="color-token-name">Shadow Tint</span>
+                <span class="color-token-swatch"></span>
+                <span class="color-token-value">hsl(222 47% 11% / 0.08)</span>
+              </button>
             </div>
 
-            <div data-format-panel="hex">
-              <label>
-                HEX
-                <input type="text" id="hexValue" value="#2563eb" />
+            <div class="color-editor">
+              <h3>Editing: <span id="activeColorName">Primary</span></h3>
+
+              <input type="color" id="colorNativePicker" value="#2563eb" />
+
+              <div class="segmented-control" aria-label="Color format" data-active-format="hex">
+                <button type="button" class="active" data-color-format="hex">
+                  HEX
+                </button>
+                <button type="button" data-color-format="rgb">RGB</button>
+                <button type="button" data-color-format="hsl">HSL</button>
+              </div>
+
+              <div data-format-panel="hex">
+                <label>
+                  HEX
+                  <input type="text" id="hexValue" value="#2563eb" />
+                </label>
+              </div>
+
+              <div data-format-panel="rgb" hidden>
+                <label>
+                  R
+                  <input type="range" id="rgbR" min="0" max="255" value="37" data-rgb-channel="r" />
+                  <input type="number" id="rgbRNumber" min="0" max="255" value="37" data-rgb-channel="r" />
+                </label>
+
+                <label>
+                  G
+                  <input type="range" id="rgbG" min="0" max="255" value="99" data-rgb-channel="g" />
+                  <input type="number" id="rgbGNumber" min="0" max="255" value="99" data-rgb-channel="g" />
+                </label>
+
+                <label>
+                  B
+                  <input type="range" id="rgbB" min="0" max="255" value="235" data-rgb-channel="b" />
+                  <input type="number" id="rgbBNumber" min="0" max="255" value="235" data-rgb-channel="b" />
+                </label>
+              </div>
+
+              <div data-format-panel="hsl" hidden>
+                <label>
+                  H
+                  <input type="range" id="hslH" min="0" max="359" value="217" data-hsl-channel="h" />
+                  <input type="number" id="hslHNumber" min="0" max="359" value="217" data-hsl-channel="h" />
+                </label>
+
+                <label>
+                  S
+                  <input type="range" id="hslS" min="0" max="100" value="91" data-hsl-channel="s" />
+                  <input type="number" id="hslSNumber" min="0" max="100" value="91" data-hsl-channel="s" />
+                </label>
+
+                <label>
+                  L
+                  <input type="range" id="hslL" min="0" max="100" value="60" data-hsl-channel="l" />
+                  <input type="number" id="hslLNumber" min="0" max="100" value="60" data-hsl-channel="l" />
+                </label>
+              </div>
+
+              <label class="alpha-control">
+                A%
+                <input type="range" id="alphaValue" min="0" max="100" step="1" value="100">
+                <input type="number" id="alphaNumber" min="0" max="100" step="1" value="100">
               </label>
             </div>
-
-            <div data-format-panel="rgb" hidden>
-              <label>
-                R
-                <input type="range" id="rgbR" min="0" max="255" value="37" data-rgb-channel="r" />
-                <input type="number" id="rgbRNumber" min="0" max="255" value="37" data-rgb-channel="r" />
-              </label>
-
-              <label>
-                G
-                <input type="range" id="rgbG" min="0" max="255" value="99" data-rgb-channel="g" />
-                <input type="number" id="rgbGNumber" min="0" max="255" value="99" data-rgb-channel="g" />
-              </label>
-
-              <label>
-                B
-                <input type="range" id="rgbB" min="0" max="255" value="235" data-rgb-channel="b" />
-                <input type="number" id="rgbBNumber" min="0" max="255" value="235" data-rgb-channel="b" />
-              </label>
-            </div>
-
-            <div data-format-panel="hsl" hidden>
-              <label>
-                H
-                <input type="range" id="hslH" min="0" max="359" value="217" data-hsl-channel="h" />
-                <input type="number" id="hslHNumber" min="0" max="359" value="217" data-hsl-channel="h" />
-              </label>
-
-              <label>
-                S
-                <input type="range" id="hslS" min="0" max="100" value="91" data-hsl-channel="s" />
-                <input type="number" id="hslSNumber" min="0" max="100" value="91" data-hsl-channel="s" />
-              </label>
-
-              <label>
-                L
-                <input type="range" id="hslL" min="0" max="100" value="60" data-hsl-channel="l" />
-                <input type="number" id="hslLNumber" min="0" max="100" value="60" data-hsl-channel="l" />
-              </label>
-            </div>
-
-            <label class="alpha-control">
-              A%
-              <input type="range" id="alphaValue" min="0" max="100" step="1" value="100">
-              <input type="number" id="alphaNumber" min="0" max="100" step="1" value="100">
-            </label>
-
           </div>
       </details>
 
@@ -322,37 +322,40 @@
         <summary>
           <span class="control-card-title">Typography</span>
         </summary>
+        <div class="control-card-content">
 
-        <label>
-          Base size
-          <input type="range" id="baseFontSize" min="14" max="22" value="16" />
-        </label>
+          <label>
+            Base size
+            <input type="range" id="baseFontSize" min="14" max="22" value="16" />
+          </label>
 
-        <label>
-          Heading scale
-          <input type="range" id="headingScale" min="110" max="180" value="135" />
-        </label>
+          <label>
+            Heading scale
+            <input type="range" id="headingScale" min="110" max="180" value="135" />
+          </label>
+        </div>
       </details>
 
       <details class="control-card" data-control-panel="shape">
         <summary>
           <span class="control-card-title">Shape</span>
         </summary>
+        <div class="control-card-content">
+          <label>
+            Border Radius
+            <input type="range" id="radiusControl" min="0" max="32" value="10" />
+          </label>
 
-        <label>
-          Border Radius
-          <input type="range" id="radiusControl" min="0" max="32" value="10" />
-        </label>
+          <label>
+            Border Width
+            <input type="range" id="borderWidthControl" min="0" max="10" value="1" />
+          </label>
 
-        <label>
-          Border Width
-          <input type="range" id="borderWidthControl" min="0" max="10" value="1" />
-        </label>
-
-        <label>
-          Overlay Blur
-          <input type="range" id="overlayBlurControl" min="0" max="10" value="2" />
-        </label>
+          <label>
+            Overlay Blur
+            <input type="range" id="overlayBlurControl" min="0" max="10" value="2" />
+          </label>
+        </div>
       </details>
     </aside>
 
