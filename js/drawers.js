@@ -1,6 +1,7 @@
 (function () {
   const drawerStates = new Set(["collapsed", "temporary", "pinned"]);
   const body = document.body;
+  const drawerStateStorageKey = "themeForge.leftDrawerState";
 
   const leftDrawer = document.getElementById("leftDrawerPanel");
   const leftDrawerPinnedOpen = document.querySelector('[data-drawer-open-pinned="left"]');
@@ -15,13 +16,18 @@
   }
 
   function getLeftDrawerState() {
-    const state = body.dataset.leftDrawerState;
+    const savedState = localStorage.getItem(drawerStateStorageKey);
+    const bodyState = body.dataset.leftDrawerState;
 
-    if (drawerStates.has(state)) {
-      return state;
+    if (drawerStates.has(savedState)) {
+      return savedState;
     }
 
-    return "collapsed";
+    if (drawerStates.has(bodyState)) {
+      return bodyState;
+    }
+
+    return "pinned";
   }
 
   function setLeftDrawerState(state) {
@@ -30,6 +36,7 @@
     const isPinned = nextState === "pinned";
 
     body.dataset.leftDrawerState = nextState;
+    localStorage.setItem(drawerStateStorageKey, nextState);
 
     leftDrawerPinnedOpen.setAttribute("aria-expanded", String(isOpen));
 
@@ -65,12 +72,26 @@
     });
   }
 
-  function openPinnedDrawer() {
-    setLeftDrawerState("pinned");
+  function togglePinnedDrawer() {
+    const currentState = getLeftDrawerState();
+
+    if (currentState === "collapsed") {
+      setLeftDrawerState("pinned");
+      return;
+    }
+
+    closeDrawer();
   }
 
-  function openTemporaryDrawer(panelName) {
+  function openPanelFromRail(panelName) {
+    const currentState = getLeftDrawerState();
+
     activatePanel(panelName);
+
+    if (currentState === "pinned") {
+      return;
+    }
+
     setLeftDrawerState("temporary");
   }
 
@@ -122,11 +143,11 @@
     closeDrawer();
   }
 
-  leftDrawerPinnedOpen.addEventListener("click", openPinnedDrawer);
+  leftDrawerPinnedOpen.addEventListener("click", togglePinnedDrawer);
 
   leftDrawerPanelButtons.forEach(function (button) {
     button.addEventListener("click", function () {
-      openTemporaryDrawer(button.dataset.drawerPanel);
+      openPanelFromRail(button.dataset.drawerPanel);
     });
   });
 
@@ -142,4 +163,8 @@
   document.addEventListener("keydown", handleDocumentKeydown);
 
   setLeftDrawerState(getLeftDrawerState());
+
+  requestAnimationFrame(function () {
+    body.classList.remove("drawer-is-initializing");
+  });
 })();

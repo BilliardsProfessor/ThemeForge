@@ -7,6 +7,9 @@
   --tooltip-offset: 0.65rem;
   --tooltip-delay: 1s;
   --preview-width-transition: 180ms ease;
+  --drawer-transition: 500ms ease;
+  --drawer-lock-accent: var(--color-secondary);
+  --drawer-sidebar-accent: var(--color-primary);
 
   --color-primary: #2563eb;
   --color-secondary: #7c3aed;
@@ -544,6 +547,10 @@ button {
 }
 
 .control-panel {
+  position: fixed;
+  top: var(--app-header-height);
+  bottom: 0;
+  left: var(--drawer-rail-width);
   z-index: 40;
   display: flex;
   flex-direction: column;
@@ -555,38 +562,25 @@ button {
   box-shadow: var(--shadow-soft);
   overflow: auto;
   transition:
-    transform 180ms ease,
-    opacity 180ms ease;
+    transform var(--drawer-transition),
+    opacity var(--drawer-transition);
 }
 
 body[data-left-drawer-state="collapsed"] .control-panel {
-  position: fixed;
-  top: var(--app-header-height);
-  bottom: 0;
-  left: var(--drawer-rail-width);
   pointer-events: none;
   opacity: 0;
   transform: translateX(calc(var(--control-panel-width) * -1));
 }
 
-body[data-left-drawer-state="temporary"] .control-panel {
-  position: fixed;
-  top: var(--app-header-height);
-  bottom: 0;
-  left: var(--drawer-rail-width);
+body[data-left-drawer-state="temporary"] .control-panel,
+body[data-left-drawer-state="pinned"] .control-panel {
   opacity: 1;
   transform: translateX(0);
 }
 
-body[data-left-drawer-state="pinned"] .control-panel {
-  position: relative;
-  top: auto;
-  bottom: auto;
-  left: auto;
-  flex: 0 0 var(--control-panel-width);
-  height: 100%;
-  opacity: 1;
-  transform: none;
+body.drawer-is-initializing .control-panel,
+body.drawer-is-initializing .preview-area {
+  transition: none;
 }
 
 .drawer-header {
@@ -609,20 +603,35 @@ body[data-left-drawer-state="pinned"] .control-panel {
 }
 
 .drawer-icon-button {
+  --drawer-action-accent: var(--color-primary);
+
   display: inline-grid;
   place-items: center;
   width: 2rem;
   height: 2rem;
-  border: var(--border-width) solid var(--color-border);
+  border: var(--border-width) solid color-mix(in srgb, var(--drawer-action-accent), transparent 60%);
   border-radius: calc(var(--radius) * 0.8);
   background: var(--color-surface);
-  color: var(--color-muted);
+  color: var(--drawer-action-accent);
+  transition:
+    background-color var(--drawer-transition),
+    border-color var(--drawer-transition),
+    color var(--drawer-transition);
 }
 
 .drawer-icon-button:hover,
 .drawer-icon-button:focus-visible {
-  border-color: var(--color-primary);
-  color: var(--color-text);
+  border-color: var(--drawer-action-accent);
+  background: var(--drawer-action-accent);
+  color: #ffffff;
+}
+
+.drawer-icon-button[data-drawer-mode-toggle] {
+  --drawer-action-accent: var(--drawer-lock-accent);
+}
+
+.drawer-icon-button[data-drawer-close] {
+  --drawer-action-accent: var(--drawer-sidebar-accent);
 }
 
 .drawer-icon-button .icon {
@@ -861,12 +870,22 @@ body[data-left-drawer-state="temporary"] .drawer-unlock-icon {
   gap: var(--space-2);
   min-width: 0;
   min-height: 0;
+  margin-left: 0;
   padding: var(--workbench-gutter);
   overflow: hidden;
+  transition: margin-left var(--drawer-transition);
   background:
     radial-gradient(circle at top left, rgb(37 99 235 / 0.08), transparent 28rem),
     linear-gradient(135deg, color-mix(in srgb, var(--color-background), #000 4%), var(--color-background));
   color: var(--color-text);
+}
+
+body[data-left-drawer-state="pinned"] .preview-area {
+  margin-left: var(--control-panel-width);
+}
+
+body[data-preview-mode="full"] .preview-area {
+  margin-left: 0;
 }
 
 .preview-custom-toolbar {
