@@ -513,7 +513,7 @@ body[data-left-drawer-state="closed"] {
   height: 1.35rem;
 }
 
-.has-tooltip {
+.has-tooltip:not(.drawer-tab):not(.restore-workbench-button) {
   position: relative;
 }
 
