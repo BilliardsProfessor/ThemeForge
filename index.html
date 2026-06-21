@@ -20,20 +20,50 @@
   <script src="js/preview.js" defer></script>
   <script src="js/drawers.js" defer></script>
   <script src="js/full-preview.js" defer></script>
+  <script src="js/preview-size.js" defer></script>
   <script src="js/app.js" defer></script>
 </head>
 
 <body data-left-drawer-state="open" data-preview-mode="workbench">
   <header class="app-header">
-    <div>
+    <div class="app-title">
       <h1>Theme Forge</h1>
       <p>Build, test, randomize, and export design themes.</p>
     </div>
 
     <div class="header-actions">
-      <button type="button" id="undoBtn">Undo</button>
-      <button type="button" id="redoBtn">Redo</button>
-      <button type="button" id="randomizeBtn">Randomize</button>
+      <button type="button" class="icon-button has-tooltip" id="undoBtn" data-tooltip="Undo"
+        data-tooltip-position="bottom" aria-label="Undo">
+        <svg class="icon icon-arrow-uturn-left" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+        </svg>
+      </button>
+
+      <button type="button" class="icon-button has-tooltip" id="redoBtn" data-tooltip="Redo"
+        data-tooltip-position="bottom" aria-label="Redo">
+        <svg class="icon icon-arrow-uturn-right" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path d="m15 15 6-6m0 0-6-6m6 6H9a6 6 0 0 0 0 12h3" />
+        </svg>
+      </button>
+
+      <button type="button" class="icon-button has-tooltip" id="randomizeBtn" data-tooltip="Randomize"
+        data-tooltip-position="bottom" aria-label="Randomize">
+        <svg class="icon icon-arrows-right-left" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5M16.5 3 21 7.5m0 0L16.5 12M21 7.5H7.5" />
+        </svg>
+      </button>
+
+      <label class="preview-size-field">
+        <span>Preview</span>
+        <select id="previewSizeSelect">
+          <option value="desktop" selected>Desktop</option>
+          <option value="tablet">Tablet</option>
+          <option value="mobile">Mobile</option>
+          <option value="fluid">Fluid</option>
+          <option value="custom">Custom</option>
+        </select>
+      </label>
+
       <button type="button" id="fullPreviewBtn">Full Preview</button>
       <div class="export-menu" data-export-menu>
         <button type="button" id="exportMenuBtn" aria-haspopup="true" aria-expanded="false">
@@ -285,6 +315,20 @@
     </aside>
 
     <section class="preview-area" aria-label="Theme preview">
+      <div class="preview-custom-toolbar" id="previewCustomToolbar" hidden>
+        <label class="preview-custom-width-field">
+          <span>Custom width</span>
+          <input type="number" id="previewCustomWidthInput" min="320" step="1" inputmode="numeric">
+          <span>px</span>
+        </label>
+
+        <button type="button" class="preview-custom-reset has-tooltip" id="previewCustomResetBtn"
+          data-tooltip="Restore to 900px" data-tooltip-position="bottom"
+          aria-label="Restore custom preview width to desktop width">
+          Reset
+        </button>
+      </div>
+
       <nav class="preview-tabs" aria-label="Preview tabs" data-active-preview-tab="page">
         <button type="button" class="active" data-preview-tab="page">Page</button>
         <button type="button" data-preview-tab="form">Form</button>
