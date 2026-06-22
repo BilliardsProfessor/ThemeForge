@@ -19,6 +19,7 @@
   const rootStyles = window.getComputedStyle(root);
   const desktopWidth = rootStyles.getPropertyValue("--preview-width").trim() || "900px";
   const desktopWidthValue = parseWidthValue(desktopWidth) || 900;
+  const previewResizeThreshold = parseWidthValue(rootStyles.getPropertyValue("--preview-resize-threshold").trim()) || 3;
 
   const previewSizes = {
     desktop: `${desktopWidthValue}px`,
@@ -172,15 +173,12 @@
     const side = handle.dataset.previewResizeHandle;
     const startWidth = getCurrentRenderedPreviewWidth();
 
-    if (previewSizeSelect.value !== "custom") {
-      window.localStorage.setItem(customWidthStorageKey, String(startWidth));
-      setPreviewSize("custom");
-    }
-
     activeResize = {
       side,
       startX: event.clientX,
       startWidth,
+      hasStarted: false,
+      originalPreviewSize: previewSizeSelect.value,
     };
 
     body.classList.add("is-resizing-preview");
@@ -194,6 +192,21 @@
     }
 
     const deltaX = event.clientX - activeResize.startX;
+    const distance = Math.abs(deltaX);
+
+    if (!activeResize.hasStarted && distance < previewResizeThreshold) {
+      return;
+    }
+
+    if (!activeResize.hasStarted) {
+      activeResize.hasStarted = true;
+
+      if (previewSizeSelect.value !== "custom") {
+        window.localStorage.setItem(customWidthStorageKey, String(activeResize.startWidth));
+        setPreviewSize("custom");
+      }
+    }
+
     const widthDelta = activeResize.side === "left" ? deltaX * -2 : deltaX * 2;
     const nextWidth = activeResize.startWidth + widthDelta;
 
