@@ -1,6 +1,6 @@
 :root {
   --app-header-height: 72px;
-  --control-panel-width: 300px;
+  --left-drawer-width: 300px;
   --drawer-rail-width: 3.25rem;
   --preview-width: 900px;
   --preview-width-transition: 180ms ease;
@@ -11,6 +11,8 @@
   --drawer-transition: 500ms ease;
   --drawer-lock-accent: var(--color-secondary);
   --drawer-sidebar-accent: var(--color-primary);
+  --left-drawer-dock-width: 0px;
+  --right-drawer-dock-width: 0px;
 
   --color-primary: #2563eb;
   --color-secondary: #7c3aed;
@@ -547,7 +549,7 @@ button {
   pointer-events: none;
 }
 
-.control-panel {
+.left-drawer {
   position: fixed;
   top: var(--app-header-height);
   bottom: 0;
@@ -555,8 +557,8 @@ button {
   z-index: 40;
   display: flex;
   flex-direction: column;
-  width: var(--control-panel-width);
-  min-width: var(--control-panel-width);
+  width: var(--left-drawer-width);
+  min-width: var(--left-drawer-width);
   padding: var(--space-2);
   border-right: var(--border-width) solid var(--color-border);
   background: color-mix(in srgb, var(--color-surface), var(--color-background) 35%);
@@ -568,14 +570,18 @@ button {
     opacity var(--drawer-transition);
 }
 
-body[data-left-drawer-state="collapsed"] .control-panel {
+body[data-left-drawer-state="collapsed"] .left-drawer {
   pointer-events: none;
   opacity: 0;
-  transform: translateX(calc(var(--control-panel-width) * -1));
+  transform: translateX(calc(var(--left-drawer-width) * -1));
 }
 
-body[data-left-drawer-state="temporary"] .control-panel,
-body[data-left-drawer-state="pinned"] .control-panel {
+body[data-left-drawer-state="pinned"] {
+  --left-drawer-dock-width: var(--left-drawer-width);
+}
+
+body[data-left-drawer-state="temporary"] .left-drawer,
+body[data-left-drawer-state="pinned"] .left-drawer {
   opacity: 1;
   transform: translateX(0);
 }
@@ -584,7 +590,27 @@ body.drawer-is-initializing .app-shell {
   visibility: hidden;
 }
 
-body.drawer-is-initializing .control-panel,
+.drawer-dock-spacer {
+  flex: 0 0 0;
+  width: 0;
+  min-width: 0;
+  transition:
+    flex-basis var(--drawer-transition),
+    width var(--drawer-transition);
+}
+
+.drawer-dock-spacer-left {
+  flex-basis: var(--left-drawer-dock-width);
+  width: var(--left-drawer-dock-width);
+}
+
+.drawer-dock-spacer-right {
+  flex-basis: var(--right-drawer-dock-width);
+  width: var(--right-drawer-dock-width);
+}
+
+body.drawer-is-initializing .left-drawer,
+body.drawer-is-initializing .drawer-dock-spacer,
 body.drawer-is-initializing .preview-area {
   transition: none;
 }
@@ -893,6 +919,7 @@ body.drawer-is-initializing .control-card-content {
 
 .preview-area {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   height: 100%;
   gap: var(--space-2);
@@ -900,19 +927,10 @@ body.drawer-is-initializing .control-card-content {
   min-height: 0;
   padding: var(--workbench-gutter);
   overflow: hidden;
-  transition: padding-left var(--drawer-transition);
   background:
     radial-gradient(circle at top left, rgb(37 99 235 / 0.08), transparent 28rem),
     linear-gradient(135deg, color-mix(in srgb, var(--color-background), #000 4%), var(--color-background));
   color: var(--color-text);
-}
-
-body[data-left-drawer-state="pinned"] .preview-area {
-  padding-left: calc(var(--workbench-gutter) + var(--control-panel-width));
-}
-
-body[data-preview-mode="full"] .preview-area {
-  padding-left: var(--workbench-gutter);
 }
 
 .preview-custom-toolbar {
@@ -1154,8 +1172,9 @@ body.is-resizing-preview .preview-resize-handle::before {
 }
 
 body[data-preview-mode="full"] .app-header,
-body[data-preview-mode="full"] .control-panel,
+body[data-preview-mode="full"] .left-drawer,
 body[data-preview-mode="full"] .drawer-rail,
+body[data-preview-mode="full"] .drawer-dock-spacer,
 body[data-preview-mode="full"] .preview-tabs {
   display: none;
 }
@@ -1200,7 +1219,7 @@ a {
 
 @media (max-width: 900px) {
   :root {
-    --control-panel-width: 280px;
+    --left-drawer-width: 280px;
     --workbench-gutter: 1rem;
   }
 
@@ -1470,13 +1489,15 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .control-panel,
+  .left-drawer,
+  .drawer-dock-spacer,
   .drawer-rail-button,
   .restore-workbench-button,
   .has-tooltip::before,
   .has-tooltip::after,
   .preview-tabs,
   .preview-panel,
+  .preview-resize-frame,
   .preview-tabs::before,
   .color-group-tabs::before,
   .segmented-control::before {

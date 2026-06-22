@@ -91,7 +91,7 @@
   <main class="app-shell">
     <nav class="drawer-rail drawer-rail-left" aria-label="Theme Forge controls">
       <button type="button" class="drawer-rail-button drawer-rail-home has-tooltip" data-drawer-open-pinned="left"
-        data-tooltip="Open controls" data-tooltip-position="right" aria-controls="leftDrawerPanel" aria-expanded="false"
+        data-tooltip="Open controls" data-tooltip-position="right" aria-controls="leftDrawer" aria-expanded="false"
         aria-label="Open controls drawer">
         <span class="drawer-logo" aria-hidden="true">TF</span>
         <svg class="icon drawer-sidebar-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
@@ -102,18 +102,18 @@
       </button>
 
       <button type="button" class="drawer-rail-button has-tooltip" data-drawer-panel="colors" data-tooltip="Colors"
-        data-tooltip-position="right" aria-controls="leftDrawerPanel" aria-label="Open colors controls">
+        data-tooltip-position="right" aria-controls="leftDrawer" aria-label="Open colors controls">
         <span aria-hidden="true">🎨</span>
       </button>
 
       <button type="button" class="drawer-rail-button has-tooltip" data-drawer-panel="typography"
-        data-tooltip="Typography" data-tooltip-position="right" aria-controls="leftDrawerPanel"
+        data-tooltip="Typography" data-tooltip-position="right" aria-controls="leftDrawer"
         aria-label="Open typography controls">
         <span aria-hidden="true">Aa</span>
       </button>
 
       <button type="button" class="drawer-rail-button has-tooltip" data-drawer-panel="shape" data-tooltip="Shape"
-        data-tooltip-position="right" aria-controls="leftDrawerPanel" aria-label="Open shape controls">
+        data-tooltip-position="right" aria-controls="leftDrawer" aria-label="Open shape controls">
         <svg data-slot="icon" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round"
@@ -122,7 +122,7 @@
       </button>
     </nav>
 
-    <aside class="control-panel drawer drawer-left" id="leftDrawerPanel" aria-label="Theme controls">
+    <aside class="left-drawer drawer drawer-left" id="leftDrawer" aria-label="Left drawer">
 
       <div class="drawer-header">
         <h2 class="drawer-title">Theme Forge</h2>
@@ -365,6 +365,8 @@
         </div>
       </details>
     </aside>
+
+    <div class="drawer-dock-spacer drawer-dock-spacer-left" aria-hidden="true"></div>
 
     <section class="preview-area" aria-label="Theme preview">
       <div class="preview-custom-toolbar" id="previewCustomToolbar" hidden>

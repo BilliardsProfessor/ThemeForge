@@ -3,11 +3,11 @@
   const body = document.body;
   const drawerStateStorageKey = "themeForge.leftDrawerState";
 
-  const leftDrawer = document.getElementById("leftDrawerPanel");
+  const leftDrawer = document.getElementById("leftDrawer");
   const leftDrawerPinnedOpen = document.querySelector('[data-drawer-open-pinned="left"]');
   const leftDrawerClose = document.querySelector('[data-drawer-close="left"]');
   const leftDrawerModeToggle = document.querySelector('[data-drawer-mode-toggle="left"]');
-  const leftDrawerPanelButtons = document.querySelectorAll("[data-drawer-panel]");
+  const leftDrawerButtons = document.querySelectorAll("[data-drawer-panel]");
   const leftControlPanels = document.querySelectorAll("[data-control-panel]");
   const controlCardAnimationDuration = 260;
   const leftDrawerRail = document.querySelector(".drawer-rail-left");
@@ -238,7 +238,7 @@
 
   leftDrawerPinnedOpen.addEventListener("click", togglePinnedDrawer);
 
-  leftDrawerPanelButtons.forEach(function (button) {
+  leftDrawerButtons.forEach(function (button) {
     button.addEventListener("click", function () {
       openPanelFromRail(button.dataset.drawerPanel);
     });
