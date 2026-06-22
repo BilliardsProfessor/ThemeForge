@@ -19,49 +19,6 @@ const toastMessages = {
 
 let lastModalTrigger = null;
 
-function ensurePreviewTabIndicatorStyles() {
-  if (document.querySelector("#previewTabIndicatorStyles")) {
-    return;
-  }
-
-  const style = document.createElement("style");
-
-  style.id = "previewTabIndicatorStyles";
-  style.textContent = `
-    .preview-tabs {
-      display: inline-flex;
-      width: auto;
-      max-width: min(var(--preview-width), 100%);
-    }
-
-    .preview-tabs::before {
-      inset-inline-start: 0;
-      inline-size: var(--active-tab-width, 0px);
-      transform: translateX(var(--active-tab-offset, 0px));
-      transition:
-        inline-size 180ms ease,
-        transform 180ms ease;
-    }
-
-    .preview-tabs button {
-      position: relative;
-      z-index: 1;
-      appearance: none;
-    }
-
-    .preview-tabs button:focus {
-      outline: none;
-    }
-
-    .preview-tabs button:focus-visible {
-      outline: 3px solid rgb(37 99 235 / 0.35);
-      outline-offset: 2px;
-    }
-  `;
-
-  document.head.append(style);
-}
-
 function updatePreviewTabIndicator(previewTabs) {
   const activeButton = previewTabs.querySelector("[data-preview-tab].active");
 
@@ -140,7 +97,6 @@ function lightTheBeacons() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  ensurePreviewTabIndicatorStyles();
   updateAllPreviewTabIndicators();
 
   document.querySelectorAll("[data-toast-demo]").forEach((button) => {

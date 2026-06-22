@@ -993,20 +993,18 @@ body.drawer-is-initializing .control-card-content {
 }
 
 .preview-tabs {
-  --active-index: 0;
-
   position: relative;
   isolation: isolate;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: inline-flex;
   flex: none;
   align-self: center;
   gap: 0.25rem;
-  width: min(var(--preview-width), 100%);
+  width: auto;
+  max-width: min(var(--preview-width), 100%);
   padding: 0.25rem;
   border-radius: var(--radius);
   background: color-mix(in srgb, var(--color-border), var(--color-surface) 45%);
-  transition: width var(--preview-width-transition);
+  transition: max-width var(--preview-width-transition);
 }
 
 .preview-tabs::before {
@@ -1014,34 +1012,35 @@ body.drawer-is-initializing .control-card-content {
   position: absolute;
   z-index: -1;
   inset-block: 0.25rem;
-  inset-inline-start: 0.25rem;
-  inline-size: calc((100% - 1.25rem) / 4);
+  inset-inline-start: 0;
+  inline-size: var(--active-tab-width, 0px);
   border-radius: calc(var(--radius) - 3px);
   background: var(--color-surface);
   box-shadow: var(--shadow-soft);
-  transform: translateX(calc(var(--active-index) * (100% + 0.25rem)));
-  transition: transform 180ms ease;
-}
-
-.preview-tabs[data-active-preview-tab="form"] {
-  --active-index: 1;
-}
-
-.preview-tabs[data-active-preview-tab="table"] {
-  --active-index: 2;
-}
-
-.preview-tabs[data-active-preview-tab="cards"] {
-  --active-index: 3;
+  transform: translateX(var(--active-tab-offset, 0px));
+  transition:
+    inline-size 180ms ease,
+    transform 180ms ease;
 }
 
 .preview-tabs button {
+  position: relative;
+  z-index: 1;
   border: 0;
   border-radius: calc(var(--radius) - 3px);
   padding: 0.45rem 0.5rem;
   background: transparent;
   color: var(--color-muted);
   font-weight: 700;
+}
+
+.preview-tabs button:focus {
+  outline: none;
+}
+
+.preview-tabs button:focus-visible {
+  outline: 3px solid rgb(37 99 235 / 0.35);
+  outline-offset: 2px;
 }
 
 .preview-tabs button:hover,
