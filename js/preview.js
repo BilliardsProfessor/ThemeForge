@@ -19,6 +19,46 @@ const toastMessages = {
 
 let lastModalTrigger = null;
 
+function ensurePreviewTabIndicatorStyles() {
+  if (document.querySelector("#previewTabIndicatorStyles")) {
+    return;
+  }
+
+  const style = document.createElement("style");
+
+  style.id = "previewTabIndicatorStyles";
+  style.textContent = `
+    .preview-tabs::before {
+      inline-size: var(--active-tab-width, calc((100% - 1.25rem) / 4));
+      transform: translateX(var(--active-tab-offset, 0));
+      transition:
+        inline-size 180ms ease,
+        transform 180ms ease;
+    }
+  `;
+
+  document.head.append(style);
+}
+
+function updatePreviewTabIndicator(previewTabs) {
+  const activeButton = previewTabs.querySelector("[data-preview-tab].active");
+
+  if (!activeButton) {
+    return;
+  }
+
+  const tabsRect = previewTabs.getBoundingClientRect();
+  const buttonRect = activeButton.getBoundingClientRect();
+  const offset = buttonRect.left - tabsRect.left;
+
+  previewTabs.style.setProperty("--active-tab-width", `${buttonRect.width}px`);
+  previewTabs.style.setProperty("--active-tab-offset", `${offset}px`);
+}
+
+function updateAllPreviewTabIndicators() {
+  document.querySelectorAll(".preview-tabs").forEach(updatePreviewTabIndicator);
+}
+
 function showToastSet(type) {
   const region = document.querySelector(".preview-toast-region");
   const message = toastMessages[type];
@@ -78,6 +118,9 @@ function lightTheBeacons() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  ensurePreviewTabIndicatorStyles();
+  updateAllPreviewTabIndicators();
+
   document.querySelectorAll("[data-toast-demo]").forEach((button) => {
     button.addEventListener("click", () => {
       showToastSet(button.dataset.toastDemo);
@@ -94,11 +137,23 @@ document.addEventListener("DOMContentLoaded", () => {
         tabButton.classList.toggle("active", tabButton === button);
       });
 
+      updatePreviewTabIndicator(previewTabs);
+
       document.querySelectorAll("[data-preview-panel]").forEach((panel) => {
         panel.hidden = panel.dataset.previewPanel !== button.dataset.previewTab;
       });
     });
   });
+
+  window.addEventListener("resize", updateAllPreviewTabIndicators);
+
+  if ("ResizeObserver" in window) {
+    const previewTabObserver = new ResizeObserver(updateAllPreviewTabIndicators);
+
+    document.querySelectorAll(".preview-tabs").forEach((previewTabs) => {
+      previewTabObserver.observe(previewTabs);
+    });
+  }
 
   document.querySelector("#lightTheBeaconsBtn")?.addEventListener("click", lightTheBeacons);
 
