@@ -339,10 +339,15 @@
   position: absolute;
   top: 1rem;
   right: 1rem;
-  z-index: 10;
+  z-index: 15;
   display: grid;
   gap: 0.75rem;
   width: min(24rem, calc(100% - 2rem));
+  pointer-events: none;
+}
+
+.preview-toast-region .preview-toast {
+  pointer-events: auto;
 }
 
 .preview-toast {
