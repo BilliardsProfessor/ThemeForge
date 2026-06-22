@@ -28,12 +28,34 @@ function ensurePreviewTabIndicatorStyles() {
 
   style.id = "previewTabIndicatorStyles";
   style.textContent = `
+    .preview-tabs {
+      display: inline-flex;
+      width: auto;
+      max-width: min(var(--preview-width), 100%);
+    }
+
     .preview-tabs::before {
-      inline-size: var(--active-tab-width, calc((100% - 1.25rem) / 4));
-      transform: translateX(var(--active-tab-offset, 0));
+      inset-inline-start: 0;
+      inline-size: var(--active-tab-width, 0px);
+      transform: translateX(var(--active-tab-offset, 0px));
       transition:
         inline-size 180ms ease,
         transform 180ms ease;
+    }
+
+    .preview-tabs button {
+      position: relative;
+      z-index: 1;
+      appearance: none;
+    }
+
+    .preview-tabs button:focus {
+      outline: none;
+    }
+
+    .preview-tabs button:focus-visible {
+      outline: 3px solid rgb(37 99 235 / 0.35);
+      outline-offset: 2px;
     }
   `;
 
