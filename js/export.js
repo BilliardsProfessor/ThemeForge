@@ -96,7 +96,7 @@ ThemeForge.export = {
     }
 
     if (exportType === "css") {
-      this.startCssExport();
+      this.startStylesExport();
     }
   },
 
@@ -146,16 +146,16 @@ ThemeForge.export = {
     };
   },
 
-  async startCssExport() {
+  async startStylesExport() {
     const suggestedName = this.generateThemeNameSuggestion();
-    const options = await this.openCssExportDialog(suggestedName);
+    const options = await this.openStylesExportDialog(suggestedName);
 
     if (!options) return;
 
-    this.downloadCss(options.themeName, options);
+    this.downloadStyles(options.themeName, options);
   },
 
-  openCssExportDialog(suggestedName) {
+  openStylesExportDialog(suggestedName) {
     const { layer } = ThemeForge.appModal.getElements();
 
     if (!layer) return Promise.resolve(null);
@@ -165,6 +165,9 @@ ThemeForge.export = {
       const nameField = document.createElement("label");
       const nameLabel = document.createElement("span");
       const nameInput = document.createElement("input");
+      const outputGroup = document.createElement("fieldset");
+      const outputLegend = document.createElement("legend");
+      const outputOptions = document.createElement("div");
       const selectorGroup = document.createElement("fieldset");
       const selectorLegend = document.createElement("legend");
       const selectorOptions = document.createElement("div");
@@ -185,6 +188,19 @@ ThemeForge.export = {
       nameInput.type = "text";
       nameInput.value = suggestedName;
       nameField.append(nameLabel, nameInput);
+
+      outputGroup.className = "export-option-group";
+      outputLegend.textContent = "Output";
+      outputOptions.className = "export-radio-group";
+
+      [
+        { value: "css", label: "CSS custom properties", checked: true },
+        { value: "scss", label: "SCSS variables" },
+      ].forEach((option) => {
+        outputOptions.append(this.createRadioOption("stylesheetOutput", option));
+      });
+
+      outputGroup.append(outputLegend, outputOptions);
 
       selectorGroup.className = "export-option-group";
       selectorLegend.textContent = "Selector";
@@ -225,7 +241,7 @@ ThemeForge.export = {
 
       confirmButton.type = "submit";
       confirmButton.className = "app-modal-primary-action";
-      confirmButton.textContent = "Export CSS";
+      confirmButton.textContent = "Export Styles";
       confirmButton.setAttribute("form", form.id);
 
       form.addEventListener("submit", (event) => {
@@ -236,17 +252,18 @@ ThemeForge.export = {
 
         ThemeForge.appModal.close({
           themeName,
+          stylesheetOutput: formData.get("stylesheetOutput") || "css",
           selectorType: formData.get("cssSelectorType") || "root",
           colorFormat: formData.get("cssColorFormat") || "hsl",
           includeComments: commentsInput.checked,
         });
       });
 
-      form.append(nameField, selectorGroup, formatGroup, commentsLabel);
+      form.append(nameField, outputGroup, selectorGroup, formatGroup, commentsLabel);
 
       ThemeForge.appModal.open({
-        eyebrow: "Export CSS",
-        title: "Choose CSS options",
+        eyebrow: "Export styles",
+        title: "Choose style options",
         body: form,
         footer: [cancelButton, confirmButton],
         initialFocusElement: nameInput,
@@ -273,7 +290,14 @@ ThemeForge.export = {
     return optionLabel;
   },
 
-  downloadCss(themeName, options) {
+  downloadStyles(themeName, options) {
+    if (options.stylesheetOutput === "scss") {
+      const scss = this.createScssExport(themeName, options);
+
+      this.downloadTextFile(scss, this.getScssFilename(themeName), "text/x-scss");
+      return;
+    }
+
     const css = this.createCssExport(themeName, options);
 
     this.downloadTextFile(css, this.getCssFilename(themeName), "text/css");
@@ -285,23 +309,21 @@ ThemeForge.export = {
     const includeComments = options.includeComments !== false;
     const selector = this.getCssSelector(selectorType, themeName);
     const declarations = this.getCssVariableDeclarations(colorFormat);
-    const block = [
-      `${selector} {`,
-      ...declarations.map((declaration) => (declaration ? `  ${declaration}` : "")),
-      "}",
-    ].join("\n");
+    const block = [`${selector} {`, ...declarations.map((declaration) => (declaration ? `  ${declaration}` : "")), "}"].join("\n");
 
     if (!includeComments) return block;
 
-    return [
-      "/*",
-      "  Theme Forge Export",
-      `  Theme: ${this.getCssCommentValue(themeName)}`,
-      `  Schema: ${this.schemaVersion}`,
-      "*/",
-      "",
-      block,
-    ].join("\n");
+    return ["/*", "  Theme Forge Export", `  Theme: ${this.getCssCommentValue(themeName)}`, `  Schema: ${this.schemaVersion}`, "*/", "", block].join("\n");
+  },
+
+  createScssExport(themeName, options = {}) {
+    const colorFormat = options.colorFormat || "hsl";
+    const includeComments = options.includeComments !== false;
+    const declarations = this.getScssVariableDeclarations(colorFormat);
+
+    if (!includeComments) return declarations.join("\n");
+
+    return ["// Theme Forge Export", `// Theme: ${this.getScssCommentValue(themeName)}`, `// Schema: ${this.schemaVersion}`, "", ...declarations].join("\n");
   },
 
   getCssVariableDeclarations(format) {
@@ -318,6 +340,23 @@ ThemeForge.export = {
       `--radius: ${shape.radius}px;`,
       `--border-width: ${shape.borderWidth}px;`,
       `--overlay-blur: ${shape.overlayBlur}px;`,
+    ];
+  },
+
+  getScssVariableDeclarations(format) {
+    const { typography, shape } = ThemeForge.theme;
+
+    return [
+      ...this.getScssColorVariableDeclarations(format),
+      "",
+      "$shadow-soft: 0 12px 30px $color-shadow-tint;",
+      "",
+      `$font-size-base: ${typography.baseFontSize}px;`,
+      `$heading-scale: ${typography.headingScale};`,
+      "",
+      `$radius: ${shape.radius}px;`,
+      `$border-width: ${shape.borderWidth}px;`,
+      `$overlay-blur: ${shape.overlayBlur}px;`,
     ];
   },
 
@@ -346,6 +385,27 @@ ThemeForge.export = {
       const declarations = group.map((tokenName) => {
         const colorToken = ThemeForge.theme.colors[tokenName];
         const variableName = `--color-${this.getCssVariableName(tokenName)}`;
+
+        return `${variableName}: ${ThemeForge.getColorValue(colorToken, colorFormat)};`;
+      });
+
+      return index < colorGroups.length - 1 ? [...declarations, ""] : declarations;
+    });
+  },
+
+  getScssColorVariableDeclarations(format) {
+    const colorFormat = ["hsl", "hex", "rgb"].includes(format) ? format : "hsl";
+    const colorGroups = [
+      ["primary", "secondary", "background", "surface"],
+      ["success", "warning", "danger", "info"],
+      ["text", "mutedText", "link"],
+      ["border", "focus", "overlay", "shadowTint"],
+    ];
+
+    return colorGroups.flatMap((group, index) => {
+      const declarations = group.map((tokenName) => {
+        const colorToken = ThemeForge.theme.colors[tokenName];
+        const variableName = `$color-${this.getCssVariableName(tokenName)}`;
 
         return `${variableName}: ${ThemeForge.getColorValue(colorToken, colorFormat)};`;
       });
@@ -436,16 +496,26 @@ ThemeForge.export = {
     return `${this.filenamePrefix}-${this.slugifyThemeName(themeName)}.css`;
   },
 
+  getScssFilename(themeName) {
+    return `${this.filenamePrefix}-${this.slugifyThemeName(themeName)}.scss`;
+  },
+
   getCssCommentValue(value) {
     return String(value).replace(/\*\//g, "* /");
   },
 
+  getScssCommentValue(value) {
+    return String(value).replace(/\r?\n/g, " ");
+  },
+
   slugifyThemeName(themeName) {
-    return themeName
-      .toLowerCase()
-      .replace(/['"]/g, "")
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "") || this.fallbackSlug;
+    return (
+      themeName
+        .toLowerCase()
+        .replace(/['"]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "") || this.fallbackSlug
+    );
   },
 };
 
