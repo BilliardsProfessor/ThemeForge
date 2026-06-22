@@ -1379,43 +1379,47 @@ a {
   border-radius: calc(0.65rem - 5px);
 }
 
-.segmented-control {
-  --active-index: 0;
-
+.segmented-control,
+.color-group-tabs {
   position: relative;
   isolation: isolate;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
   gap: 0.25rem;
-  margin: 0.75rem 0;
   padding: 0.25rem;
   border-radius: 0.65rem;
   background: #e2e8f0;
 }
 
-.segmented-control::before {
+.segmented-control {
+  margin: 0.75rem 0;
+}
+
+.color-group-tabs {
+  margin-bottom: var(--space-2);
+}
+
+.segmented-control::before,
+.color-group-tabs::before {
   content: "";
   position: absolute;
   z-index: -1;
   inset-block: 0.25rem;
-  inset-inline-start: 0.25rem;
-  inline-size: calc((100% - 1rem) / 3);
+  inset-inline-start: 0;
+  inline-size: var(--active-tab-width, 0px);
   border-radius: 0.45rem;
   background: #ffffff;
   box-shadow: 0 1px 3px rgb(15 23 42 / 0.16);
-  transform: translateX(calc(var(--active-index) * (100% + 0.25rem)));
-  transition: transform 180ms ease;
+  transform: translateX(var(--active-tab-offset, 0px));
+  transition:
+    inline-size 180ms ease,
+    transform 180ms ease;
 }
 
-.segmented-control[data-active-format="rgb"] {
-  --active-index: 1;
-}
-
-.segmented-control[data-active-format="hsl"] {
-  --active-index: 2;
-}
-
-.segmented-control button {
+.segmented-control button,
+.color-group-tabs button {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 0;
   border: 0;
   border-radius: 0.45rem;
   padding: 0.45rem 0.5rem;
@@ -1425,62 +1429,21 @@ a {
 }
 
 .segmented-control button:hover,
-.segmented-control button.active {
-  color: #0f172a;
-}
-
-.color-group-tabs {
-  --active-index: 0;
-
-  position: relative;
-  isolation: isolate;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.25rem;
-  margin-bottom: var(--space-2);
-  padding: 0.25rem;
-  border-radius: 0.65rem;
-  background: #e2e8f0;
-}
-
-.color-group-tabs::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset-block: 0.25rem;
-  inset-inline-start: 0.25rem;
-  inline-size: calc((100% - 1.25rem) / 4);
-  border-radius: 0.45rem;
-  background: #ffffff;
-  box-shadow: 0 1px 3px rgb(15 23 42 / 0.16);
-  transform: translateX(calc(var(--active-index) * (100% + 0.25rem)));
-  transition: transform 180ms ease;
-}
-
-.color-group-tabs[data-active-group="states"] {
-  --active-index: 1;
-}
-
-.color-group-tabs[data-active-group="text"] {
-  --active-index: 2;
-}
-
-.color-group-tabs[data-active-group="ui"] {
-  --active-index: 3;
-}
-
-.color-group-tabs button {
-  border: 0;
-  border-radius: 0.45rem;
-  padding: 0.45rem 0.5rem;
-  background: transparent;
-  color: #334155;
-  font-weight: 700;
-}
-
+.segmented-control button.active,
 .color-group-tabs button:hover,
 .color-group-tabs button.active {
   color: #0f172a;
+}
+
+.segmented-control button:focus,
+.color-group-tabs button:focus {
+  outline: none;
+}
+
+.segmented-control button:focus-visible,
+.color-group-tabs button:focus-visible {
+  outline: 3px solid rgb(37 99 235 / 0.35);
+  outline-offset: 2px;
 }
 
 .color-token[hidden] {

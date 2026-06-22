@@ -16,6 +16,19 @@ ThemeForge.colorEditor = {
     this.bindGroupTabs();
     this.bindEditorControls();
     this.render();
+    window.addEventListener("resize", () => {
+      this.updateAllTabIndicators();
+    });
+
+    if ("ResizeObserver" in window) {
+      const tabObserver = new ResizeObserver(() => {
+        this.updateAllTabIndicators();
+      });
+
+      document.querySelectorAll(".segmented-control, .color-group-tabs").forEach((tabList) => {
+        tabObserver.observe(tabList);
+      });
+    }
   },
 
   getActiveColor() {
@@ -119,6 +132,27 @@ ThemeForge.colorEditor = {
     });
   },
 
+  updateTabIndicator(tabList) {
+    const activeButton = tabList.querySelector("button.active");
+
+    if (!activeButton) {
+      return;
+    }
+
+    const tabListRect = tabList.getBoundingClientRect();
+    const activeButtonRect = activeButton.getBoundingClientRect();
+    const offset = activeButtonRect.left - tabListRect.left;
+
+    tabList.style.setProperty("--active-tab-width", `${activeButtonRect.width}px`);
+    tabList.style.setProperty("--active-tab-offset", `${offset}px`);
+  },
+
+  updateAllTabIndicators() {
+    document.querySelectorAll(".segmented-control, .color-group-tabs").forEach((tabList) => {
+      this.updateTabIndicator(tabList);
+    });
+  },
+
   render() {
     const color = this.getActiveColor();
     const rgb = hslToRgb(color);
@@ -174,6 +208,8 @@ ThemeForge.colorEditor = {
       swatch.style.backgroundColor = ThemeForge.getColorValue(tokenColor);
       value.textContent = ThemeForge.getColorValue(tokenColor, format);
     });
+
+    this.updateAllTabIndicators();
   },
 
   getLabel(key) {
