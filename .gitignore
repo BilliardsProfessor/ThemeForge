@@ -8,3 +8,6 @@ export-diff.txt
 
 # Zip files in the root directory
 /*.zip
+
+# Ignore the issues directory
+/issues/
