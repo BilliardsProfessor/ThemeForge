@@ -173,7 +173,9 @@ ThemeForge.history = {
   },
 
   onHistoryButtonPointerDown(event, action) {
-    if (event.button !== 0 || event.currentTarget.disabled) {
+    const button = event.currentTarget;
+
+    if (event.button !== 0 || button.disabled) {
       return;
     }
 
@@ -184,16 +186,16 @@ ThemeForge.history = {
     this.menu.pointerStarted = true;
     this.menu.menuOpenedFromHold = false;
     this.menu.action = action;
-    this.menu.activeButton = event.currentTarget;
+    this.menu.activeButton = button;
     this.menu.activeItem = null;
 
-    if (event.currentTarget.setPointerCapture) {
-      event.currentTarget.setPointerCapture(event.pointerId);
+    if (button.setPointerCapture) {
+      button.setPointerCapture(event.pointerId);
     }
 
     this.menu.holdTimerId = setTimeout(() => {
       this.menu.menuOpenedFromHold = true;
-      this.openMenu(action, event.currentTarget);
+      this.openMenu(action, button);
     }, this.holdDelay);
   },
 
