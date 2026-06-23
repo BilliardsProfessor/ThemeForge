@@ -44,6 +44,21 @@ ThemeForge.colorEditor = {
     return `Changed ${this.getActiveColorLabel()} ${detail}`;
   },
 
+  getColorHistoryDetail() {
+    const snapshot = ThemeForge.history.getLatestUndoSnapshot();
+
+    if (!snapshot) {
+      return null;
+    }
+
+    return {
+      type: "color",
+      label: this.getActiveColorLabel(),
+      before: ThemeForge.history.cloneTheme(snapshot.colors[this.activeColorKey]),
+      after: ThemeForge.history.cloneTheme(this.getActiveColor()),
+    };
+  },
+
   bindTokenButtons() {
     document.querySelectorAll("[data-color-token]").forEach((button) => {
       button.addEventListener("click", () => {
@@ -77,6 +92,7 @@ ThemeForge.colorEditor = {
       const rgb = hexToRgb(event.target.value);
 
       Object.assign(this.getActiveColor(), rgbToHsl(rgb), { a: this.getActiveColor().a });
+      ThemeForge.history.updateLatestChangeDetail(this.getColorHistoryDetail());
 
       ThemeForge.applyTheme();
       ThemeForge.accessibility.updateScoreBadge();
@@ -91,6 +107,7 @@ ThemeForge.colorEditor = {
       ThemeForge.history.recordContinuousChange(this.getColorHistoryLabel("HEX value"));
 
       Object.assign(this.getActiveColor(), rgbToHsl(rgb), { a: this.getActiveColor().a });
+      ThemeForge.history.updateLatestChangeDetail(this.getColorHistoryDetail());
 
       ThemeForge.applyTheme();
       ThemeForge.accessibility.updateScoreBadge();
@@ -116,6 +133,7 @@ ThemeForge.colorEditor = {
         rgb[channel] = value;
 
         Object.assign(this.getActiveColor(), rgbToHsl(rgb), { a: this.getActiveColor().a });
+        ThemeForge.history.updateLatestChangeDetail(this.getColorHistoryDetail());
 
         ThemeForge.applyTheme();
         ThemeForge.accessibility.updateScoreBadge();
@@ -133,6 +151,8 @@ ThemeForge.colorEditor = {
           l: Number(document.querySelector("#hslL").value),
         });
 
+        ThemeForge.history.updateLatestChangeDetail(this.getColorHistoryDetail());
+
         ThemeForge.applyTheme();
         ThemeForge.accessibility.updateScoreBadge();
         this.render();
@@ -147,6 +167,7 @@ ThemeForge.colorEditor = {
         const clampedAlphaPercent = Math.max(0, Math.min(100, alphaPercent));
 
         this.getActiveColor().a = clampedAlphaPercent / 100;
+        ThemeForge.history.updateLatestChangeDetail(this.getColorHistoryDetail());
 
         ThemeForge.applyTheme();
         ThemeForge.accessibility.updateScoreBadge();

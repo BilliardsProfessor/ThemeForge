@@ -61,15 +61,15 @@ ThemeForge.history = {
     });
   },
 
-  recordChange(label) {
-    this.pushUndoState(label);
+  recordChange(label, detail = null) {
+    this.pushUndoState(label, detail);
     this.redoStack = [];
     this.updateControls();
   },
 
-  recordContinuousChange(label) {
+  recordContinuousChange(label, detail = null) {
     if (this.continuousChangeLabel !== label) {
-      this.pushUndoState(label);
+      this.pushUndoState(label, detail);
       this.redoStack = [];
       this.continuousChangeLabel = label;
     }
@@ -83,15 +83,32 @@ ThemeForge.history = {
     this.updateControls();
   },
 
-  pushUndoState(label) {
+  pushUndoState(label, detail = null) {
     this.undoStack.push({
       label,
+      detail,
       snapshot: this.cloneTheme(ThemeForge.theme),
     });
 
     if (this.undoStack.length > this.maxItems) {
       this.undoStack.shift();
     }
+  },
+
+  updateLatestChangeDetail(detail) {
+    const latestItem = this.undoStack[this.undoStack.length - 1];
+
+    if (!latestItem) {
+      return;
+    }
+
+    latestItem.detail = detail;
+  },
+
+  getLatestUndoSnapshot() {
+    const latestItem = this.undoStack[this.undoStack.length - 1];
+
+    return latestItem ? latestItem.snapshot : null;
   },
 
   undo(steps = 1) {
@@ -108,6 +125,7 @@ ThemeForge.history = {
 
       this.redoStack.push({
         label: historyItem.label,
+        detail: historyItem.detail,
         snapshot: nextTheme,
       });
 
@@ -132,6 +150,7 @@ ThemeForge.history = {
 
       this.undoStack.push({
         label: historyItem.label,
+        detail: historyItem.detail,
         snapshot: nextTheme,
       });
 
@@ -316,10 +335,56 @@ ThemeForge.history = {
       button.dataset.historyAction = action;
       button.dataset.historySteps = String(index + 1);
       button.setAttribute("role", "menuitem");
-      button.textContent = item.label;
+
+      this.renderMenuItemContent(button, item);
 
       this.menu.element.append(button);
     });
+  },
+
+  renderMenuItemContent(button, item) {
+    if (!item.detail) {
+      button.textContent = item.label;
+      return;
+    }
+
+    if (item.detail.type === "color") {
+      this.renderColorHistoryItem(button, item.detail);
+      return;
+    }
+
+    if (item.detail.type === "value") {
+      button.textContent = `${item.detail.label}: ${item.detail.before} → ${item.detail.after}`;
+      return;
+    }
+
+    button.textContent = item.label;
+  },
+
+  renderColorHistoryItem(button, detail) {
+    const label = document.createElement("span");
+    label.className = "history-menu-item-label";
+    label.textContent = `${detail.label}:`;
+
+    const beforeSwatch = document.createElement("span");
+    beforeSwatch.className = "history-menu-swatch";
+    beforeSwatch.style.backgroundColor = this.formatColorDetail(detail.before);
+
+    const arrow = document.createElement("span");
+    arrow.className = "history-menu-arrow";
+    arrow.textContent = "→";
+
+    const afterSwatch = document.createElement("span");
+    afterSwatch.className = "history-menu-swatch";
+    afterSwatch.style.backgroundColor = this.formatColorDetail(detail.after);
+
+    button.textContent = "";
+    button.append(label, beforeSwatch, arrow, afterSwatch);
+    button.setAttribute("aria-label", `${detail.label}: ${this.formatColorDetail(detail.before)} to ${this.formatColorDetail(detail.after)}`);
+  },
+
+  formatColorDetail(color) {
+    return color.a === 1 ? `hsl(${color.h} ${color.s}% ${color.l}%)` : `hsl(${color.h} ${color.s}% ${color.l}% / ${ThemeForge.formatAlpha(color.a)})`;
   },
 
   activateMenuItem(menuItem) {
