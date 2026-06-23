@@ -16,6 +16,7 @@ ThemeForge.colorEditor = {
     this.bindGroupTabs();
     this.bindEditorControls();
     this.render();
+
     window.addEventListener("resize", () => {
       this.updateAllTabIndicators();
     });
@@ -35,6 +36,14 @@ ThemeForge.colorEditor = {
     return ThemeForge.theme.colors[this.activeColorKey];
   },
 
+  getActiveColorLabel() {
+    return this.getLabel(this.activeColorKey);
+  },
+
+  getColorHistoryLabel(detail) {
+    return `Changed ${this.getActiveColorLabel()} ${detail}`;
+  },
+
   bindTokenButtons() {
     document.querySelectorAll("[data-color-token]").forEach((button) => {
       button.addEventListener("click", () => {
@@ -52,7 +61,6 @@ ThemeForge.colorEditor = {
 
         const rememberedColorKey = this.activeColorKeysByGroup[this.activeColorGroup];
         const rememberedToken = document.querySelector(`[data-color-token="${rememberedColorKey}"][data-color-group="${this.activeColorGroup}"]`);
-
         const firstTokenInGroup = document.querySelector(`[data-color-token][data-color-group="${this.activeColorGroup}"]`);
 
         this.activeColorKey = rememberedToken ? rememberedToken.dataset.colorToken : firstTokenInGroup.dataset.colorToken;
@@ -64,8 +72,12 @@ ThemeForge.colorEditor = {
 
   bindEditorControls() {
     document.querySelector("#colorNativePicker").addEventListener("input", (event) => {
+      ThemeForge.history.recordContinuousChange(this.getColorHistoryLabel("color"));
+
       const rgb = hexToRgb(event.target.value);
+
       Object.assign(this.getActiveColor(), rgbToHsl(rgb), { a: this.getActiveColor().a });
+
       ThemeForge.applyTheme();
       ThemeForge.accessibility.updateScoreBadge();
       this.render();
@@ -76,7 +88,10 @@ ThemeForge.colorEditor = {
 
       if (!rgb) return;
 
+      ThemeForge.history.recordContinuousChange(this.getColorHistoryLabel("HEX value"));
+
       Object.assign(this.getActiveColor(), rgbToHsl(rgb), { a: this.getActiveColor().a });
+
       ThemeForge.applyTheme();
       ThemeForge.accessibility.updateScoreBadge();
       this.render();
@@ -92,6 +107,8 @@ ThemeForge.colorEditor = {
 
     document.querySelectorAll("[data-rgb-channel]").forEach((input) => {
       input.addEventListener("input", () => {
+        ThemeForge.history.recordContinuousChange(this.getColorHistoryLabel("RGB value"));
+
         const rgb = hslToRgb(this.getActiveColor());
         const channel = input.dataset.rgbChannel;
         const value = Math.max(0, Math.min(255, Number(input.value)));
@@ -99,13 +116,17 @@ ThemeForge.colorEditor = {
         rgb[channel] = value;
 
         Object.assign(this.getActiveColor(), rgbToHsl(rgb), { a: this.getActiveColor().a });
+
         ThemeForge.applyTheme();
+        ThemeForge.accessibility.updateScoreBadge();
         this.render();
       });
     });
 
     document.querySelectorAll("[data-hsl-channel]").forEach((input) => {
       input.addEventListener("input", () => {
+        ThemeForge.history.recordContinuousChange(this.getColorHistoryLabel("HSL value"));
+
         Object.assign(this.getActiveColor(), {
           h: Number(document.querySelector("#hslH").value),
           s: Number(document.querySelector("#hslS").value),
@@ -120,6 +141,8 @@ ThemeForge.colorEditor = {
 
     document.querySelectorAll("#alphaValue, #alphaNumber").forEach((input) => {
       input.addEventListener("input", () => {
+        ThemeForge.history.recordContinuousChange(this.getColorHistoryLabel("alpha"));
+
         const alphaPercent = Number(input.value);
         const clampedAlphaPercent = Math.max(0, Math.min(100, alphaPercent));
 
@@ -199,6 +222,7 @@ ThemeForge.colorEditor = {
 
     document.querySelectorAll("[data-color-token]").forEach((button) => {
       button.hidden = button.dataset.colorGroup !== this.activeColorGroup;
+
       const token = button.dataset.colorToken;
       const tokenColor = ThemeForge.theme.colors[token];
       const swatch = button.querySelector(".color-token-swatch");

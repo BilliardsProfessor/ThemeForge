@@ -243,6 +243,63 @@ button {
   background: color-mix(in srgb, var(--color-primary), transparent 88%);
 }
 
+.history-menu {
+  position: fixed;
+  z-index: 90;
+  display: grid;
+  width: max-content;
+  min-width: 12rem;
+  max-width: 18rem;
+  max-height: min(24rem, calc(100vh - 6rem));
+  overflow: auto;
+  padding: 0.3rem;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+  font-size: 0.85rem;
+}
+
+.history-menu[hidden] {
+  display: none;
+}
+
+.history-menu-title {
+  padding: 0.3rem 0.5rem 0.35rem;
+  border-bottom: var(--border-width) solid var(--color-border);
+  color: var(--color-muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.history-menu-item {
+  width: 100%;
+  border: 0;
+  border-radius: calc(var(--radius) * 0.65);
+  padding: 0.42rem 0.55rem;
+  overflow: hidden;
+  background: transparent;
+  color: var(--color-text);
+  line-height: 1.2;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-menu-item:hover,
+.history-menu-item:focus-visible,
+.history-menu-item.active {
+  background: color-mix(in srgb, var(--color-primary), transparent 88%);
+}
+
+.history-menu-empty {
+  padding: 0.45rem 0.55rem;
+  color: var(--color-muted);
+  font-size: 0.82rem;
+}
+
 .score-badge {
   font-weight: 700;
 }
@@ -736,6 +793,12 @@ body[data-left-drawer-state="temporary"] .drawer-unlock-icon {
 .has-tooltip:focus-visible::after {
   opacity: 1;
   transition-delay: var(--tooltip-delay);
+}
+
+.has-tooltip[data-history-menu-open="true"]::before,
+.has-tooltip[data-history-menu-open="true"]::after {
+  opacity: 0;
+  transition-delay: 0ms;
 }
 
 .has-tooltip[data-tooltip-position="top"]::before {
