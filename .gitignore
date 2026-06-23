@@ -1,7 +1,7 @@
 .vscode/
 .DS_Store
 Thumbs.db
-export-diff.txt
+*diff.txt
 
 # Patch files
 *.patch
