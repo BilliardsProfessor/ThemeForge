@@ -177,6 +177,9 @@ ThemeForge.export = {
       const commentsLabel = document.createElement("label");
       const commentsInput = document.createElement("input");
       const commentsText = document.createElement("span");
+      const exampleLabel = document.createElement("label");
+      const exampleInput = document.createElement("input");
+      const exampleText = document.createElement("span");
       const cancelButton = document.createElement("button");
       const confirmButton = document.createElement("button");
 
@@ -232,6 +235,12 @@ ThemeForge.export = {
       commentsText.textContent = "Include comments";
       commentsLabel.append(commentsInput, commentsText);
 
+      exampleLabel.className = "export-checkbox";
+      exampleInput.type = "checkbox";
+      exampleInput.checked = false;
+      exampleText.textContent = "Include example styles";
+      exampleLabel.append(exampleInput, exampleText);
+
       cancelButton.type = "button";
       cancelButton.className = "app-modal-secondary-action";
       cancelButton.textContent = "Cancel";
@@ -256,10 +265,11 @@ ThemeForge.export = {
           selectorType: formData.get("cssSelectorType") || "root",
           colorFormat: formData.get("cssColorFormat") || "hsl",
           includeComments: commentsInput.checked,
+          includeExample: exampleInput.checked,
         });
       });
 
-      form.append(nameField, outputGroup, selectorGroup, formatGroup, commentsLabel);
+      form.append(nameField, outputGroup, selectorGroup, formatGroup, commentsLabel, exampleLabel);
 
       ThemeForge.appModal.open({
         eyebrow: "Export styles",
@@ -310,20 +320,120 @@ ThemeForge.export = {
     const selector = this.getCssSelector(selectorType, themeName);
     const declarations = this.getCssVariableDeclarations(colorFormat);
     const block = [`${selector} {`, ...declarations.map((declaration) => (declaration ? `  ${declaration}` : "")), "}"].join("\n");
+    const example = options.includeExample ? `\n\n${this.getCssUsageExample(themeName, options)}` : "";
 
-    if (!includeComments) return block;
+    if (!includeComments) return `${block}${example}`;
 
-    return ["/*", "  Theme Forge Export", `  Theme: ${this.getCssCommentValue(themeName)}`, `  Schema: ${this.schemaVersion}`, "*/", "", block].join("\n");
+    return [
+      "/*",
+      "  Theme Forge Export",
+      `  Theme: ${this.getCssCommentValue(themeName)}`,
+      `  Schema: ${this.schemaVersion}`,
+      "*/",
+      "",
+      `${block}${example}`,
+    ].join("\n");
   },
 
   createScssExport(themeName, options = {}) {
     const colorFormat = options.colorFormat || "hsl";
     const includeComments = options.includeComments !== false;
     const declarations = this.getScssVariableDeclarations(colorFormat);
+    const example = options.includeExample ? `\n\n${this.getScssUsageExample()}` : "";
 
-    if (!includeComments) return declarations.join("\n");
+    if (!includeComments) return `${declarations.join("\n")}${example}`;
 
-    return ["// Theme Forge Export", `// Theme: ${this.getScssCommentValue(themeName)}`, `// Schema: ${this.schemaVersion}`, "", ...declarations].join("\n");
+    return (
+      ["// Theme Forge Export", `// Theme: ${this.getScssCommentValue(themeName)}`, `// Schema: ${this.schemaVersion}`, "", ...declarations].join("\n") +
+      example
+    );
+  },
+
+  getCssUsageExample(themeName, options = {}) {
+    const selector = this.getCssSelector(options.selectorType || "root", themeName);
+    const scopeSelector = selector === ":root" ? "body" : selector;
+
+    return [
+      "/* Example styles",
+      "",
+      `${scopeSelector} {`,
+      "  color: var(--color-text);",
+      "  background: var(--color-background);",
+      "  font-size: var(--font-size-base);",
+      "}",
+      "",
+      "main {",
+      "  background: var(--color-surface);",
+      "  border: var(--border-width) solid var(--color-border);",
+      "  border-radius: var(--radius);",
+      "  box-shadow: var(--shadow-soft);",
+      "}",
+      "",
+      ".example-card {",
+      "  color: var(--color-text);",
+      "  background: var(--color-surface);",
+      "  border: var(--border-width) solid var(--color-border);",
+      "  border-radius: var(--radius);",
+      "}",
+      "",
+      ".example-card a {",
+      "  color: var(--color-link);",
+      "}",
+      "",
+      ".example-card a:focus-visible {",
+      "  outline: 2px solid var(--color-focus);",
+      "  outline-offset: 3px;",
+      "}",
+      "",
+      ".example-alert {",
+      "  color: var(--color-text);",
+      "  background: var(--color-warning);",
+      "  border-radius: var(--radius);",
+      "}",
+      "",
+      "*/",
+    ].join("\n");
+  },
+
+  getScssUsageExample() {
+    return [
+      "// Example styles",
+      "",
+      "body {",
+      "  color: $color-text;",
+      "  background: $color-background;",
+      "  font-size: $font-size-base;",
+      "}",
+      "",
+      "main {",
+      "  background: $color-surface;",
+      "  border: $border-width solid $color-border;",
+      "  border-radius: $radius;",
+      "  box-shadow: $shadow-soft;",
+      "}",
+      "",
+      ".example-card {",
+      "  color: $color-text;",
+      "  background: $color-surface;",
+      "  border: $border-width solid $color-border;",
+      "  border-radius: $radius;",
+      "}",
+      "",
+      ".example-card a {",
+      "  color: $color-link;",
+      "}",
+      "",
+      ".example-card a:focus-visible {",
+      "  outline: 2px solid $color-focus;",
+      "  outline-offset: 3px;",
+      "}",
+      "",
+      ".example-alert {",
+      "  color: $color-text;",
+      "  background: $color-warning;",
+      "  border-radius: $radius;",
+      "}",
+    ].join("\n");
   },
 
   getCssVariableDeclarations(format) {
