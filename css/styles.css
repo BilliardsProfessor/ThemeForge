@@ -231,8 +231,14 @@ button {
     color: hsl(260 90% 82%);
 }
 
-.app-appearance-toggle[data-app-appearance-preference="system"] {
+.app-appearance-toggle[data-app-appearance-preference="system"][data-app-mode="light"] {
     color: hsl(199 89% 48%);
+}
+
+.app-appearance-toggle[data-app-appearance-preference="system"][data-app-mode="dark"] {
+    border-color: hsl(260 55% 35%);
+    background: hsl(258 55% 14%);
+    color: hsl(260 90% 82%);
 }
 
 .app-appearance-icon {

@@ -31,11 +31,13 @@ function updateAppAppearanceControl(preference = getStoredAppAppearancePreferenc
         return;
     }
 
+    const resolvedMode = getResolvedAppAppearance(preference);
     const currentIndex = APP_APPEARANCE_OPTIONS.indexOf(preference);
     const nextPreference = APP_APPEARANCE_OPTIONS[(currentIndex + 1) % APP_APPEARANCE_OPTIONS.length];
     const label = `Switch app appearance to ${nextPreference}`;
 
     button.dataset.appAppearancePreference = preference;
+    button.dataset.appMode = resolvedMode;
     button.dataset.tooltip = label;
     button.setAttribute("aria-label", label);
 }
