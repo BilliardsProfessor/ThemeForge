@@ -265,6 +265,28 @@ body[data-app-mode="dark"] {
     --shadow-soft: 0 12px 30px rgb(0 0 0 / 0.35);
 }
 
+body[data-app-mode="dark"] {
+    --control-surface: hsl(222 40% 13%);
+    --control-surface-raised: hsl(222 34% 18%);
+    --control-surface-active: hsl(222 28% 24%);
+    --control-border: hsl(217 33% 30%);
+    --control-border-strong: hsl(217 33% 42%);
+    --control-text: hsl(210 40% 98%);
+    --control-muted: hsl(215 20% 72%);
+    --swatch-border: hsl(210 40% 96%);
+}
+
+body:not([data-app-mode="dark"]) {
+    --control-surface: hsl(0 0% 100%);
+    --control-surface-raised: hsl(210 40% 96%);
+    --control-surface-active: hsl(0 0% 100%);
+    --control-border: hsl(214 32% 84%);
+    --control-border-strong: hsl(215 20% 58%);
+    --control-text: hsl(222 47% 11%);
+    --control-muted: hsl(215 16% 47%);
+    --swatch-border: hsl(222 47% 11%);
+}
+
 .preview-size-field {
     display: flex;
     align-items: center;
@@ -1441,17 +1463,17 @@ a {
     gap: 0.1rem 0.75rem;
     width: 100%;
     padding: 0.25rem 0.75rem;
-    border: 1px solid #cbd5e1;
+    border: var(--border-width) solid var(--control-border);
     border-radius: 0.7rem;
-    background: #ffffff;
-    color: #0f172a;
+    background: var(--control-surface);
+    color: var(--control-text);
     text-align: left;
 }
 
 .color-token:hover,
 .color-token.active {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgb(37 99 235 / 0.12);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary), transparent 82%);
 }
 
 .color-token-name {
@@ -1464,14 +1486,15 @@ a {
     justify-self: end;
     width: 3rem;
     height: 1rem;
-    border: 1px solid #94a3b8;
+    border: var(--border-width) solid var(--swatch-border);
     border-radius: 999px;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-background), transparent 35%);
 }
 
 .color-token-value {
     grid-area: value;
     max-width: 100%;
-    color: #64748b;
+    color: var(--control-muted);
     font-family: Consolas, Monaco, monospace;
     font-size: 0.75rem;
     line-height: 1.2;
@@ -1481,11 +1504,12 @@ a {
 
 .color-editor {
     padding-top: var(--space-2);
-    border-top: 1px solid #e2e8f0;
+    border-top: var(--border-width) solid var(--control-border);
 }
 
 .color-editor h3 {
     margin: 0 0 0.75rem;
+    color: var(--control-text);
     font-size: 0.95rem;
 }
 
@@ -1505,6 +1529,7 @@ a {
     align-items: center;
     gap: 0.5rem;
     margin-bottom: 0.65rem;
+    color: var(--control-muted);
 }
 
 .color-editor [data-format-panel="hex"] label {
@@ -1515,8 +1540,10 @@ a {
 .color-editor input[type="number"] {
     min-width: 0;
     padding: 0.4rem 0.45rem;
-    border: 1px solid #cbd5e1;
+    border: var(--border-width) solid var(--control-border);
     border-radius: 0.45rem;
+    background: var(--control-surface);
+    color: var(--control-text);
     text-align: center;
 }
 
@@ -1529,25 +1556,10 @@ a {
     height: 2.75rem;
     padding: 5px;
     overflow: hidden;
-    border: 1px solid #cbd5e1;
+    border: var(--border-width) solid var(--swatch-border);
     border-radius: 0.65rem;
-    background: #ffffff;
+    background: var(--control-surface);
     cursor: pointer;
-    overflow: hidden;
-}
-
-#colorNativePicker::-webkit-color-swatch-wrapper {
-    padding: 0;
-}
-
-#colorNativePicker::-webkit-color-swatch {
-    border: 0;
-    border-radius: calc(0.65rem - 5px);
-}
-
-#colorNativePicker::-moz-color-swatch {
-    border: 0;
-    border-radius: calc(0.65rem - 5px);
 }
 
 #colorNativePicker::-webkit-color-swatch-wrapper {
@@ -1571,8 +1583,9 @@ a {
     display: flex;
     gap: 0.25rem;
     padding: 0.25rem;
+    border: var(--border-width) solid var(--control-border);
     border-radius: 0.65rem;
-    background: #e2e8f0;
+    background: var(--control-surface-raised);
 }
 
 .segmented-control {
@@ -1592,8 +1605,8 @@ a {
     inset-inline-start: 0;
     inline-size: var(--active-tab-width, 0px);
     border-radius: 0.45rem;
-    background: #ffffff;
-    box-shadow: 0 1px 3px rgb(15 23 42 / 0.16);
+    background: var(--control-surface-active);
+    box-shadow: var(--shadow-soft);
     transform: translateX(var(--active-tab-offset, 0px));
     transition:
         inline-size 180ms ease,
@@ -1609,7 +1622,7 @@ a {
     border-radius: 0.45rem;
     padding: 0.45rem 0.5rem;
     background: transparent;
-    color: #334155;
+    color: var(--control-muted);
     font-weight: 700;
 }
 
@@ -1617,7 +1630,7 @@ a {
 .segmented-control button.active,
 .color-group-tabs button:hover,
 .color-group-tabs button.active {
-    color: #0f172a;
+    color: var(--control-text);
 }
 
 .segmented-control button:focus,
@@ -1627,7 +1640,7 @@ a {
 
 .segmented-control button:focus-visible,
 .color-group-tabs button:focus-visible {
-    outline: 3px solid rgb(37 99 235 / 0.35);
+    outline: 3px solid color-mix(in srgb, var(--color-primary), transparent 65%);
     outline-offset: 2px;
 }
 
