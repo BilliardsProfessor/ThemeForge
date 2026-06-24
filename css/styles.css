@@ -147,6 +147,14 @@ button {
     gap: 0.5rem;
 }
 
+.app-actions {
+    grid-column: 3;
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .header-actions button,
 .primary-button,
 .secondary-button {
@@ -211,6 +219,39 @@ button {
 .theme-mode-toggle[data-theme-mode="light"] .theme-mode-icon-sun,
 .theme-mode-toggle[data-theme-mode="dark"] .theme-mode-icon-moon {
     display: block;
+}
+
+.app-appearance-toggle[data-app-appearance-preference="light"] {
+    color: hsl(38 92% 50%);
+}
+
+.app-appearance-toggle[data-app-appearance-preference="dark"] {
+    border-color: hsl(260 55% 35%);
+    background: hsl(258 55% 14%);
+    color: hsl(260 90% 82%);
+}
+
+.app-appearance-toggle[data-app-appearance-preference="system"] {
+    color: hsl(199 89% 48%);
+}
+
+.app-appearance-icon {
+    display: none;
+}
+
+.app-appearance-toggle[data-app-appearance-preference="light"] .app-appearance-icon-sun,
+.app-appearance-toggle[data-app-appearance-preference="dark"] .app-appearance-icon-moon,
+.app-appearance-toggle[data-app-appearance-preference="system"] .app-appearance-icon-system {
+    display: block;
+}
+
+body[data-app-mode="dark"] {
+    --color-background: hsl(222 47% 8%);
+    --color-surface: hsl(222 40% 13%);
+    --color-text: hsl(210 40% 98%);
+    --color-muted: hsl(215 20% 70%);
+    --color-border: hsl(217 33% 24%);
+    --shadow-soft: 0 12px 30px rgb(0 0 0 / 0.35);
 }
 
 .preview-size-field {

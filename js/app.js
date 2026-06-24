@@ -1,3 +1,97 @@
+const APP_APPEARANCE_STORAGE_KEY = "themeForge.appAppearance";
+const APP_APPEARANCE_OPTIONS = ["light", "dark", "system"];
+
+function getStoredAppAppearancePreference() {
+    const preference = localStorage.getItem(APP_APPEARANCE_STORAGE_KEY);
+
+    return APP_APPEARANCE_OPTIONS.includes(preference) ? preference : "system";
+}
+
+function getResolvedAppAppearance(preference) {
+    if (preference !== "system") {
+        return preference;
+    }
+
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function applyAppAppearance(preference) {
+    const resolvedMode = getResolvedAppAppearance(preference);
+
+    document.body.dataset.appModePreference = preference;
+    document.body.dataset.appMode = resolvedMode;
+
+    updateAppAppearanceControl(preference);
+}
+
+function updateAppAppearanceControl(preference = getStoredAppAppearancePreference()) {
+    const button = document.querySelector("[data-app-appearance-toggle]");
+
+    if (!button) {
+        return;
+    }
+
+    const currentIndex = APP_APPEARANCE_OPTIONS.indexOf(preference);
+    const nextPreference = APP_APPEARANCE_OPTIONS[(currentIndex + 1) % APP_APPEARANCE_OPTIONS.length];
+    const label = `Switch app appearance to ${nextPreference}`;
+
+    button.dataset.appAppearancePreference = preference;
+    button.dataset.tooltip = label;
+    button.setAttribute("aria-label", label);
+}
+
+function cycleAppAppearance() {
+    const currentPreference = document.body.dataset.appModePreference || getStoredAppAppearancePreference();
+    const currentIndex = APP_APPEARANCE_OPTIONS.indexOf(currentPreference);
+    const nextPreference = APP_APPEARANCE_OPTIONS[(currentIndex + 1) % APP_APPEARANCE_OPTIONS.length];
+
+    localStorage.setItem(APP_APPEARANCE_STORAGE_KEY, nextPreference);
+    applyAppAppearance(nextPreference);
+}
+
+function bindAppAppearanceControl() {
+    const button = document.querySelector("[data-app-appearance-toggle]");
+
+    if (!button) {
+        return;
+    }
+
+    button.addEventListener("click", cycleAppAppearance);
+
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+        const preference = document.body.dataset.appModePreference || getStoredAppAppearancePreference();
+
+        if (preference === "system") {
+            applyAppAppearance(preference);
+        }
+    });
+}
+
+function openSettingsDialog() {
+    const message = document.createElement("p");
+    const closeButton = document.createElement("button");
+
+    message.textContent = "Wouldn't it be nice if there were actually settings in here?";
+
+    closeButton.type = "button";
+    closeButton.textContent = "Close";
+    closeButton.addEventListener("click", () => {
+        ThemeForge.appModal.close();
+    });
+
+    ThemeForge.appModal.open({
+        eyebrow: "Settings",
+        title: "Theme Forge Settings",
+        body: message,
+        footer: [closeButton],
+        initialFocusElement: closeButton,
+    });
+}
+
+function bindSettingsControl() {
+    document.querySelector("#settingsBtn")?.addEventListener("click", openSettingsDialog);
+}
+
 function updateThemeModeControls() {
     const button = document.querySelector("[data-theme-mode-toggle]");
 
@@ -153,6 +247,9 @@ function bindControls() {
 document.addEventListener("DOMContentLoaded", () => {
     bindControls();
     bindThemeModeControls();
+    bindAppAppearanceControl();
+    bindSettingsControl();
+    applyAppAppearance(getStoredAppAppearancePreference());
     updateThemeModeControls();
     ThemeForge.history.init();
     ThemeForge.applyTheme();
