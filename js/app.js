@@ -1,3 +1,19 @@
+function updateThemeModeControls() {
+    const button = document.querySelector("[data-theme-mode-toggle]");
+
+    if (!button) {
+        return;
+    }
+
+    const activeMode = ThemeForge.getActiveMode();
+    const nextMode = activeMode === "light" ? "dark" : "light";
+    const label = `Switch to ${nextMode} mode`;
+
+    button.dataset.themeMode = activeMode;
+    button.dataset.tooltip = label;
+    button.setAttribute("aria-label", label);
+}
+
 function bindThemeModeControls() {
     const button = document.querySelector("[data-theme-mode-toggle]");
 
@@ -30,14 +46,6 @@ function setThemeMode(mode) {
 
     ThemeForge.refreshThemeInterface();
     ThemeForge.history.saveSession();
-}
-
-function bindThemeModeControls() {
-    document.querySelectorAll("[data-theme-mode]").forEach((button) => {
-        button.addEventListener("click", () => {
-            setThemeMode(button.dataset.themeMode);
-        });
-    });
 }
 
 function updateThemeFromControls(event) {
@@ -145,6 +153,7 @@ function bindControls() {
 document.addEventListener("DOMContentLoaded", () => {
     bindControls();
     bindThemeModeControls();
+    updateThemeModeControls();
     ThemeForge.history.init();
     ThemeForge.applyTheme();
     ThemeForge.colorEditor.init();
