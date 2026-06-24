@@ -1,489 +1,497 @@
 ThemeForge.history = {
-  undoStack: [],
-  redoStack: [],
-  maxItems: 50,
-  continuousTimerId: null,
-  continuousChangeLabel: null,
-  continuousDelay: 650,
-  holdDelay: 400,
+    undoStack: [],
+    redoStack: [],
+    maxItems: 50,
+    continuousTimerId: null,
+    continuousChangeLabel: null,
+    continuousDelay: 650,
+    holdDelay: 400,
 
-  menu: {
-    element: null,
-    action: null,
-    activeButton: null,
-    activeItem: null,
-    holdTimerId: null,
-    pointerStarted: false,
-    menuOpenedFromHold: false,
-  },
+    menu: {
+        element: null,
+        action: null,
+        activeButton: null,
+        activeItem: null,
+        holdTimerId: null,
+        pointerStarted: false,
+        menuOpenedFromHold: false,
+    },
 
-  init() {
-    this.menu.element = document.querySelector("#historyMenu");
+    init() {
+        this.menu.element = document.querySelector("#historyMenu");
 
-    this.bindHistoryButton("#undoBtn", "undo");
-    this.bindHistoryButton("#redoBtn", "redo");
+        this.bindHistoryButton("#undoBtn", "undo");
+        this.bindHistoryButton("#redoBtn", "redo");
 
-    document.addEventListener("pointermove", (event) => {
-      this.onDocumentPointerMove(event);
-    });
+        document.addEventListener("pointermove", (event) => {
+            this.onDocumentPointerMove(event);
+        });
 
-    document.addEventListener("pointerup", (event) => {
-      this.onDocumentPointerUp(event);
-    });
+        document.addEventListener("pointerup", (event) => {
+            this.onDocumentPointerUp(event);
+        });
 
-    document.addEventListener("pointerdown", (event) => {
-      this.onDocumentPointerDown(event);
-    });
+        document.addEventListener("pointerdown", (event) => {
+            this.onDocumentPointerDown(event);
+        });
 
-    document.addEventListener("keydown", (event) => {
-      this.onDocumentKeyDown(event);
-    });
+        document.addEventListener("keydown", (event) => {
+            this.onDocumentKeyDown(event);
+        });
 
-    this.menu.element.addEventListener("click", (event) => {
-      this.onMenuClick(event);
-    });
+        this.menu.element.addEventListener("click", (event) => {
+            this.onMenuClick(event);
+        });
 
-    this.updateControls();
-  },
+        this.updateControls();
+    },
 
-  bindHistoryButton(selector, action) {
-    const button = document.querySelector(selector);
+    bindHistoryButton(selector, action) {
+        const button = document.querySelector(selector);
 
-    button.setAttribute("aria-haspopup", "menu");
-    button.setAttribute("aria-expanded", "false");
+        button.setAttribute("aria-haspopup", "menu");
+        button.setAttribute("aria-expanded", "false");
 
-    button.addEventListener("pointerdown", (event) => {
-      this.onHistoryButtonPointerDown(event, action);
-    });
+        button.addEventListener("pointerdown", (event) => {
+            this.onHistoryButtonPointerDown(event, action);
+        });
 
-    button.addEventListener("click", (event) => {
-      event.preventDefault();
-    });
-  },
+        button.addEventListener("click", (event) => {
+            event.preventDefault();
+        });
+    },
 
-  recordChange(label, detail = null) {
-    this.pushUndoState(label, detail);
-    this.redoStack = [];
-    this.updateControls();
-  },
+    recordChange(label, detail = null) {
+        this.pushUndoState(label, detail);
+        this.redoStack = [];
+        this.updateControls();
+    },
 
-  recordContinuousChange(label, detail = null) {
-    if (this.continuousChangeLabel !== label) {
-      this.pushUndoState(label, detail);
-      this.redoStack = [];
-      this.continuousChangeLabel = label;
-    }
+    recordContinuousChange(label, detail = null) {
+        if (this.continuousChangeLabel !== label) {
+            this.pushUndoState(label, detail);
+            this.redoStack = [];
+            this.continuousChangeLabel = label;
+        }
 
-    clearTimeout(this.continuousTimerId);
+        clearTimeout(this.continuousTimerId);
 
-    this.continuousTimerId = setTimeout(() => {
-      this.continuousChangeLabel = null;
-    }, this.continuousDelay);
+        this.continuousTimerId = setTimeout(() => {
+            this.continuousChangeLabel = null;
+        }, this.continuousDelay);
 
-    this.updateControls();
-  },
+        this.updateControls();
+    },
 
-  pushUndoState(label, detail = null) {
-    this.undoStack.push({
-      label,
-      detail,
-      snapshot: this.cloneTheme(ThemeForge.theme),
-    });
+    pushUndoState(label, detail = null) {
+        this.undoStack.push({
+            label,
+            detail,
+            snapshot: this.cloneTheme(ThemeForge.theme),
+        });
 
-    if (this.undoStack.length > this.maxItems) {
-      this.undoStack.shift();
-    }
-  },
+        if (this.undoStack.length > this.maxItems) {
+            this.undoStack.shift();
+        }
+    },
 
-  updateLatestChangeDetail(detail) {
-    const latestItem = this.undoStack[this.undoStack.length - 1];
+    updateLatestChangeDetail(detail) {
+        const latestItem = this.undoStack[this.undoStack.length - 1];
 
-    if (!latestItem) {
-      return;
-    }
+        if (!latestItem) {
+            return;
+        }
 
-    latestItem.detail = detail;
-  },
+        latestItem.detail = detail;
+    },
 
-  getLatestUndoSnapshot() {
-    const latestItem = this.undoStack[this.undoStack.length - 1];
+    getLatestUndoSnapshot() {
+        const latestItem = this.undoStack[this.undoStack.length - 1];
 
-    return latestItem ? latestItem.snapshot : null;
-  },
+        return latestItem ? latestItem.snapshot : null;
+    },
 
-  undo(steps = 1) {
-    if (!this.undoStack.length) {
-      return;
-    }
+    undo(steps = 1) {
+        if (!this.undoStack.length) {
+            return;
+        }
 
-    this.clearContinuousChange();
+        this.clearContinuousChange();
 
-    let nextTheme = this.cloneTheme(ThemeForge.theme);
+        let nextTheme = this.cloneTheme(ThemeForge.theme);
 
-    for (let index = 0; index < steps && this.undoStack.length; index += 1) {
-      const historyItem = this.undoStack.pop();
+        for (let index = 0; index < steps && this.undoStack.length; index += 1) {
+            const historyItem = this.undoStack.pop();
 
-      this.redoStack.push({
-        label: historyItem.label,
-        detail: historyItem.detail,
-        snapshot: nextTheme,
-      });
+            this.redoStack.push({
+                label: historyItem.label,
+                detail: historyItem.detail,
+                snapshot: nextTheme,
+            });
 
-      nextTheme = this.cloneTheme(historyItem.snapshot);
-    }
+            nextTheme = this.cloneTheme(historyItem.snapshot);
+        }
 
-    this.restoreTheme(nextTheme);
-    this.updateControls();
-  },
+        this.restoreTheme(nextTheme);
+        this.updateControls();
+    },
 
-  redo(steps = 1) {
-    if (!this.redoStack.length) {
-      return;
-    }
+    redo(steps = 1) {
+        if (!this.redoStack.length) {
+            return;
+        }
 
-    this.clearContinuousChange();
+        this.clearContinuousChange();
 
-    let nextTheme = this.cloneTheme(ThemeForge.theme);
+        let nextTheme = this.cloneTheme(ThemeForge.theme);
 
-    for (let index = 0; index < steps && this.redoStack.length; index += 1) {
-      const historyItem = this.redoStack.pop();
+        for (let index = 0; index < steps && this.redoStack.length; index += 1) {
+            const historyItem = this.redoStack.pop();
 
-      this.undoStack.push({
-        label: historyItem.label,
-        detail: historyItem.detail,
-        snapshot: nextTheme,
-      });
+            this.undoStack.push({
+                label: historyItem.label,
+                detail: historyItem.detail,
+                snapshot: nextTheme,
+            });
 
-      if (this.undoStack.length > this.maxItems) {
-        this.undoStack.shift();
-      }
+            if (this.undoStack.length > this.maxItems) {
+                this.undoStack.shift();
+            }
 
-      nextTheme = this.cloneTheme(historyItem.snapshot);
-    }
+            nextTheme = this.cloneTheme(historyItem.snapshot);
+        }
 
-    this.restoreTheme(nextTheme);
-    this.updateControls();
-  },
+        this.restoreTheme(nextTheme);
+        this.updateControls();
+    },
 
-  restoreTheme(snapshot) {
-    ThemeForge.theme = this.cloneTheme(snapshot);
-    ThemeForge.refreshThemeInterface();
-  },
+    restoreTheme(snapshot) {
+        ThemeForge.theme = this.cloneTheme(snapshot);
+        ThemeForge.refreshThemeInterface();
+    },
 
-  clearContinuousChange() {
-    clearTimeout(this.continuousTimerId);
-    this.continuousChangeLabel = null;
-  },
+    clearContinuousChange() {
+        clearTimeout(this.continuousTimerId);
+        this.continuousChangeLabel = null;
+    },
 
-  cloneTheme(theme) {
-    if (typeof structuredClone === "function") {
-      return structuredClone(theme);
-    }
+    cloneTheme(theme) {
+        if (typeof structuredClone === "function") {
+            return structuredClone(theme);
+        }
 
-    return JSON.parse(JSON.stringify(theme));
-  },
+        return JSON.parse(JSON.stringify(theme));
+    },
 
-  getUndoItems() {
-    return this.undoStack.slice().reverse();
-  },
+    getUndoItems() {
+        return this.undoStack.slice().reverse();
+    },
 
-  getRedoItems() {
-    return this.redoStack.slice().reverse();
-  },
+    getRedoItems() {
+        return this.redoStack.slice().reverse();
+    },
 
-  onHistoryButtonPointerDown(event, action) {
-    const button = event.currentTarget;
+    onHistoryButtonPointerDown(event, action) {
+        const button = event.currentTarget;
 
-    if (event.button !== 0 || button.disabled) {
-      return;
-    }
+        if (event.button !== 0 || button.disabled) {
+            return;
+        }
 
-    event.preventDefault();
+        event.preventDefault();
 
-    this.closeMenu();
-
-    this.menu.pointerStarted = true;
-    this.menu.menuOpenedFromHold = false;
-    this.menu.action = action;
-    this.menu.activeButton = button;
-    this.menu.activeItem = null;
-
-    if (button.setPointerCapture) {
-      button.setPointerCapture(event.pointerId);
-    }
-
-    this.menu.holdTimerId = setTimeout(() => {
-      this.menu.menuOpenedFromHold = true;
-      this.openMenu(action, button);
-    }, this.holdDelay);
-  },
-
-  onDocumentPointerMove(event) {
-    if (!this.menu.menuOpenedFromHold || this.menu.element.hidden) {
-      return;
-    }
-
-    const menuItem = this.getMenuItemFromPoint(event.clientX, event.clientY);
-
-    this.setActiveMenuItem(menuItem);
-  },
-
-  onDocumentPointerUp(event) {
-    if (!this.menu.pointerStarted) {
-      return;
-    }
-
-    clearTimeout(this.menu.holdTimerId);
-
-    if (this.menu.menuOpenedFromHold) {
-      if (this.menu.activeItem) {
-        this.activateMenuItem(this.menu.activeItem);
-      } else if (!this.isPointInsideMenu(event.clientX, event.clientY) && !this.isPointInsideButton(event.clientX, event.clientY)) {
         this.closeMenu();
-      }
 
-      this.resetPointerState();
-      return;
-    }
+        this.menu.pointerStarted = true;
+        this.menu.menuOpenedFromHold = false;
+        this.menu.action = action;
+        this.menu.activeButton = button;
+        this.menu.activeItem = null;
 
-    if (this.menu.action === "undo") {
-      this.undo();
-    }
+        if (button.setPointerCapture) {
+            button.setPointerCapture(event.pointerId);
+        }
 
-    if (this.menu.action === "redo") {
-      this.redo();
-    }
+        this.menu.holdTimerId = setTimeout(() => {
+            this.menu.menuOpenedFromHold = true;
+            this.openMenu(action, button);
+        }, this.holdDelay);
+    },
 
-    this.resetPointerState();
-  },
+    onDocumentPointerMove(event) {
+        if (!this.menu.menuOpenedFromHold || this.menu.element.hidden) {
+            return;
+        }
 
-  onDocumentPointerDown(event) {
-    if (this.menu.element.hidden) {
-      return;
-    }
+        const menuItem = this.getMenuItemFromPoint(event.clientX, event.clientY);
 
-    if (this.menu.element.contains(event.target) || event.target === this.menu.activeButton) {
-      return;
-    }
+        this.setActiveMenuItem(menuItem);
+    },
 
-    this.closeMenu();
-  },
+    onDocumentPointerUp(event) {
+        if (!this.menu.pointerStarted) {
+            return;
+        }
 
-  onDocumentKeyDown(event) {
-    if (event.key !== "Escape" || this.menu.element.hidden) {
-      return;
-    }
+        clearTimeout(this.menu.holdTimerId);
 
-    this.closeMenu();
-  },
+        if (this.menu.menuOpenedFromHold) {
+            if (this.menu.activeItem) {
+                this.activateMenuItem(this.menu.activeItem);
+            } else if (!this.isPointInsideMenu(event.clientX, event.clientY) && !this.isPointInsideButton(event.clientX, event.clientY)) {
+                this.closeMenu();
+            }
 
-  onMenuClick(event) {
-    const menuItem = event.target.closest("[data-history-steps]");
+            this.resetPointerState();
+            return;
+        }
 
-    if (!menuItem) {
-      return;
-    }
+        if (this.menu.action === "undo") {
+            this.undo();
+        }
 
-    this.activateMenuItem(menuItem);
-  },
+        if (this.menu.action === "redo") {
+            this.redo();
+        }
 
-  openMenu(action, button) {
-    this.renderMenu(action);
+        this.resetPointerState();
+    },
 
-    this.menu.element.hidden = false;
-    this.menu.action = action;
-    this.menu.activeButton = button;
+    onDocumentPointerDown(event) {
+        if (this.menu.element.hidden) {
+            return;
+        }
 
-    button.setAttribute("aria-expanded", "true");
-    button.dataset.historyMenuOpen = "true";
+        if (this.menu.element.contains(event.target) || event.target === this.menu.activeButton) {
+            return;
+        }
 
-    const buttonRect = button.getBoundingClientRect();
-    const menuRect = this.menu.element.getBoundingClientRect();
-    const viewportPadding = 8;
+        this.closeMenu();
+    },
 
-    const top = buttonRect.bottom + 6;
-    const left = Math.min(Math.max(viewportPadding, buttonRect.left), window.innerWidth - menuRect.width - viewportPadding);
+    onDocumentKeyDown(event) {
+        if (event.key !== "Escape" || this.menu.element.hidden) {
+            return;
+        }
 
-    this.menu.element.style.top = `${top}px`;
-    this.menu.element.style.left = `${left}px`;
-  },
+        this.closeMenu();
+    },
 
-  renderMenu(action) {
-    const items = action === "undo" ? this.getUndoItems() : this.getRedoItems();
-    const title = action === "undo" ? "Undo" : "Redo";
+    onMenuClick(event) {
+        const menuItem = event.target.closest("[data-history-steps]");
 
-    this.menu.element.textContent = "";
+        if (!menuItem) {
+            return;
+        }
 
-    const titleElement = document.createElement("div");
-    titleElement.className = "history-menu-title";
-    titleElement.textContent = title;
-    this.menu.element.append(titleElement);
+        this.activateMenuItem(menuItem);
+    },
 
-    if (!items.length) {
-      const emptyElement = document.createElement("div");
-      emptyElement.className = "history-menu-empty";
-      emptyElement.textContent = `Nothing to ${action}`;
-      this.menu.element.append(emptyElement);
-      return;
-    }
+    openMenu(action, button) {
+        this.renderMenu(action);
 
-    items.forEach((item, index) => {
-      const button = document.createElement("button");
+        this.menu.element.hidden = false;
+        this.menu.action = action;
+        this.menu.activeButton = button;
 
-      button.type = "button";
-      button.className = "history-menu-item";
-      button.dataset.historyAction = action;
-      button.dataset.historySteps = String(index + 1);
-      button.setAttribute("role", "menuitem");
+        button.setAttribute("aria-expanded", "true");
+        button.dataset.historyMenuOpen = "true";
 
-      this.renderMenuItemContent(button, item);
+        const buttonRect = button.getBoundingClientRect();
+        const menuRect = this.menu.element.getBoundingClientRect();
+        const viewportPadding = 8;
 
-      this.menu.element.append(button);
-    });
-  },
+        const top = buttonRect.bottom + 6;
+        const left = Math.min(Math.max(viewportPadding, buttonRect.left), window.innerWidth - menuRect.width - viewportPadding);
 
-  renderMenuItemContent(button, item) {
-    if (!item.detail) {
-      button.textContent = item.label;
-      return;
-    }
+        this.menu.element.style.top = `${top}px`;
+        this.menu.element.style.left = `${left}px`;
+    },
 
-    if (item.detail.type === "color") {
-      this.renderColorHistoryItem(button, item.detail);
-      return;
-    }
+    renderMenu(action) {
+        const items = action === "undo" ? this.getUndoItems() : this.getRedoItems();
+        const title = action === "undo" ? "Undo" : "Redo";
 
-    if (item.detail.type === "value") {
-      button.textContent = `${item.detail.label}: ${item.detail.before} → ${item.detail.after}`;
-      return;
-    }
+        this.menu.element.textContent = "";
 
-    button.textContent = item.label;
-  },
+        const titleElement = document.createElement("div");
+        titleElement.className = "history-menu-title";
+        titleElement.textContent = title;
+        this.menu.element.append(titleElement);
 
-  renderColorHistoryItem(button, detail) {
-    const label = document.createElement("span");
-    label.className = "history-menu-item-label";
-    label.textContent = `${detail.label}:`;
+        if (!items.length) {
+            const emptyElement = document.createElement("div");
+            emptyElement.className = "history-menu-empty";
+            emptyElement.textContent = `Nothing to ${action}`;
+            this.menu.element.append(emptyElement);
+            return;
+        }
 
-    const beforeSwatch = document.createElement("span");
-    beforeSwatch.className = "history-menu-swatch";
-    beforeSwatch.style.backgroundColor = this.formatColorDetail(detail.before);
+        items.forEach((item, index) => {
+            const button = document.createElement("button");
 
-    const arrow = document.createElement("span");
-    arrow.className = "history-menu-arrow";
-    arrow.textContent = "→";
+            button.type = "button";
+            button.className = "history-menu-item";
+            button.dataset.historyAction = action;
+            button.dataset.historySteps = String(index + 1);
+            button.setAttribute("role", "menuitem");
 
-    const afterSwatch = document.createElement("span");
-    afterSwatch.className = "history-menu-swatch";
-    afterSwatch.style.backgroundColor = this.formatColorDetail(detail.after);
+            this.renderMenuItemContent(button, item);
 
-    button.textContent = "";
-    button.append(label, beforeSwatch, arrow, afterSwatch);
-    button.setAttribute("aria-label", `${detail.label}: ${this.formatColorDetail(detail.before)} to ${this.formatColorDetail(detail.after)}`);
-  },
+            this.menu.element.append(button);
+        });
+    },
 
-  formatColorDetail(color) {
-    return color.a === 1 ? `hsl(${color.h} ${color.s}% ${color.l}%)` : `hsl(${color.h} ${color.s}% ${color.l}% / ${ThemeForge.formatAlpha(color.a)})`;
-  },
+    renderMenuItemContent(button, item) {
+        if (!item.detail) {
+            button.textContent = item.label;
+            return;
+        }
 
-  activateMenuItem(menuItem) {
-    const action = menuItem.dataset.historyAction;
-    const steps = Number(menuItem.dataset.historySteps);
+        if (item.detail.type === "color") {
+            this.renderColorHistoryItem(button, item.detail);
+            return;
+        }
 
-    this.closeMenu();
+        if (item.detail.type === "value") {
+            button.textContent = `${item.detail.label}: ${item.detail.before} → ${item.detail.after}`;
+            return;
+        }
 
-    if (action === "undo") {
-      this.undo(steps);
-    }
+        button.textContent = item.label;
+    },
 
-    if (action === "redo") {
-      this.redo(steps);
-    }
-  },
+    renderColorHistoryItem(button, detail) {
+        const label = document.createElement("span");
+        label.className = "history-menu-item-label";
+        label.textContent = `${detail.label}:`;
 
-  getMenuItemFromPoint(x, y) {
-    const element = document.elementFromPoint(x, y);
+        const beforeSwatch = document.createElement("span");
+        beforeSwatch.className = "history-menu-swatch";
+        beforeSwatch.style.backgroundColor = this.formatColorDetail(detail.before);
 
-    if (!element) {
-      return null;
-    }
+        const arrow = document.createElement("span");
+        arrow.className = "history-menu-arrow";
+        arrow.textContent = "→";
 
-    return element.closest("[data-history-steps]");
-  },
+        const afterSwatch = document.createElement("span");
+        afterSwatch.className = "history-menu-swatch";
+        afterSwatch.style.backgroundColor = this.formatColorDetail(detail.after);
 
-  setActiveMenuItem(menuItem) {
-    if (this.menu.activeItem === menuItem) {
-      return;
-    }
+        button.textContent = "";
+        button.append(label, beforeSwatch, arrow, afterSwatch);
+        button.setAttribute("aria-label", `${detail.label}: ${this.formatColorDetail(detail.before)} to ${this.formatColorDetail(detail.after)}`);
+    },
 
-    if (this.menu.activeItem) {
-      this.menu.activeItem.classList.remove("active");
-    }
+    formatColorDetail(color) {
+        return color.a === 1 ? `hsl(${color.h} ${color.s}% ${color.l}%)` : `hsl(${color.h} ${color.s}% ${color.l}% / ${ThemeForge.formatAlpha(color.a)})`;
+    },
 
-    this.menu.activeItem = menuItem;
+    activateMenuItem(menuItem) {
+        const action = menuItem.dataset.historyAction;
+        const steps = Number(menuItem.dataset.historySteps);
 
-    if (this.menu.activeItem) {
-      this.menu.activeItem.classList.add("active");
-    }
-  },
+        this.closeMenu();
 
-  isPointInsideMenu(x, y) {
-    const menuRect = this.menu.element.getBoundingClientRect();
+        if (action === "undo") {
+            this.undo(steps);
+        }
 
-    return x >= menuRect.left && x <= menuRect.right && y >= menuRect.top && y <= menuRect.bottom;
-  },
+        if (action === "redo") {
+            this.redo(steps);
+        }
+    },
 
-  isPointInsideButton(x, y) {
-    if (!this.menu.activeButton) {
-      return false;
-    }
+    getMenuItemFromPoint(x, y) {
+        const element = document.elementFromPoint(x, y);
 
-    const buttonRect = this.menu.activeButton.getBoundingClientRect();
+        if (!element) {
+            return null;
+        }
 
-    return x >= buttonRect.left && x <= buttonRect.right && y >= buttonRect.top && y <= buttonRect.bottom;
-  },
+        return element.closest("[data-history-steps]");
+    },
 
-  closeMenu() {
-    if (this.menu.activeItem) {
-      this.menu.activeItem.classList.remove("active");
-    }
+    setActiveMenuItem(menuItem) {
+        if (this.menu.activeItem === menuItem) {
+            return;
+        }
 
-    if (this.menu.activeButton) {
-      delete this.menu.activeButton.dataset.historyMenuOpen;
-      this.menu.activeButton.setAttribute("aria-expanded", "false");
-    }
+        if (this.menu.activeItem) {
+            this.menu.activeItem.classList.remove("active");
+        }
 
-    this.menu.element.hidden = true;
-    this.menu.element.style.top = "";
-    this.menu.element.style.left = "";
-    this.menu.action = null;
-    this.menu.activeButton = null;
-    this.menu.activeItem = null;
-  },
+        this.menu.activeItem = menuItem;
 
-  resetPointerState() {
-    this.menu.pointerStarted = false;
-    this.menu.menuOpenedFromHold = false;
-    this.menu.holdTimerId = null;
-  },
+        if (this.menu.activeItem) {
+            this.menu.activeItem.classList.add("active");
+        }
+    },
 
-  updateControls() {
-    const undoButton = document.querySelector("#undoBtn");
-    const redoButton = document.querySelector("#redoBtn");
+    isPointInsideMenu(x, y) {
+        const menuRect = this.menu.element.getBoundingClientRect();
 
-    undoButton.disabled = !this.undoStack.length;
-    redoButton.disabled = !this.redoStack.length;
+        return x >= menuRect.left && x <= menuRect.right && y >= menuRect.top && y <= menuRect.bottom;
+    },
 
-    undoButton.setAttribute("aria-disabled", String(!this.undoStack.length));
-    redoButton.setAttribute("aria-disabled", String(!this.redoStack.length));
+    isPointInsideButton(x, y) {
+        if (!this.menu.activeButton) {
+            return false;
+        }
 
-    if (!this.undoStack.length && this.menu.action === "undo") {
-      this.closeMenu();
-    }
+        const buttonRect = this.menu.activeButton.getBoundingClientRect();
 
-    if (!this.redoStack.length && this.menu.action === "redo") {
-      this.closeMenu();
-    }
-  },
+        return x >= buttonRect.left && x <= buttonRect.right && y >= buttonRect.top && y <= buttonRect.bottom;
+    },
+
+    closeMenu() {
+        if (this.menu.activeItem) {
+            this.menu.activeItem.classList.remove("active");
+        }
+
+        if (this.menu.activeButton) {
+            delete this.menu.activeButton.dataset.historyMenuOpen;
+            this.menu.activeButton.setAttribute("aria-expanded", "false");
+        }
+
+        this.menu.element.hidden = true;
+        this.menu.element.style.top = "";
+        this.menu.element.style.left = "";
+        this.menu.action = null;
+        this.menu.activeButton = null;
+        this.menu.activeItem = null;
+    },
+
+    resetPointerState() {
+        this.menu.pointerStarted = false;
+        this.menu.menuOpenedFromHold = false;
+        this.menu.holdTimerId = null;
+    },
+
+    updateControls() {
+        const undoButton = document.querySelector("#undoBtn");
+        const redoButton = document.querySelector("#redoBtn");
+        const undoDisabled = !this.undoStack.length;
+        const redoDisabled = !this.redoStack.length;
+
+        undoButton.disabled = undoDisabled;
+        redoButton.disabled = redoDisabled;
+
+        undoButton.setAttribute("aria-disabled", String(undoDisabled));
+        redoButton.setAttribute("aria-disabled", String(redoDisabled));
+
+        undoButton.dataset.tooltip = undoDisabled ? "No undo available" : "Undo";
+        redoButton.dataset.tooltip = redoDisabled ? "No redo available" : "Redo";
+
+        undoButton.setAttribute("aria-label", undoDisabled ? "No undo available" : "Undo");
+        redoButton.setAttribute("aria-label", redoDisabled ? "No redo available" : "Redo");
+
+        if (undoDisabled && this.menu.action === "undo") {
+            this.closeMenu();
+        }
+
+        if (redoDisabled && this.menu.action === "redo") {
+            this.closeMenu();
+        }
+    },
 };
