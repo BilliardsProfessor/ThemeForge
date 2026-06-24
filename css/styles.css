@@ -194,6 +194,37 @@ button {
     stroke: none;
 }
 
+.theme-mode-switch {
+    display: flex;
+    gap: 0.2rem;
+    min-height: 2.35rem;
+    padding: 0.2rem;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius);
+    background: color-mix(in srgb, var(--color-surface), var(--color-muted) 8%);
+}
+
+.header-actions .theme-mode-switch button {
+    border: 0;
+    border-radius: calc(var(--radius) * 0.75);
+    padding: 0.35rem 0.65rem;
+    background: transparent;
+    color: var(--color-muted);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.header-actions .theme-mode-switch button[aria-pressed="true"] {
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: var(--shadow-soft);
+}
+
+.header-actions .theme-mode-switch button:hover,
+.header-actions .theme-mode-switch button:focus-visible {
+    color: var(--color-primary);
+}
+
 .preview-size-field {
     display: flex;
     align-items: center;

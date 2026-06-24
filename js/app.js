@@ -1,3 +1,39 @@
+function updateThemeModeControls() {
+    document.querySelectorAll("[data-theme-mode]").forEach((button) => {
+        const isActiveMode = button.dataset.themeMode === ThemeForge.getActiveMode();
+
+        button.setAttribute("aria-pressed", String(isActiveMode));
+    });
+}
+
+function setThemeMode(mode) {
+    if (mode === ThemeForge.getActiveMode()) {
+        return;
+    }
+
+    ThemeForge.history.recordChange(`Switched to ${mode} mode`);
+
+    ThemeForge.theme.activeMode = mode;
+
+    ThemeForge.history.updateLatestChangeDetail({
+        type: "value",
+        label: "Theme Mode",
+        before: mode === "light" ? "Dark" : "Light",
+        after: mode === "light" ? "Light" : "Dark",
+    });
+
+    ThemeForge.refreshThemeInterface();
+    ThemeForge.history.saveSession();
+}
+
+function bindThemeModeControls() {
+    document.querySelectorAll("[data-theme-mode]").forEach((button) => {
+        button.addEventListener("click", () => {
+            setThemeMode(button.dataset.themeMode);
+        });
+    });
+}
+
 function updateThemeFromControls(event) {
     const label = getControlHistoryLabel(event.target);
 
@@ -86,6 +122,7 @@ function syncThemeControlsFromState() {
 
 ThemeForge.refreshThemeInterface = function refreshThemeInterface() {
     syncThemeControlsFromState();
+    updateThemeModeControls();
     ThemeForge.applyTheme();
     ThemeForge.colorEditor.render();
     ThemeForge.accessibility.updateScoreBadge();
@@ -101,6 +138,7 @@ function bindControls() {
 
 document.addEventListener("DOMContentLoaded", () => {
     bindControls();
+    bindThemeModeControls();
     ThemeForge.history.init();
     ThemeForge.applyTheme();
     ThemeForge.colorEditor.init();
