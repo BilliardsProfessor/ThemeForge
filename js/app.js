@@ -129,6 +129,8 @@ function setThemeMode(mode) {
         return;
     }
 
+    const previousMode = ThemeForge.getActiveMode();
+
     ThemeForge.history.recordChange(`Switched to ${mode} mode`);
 
     ThemeForge.theme.activeMode = mode;
@@ -136,7 +138,7 @@ function setThemeMode(mode) {
     ThemeForge.history.updateLatestChangeDetail({
         type: "value",
         label: "Theme Mode",
-        before: mode === "light" ? "Dark" : "Light",
+        before: previousMode === "light" ? "Light" : "Dark",
         after: mode === "light" ? "Light" : "Dark",
     });
 
@@ -252,8 +254,8 @@ document.addEventListener("DOMContentLoaded", () => {
     bindAppAppearanceControl();
     bindSettingsControl();
     applyAppAppearance(getStoredAppAppearancePreference());
-    updateThemeModeControls();
     ThemeForge.history.init();
+    updateThemeModeControls();
     ThemeForge.applyTheme();
     ThemeForge.colorEditor.init();
     ThemeForge.accessibility.init();
