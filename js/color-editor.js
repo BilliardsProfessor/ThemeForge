@@ -256,7 +256,7 @@ ThemeForge.colorEditor = {
             button.hidden = button.dataset.colorGroup !== this.activeColorGroup;
 
             const token = button.dataset.colorToken;
-            const tokenColor = ThemeForge.theme.colors[token];
+            const tokenColor = ThemeForge.getActiveColors()[token];
             const swatch = button.querySelector(".color-token-swatch");
             const value = button.querySelector(".color-token-value");
 
