@@ -74,7 +74,7 @@ ThemeForge.history = {
         try {
             const session = JSON.parse(savedSession);
 
-            ThemeForge.theme = this.cloneTheme(session.theme);
+            ThemeForge.theme = ThemeForge.normalizeTheme(session.theme);
             this.undoStack = Array.isArray(session.undoStack) ? session.undoStack : [];
             this.redoStack = Array.isArray(session.redoStack) ? session.redoStack : [];
         } catch {

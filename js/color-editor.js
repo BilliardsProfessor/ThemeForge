@@ -33,7 +33,7 @@ ThemeForge.colorEditor = {
     },
 
     getActiveColor() {
-        return ThemeForge.theme.colors[this.activeColorKey];
+        return ThemeForge.getActiveColors()[this.activeColorKey];
     },
 
     getActiveColorLabel() {
@@ -54,7 +54,7 @@ ThemeForge.colorEditor = {
         return {
             type: "color",
             label: this.getActiveColorLabel(),
-            before: ThemeForge.history.cloneTheme(snapshot.colors[this.activeColorKey]),
+            before: ThemeForge.history.cloneTheme(snapshot.modes[snapshot.activeMode].colors[this.activeColorKey]),
             after: ThemeForge.history.cloneTheme(this.getActiveColor()),
         };
     },
