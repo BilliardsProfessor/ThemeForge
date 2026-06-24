@@ -2,6 +2,7 @@ ThemeForge.history = {
     undoStack: [],
     redoStack: [],
     maxItems: 50,
+    storageKey: "themeForge.historySession",
     continuousTimerId: null,
     continuousChangeLabel: null,
     continuousDelay: 650,
@@ -19,6 +20,8 @@ ThemeForge.history = {
 
     init() {
         this.menu.element = document.querySelector("#historyMenu");
+
+        this.restoreSession();
 
         this.bindHistoryButton("#undoBtn", "undo");
         this.bindHistoryButton("#redoBtn", "redo");
@@ -61,10 +64,40 @@ ThemeForge.history = {
         });
     },
 
+    restoreSession() {
+        const savedSession = sessionStorage.getItem(this.storageKey);
+
+        if (!savedSession) {
+            return;
+        }
+
+        try {
+            const session = JSON.parse(savedSession);
+
+            ThemeForge.theme = this.cloneTheme(session.theme);
+            this.undoStack = Array.isArray(session.undoStack) ? session.undoStack : [];
+            this.redoStack = Array.isArray(session.redoStack) ? session.redoStack : [];
+        } catch {
+            sessionStorage.removeItem(this.storageKey);
+        }
+    },
+
+    saveSession() {
+        sessionStorage.setItem(
+            this.storageKey,
+            JSON.stringify({
+                theme: ThemeForge.theme,
+                undoStack: this.undoStack,
+                redoStack: this.redoStack,
+            }),
+        );
+    },
+
     recordChange(label, detail = null) {
         this.pushUndoState(label, detail);
         this.redoStack = [];
         this.updateControls();
+        this.saveSession();
     },
 
     recordContinuousChange(label, detail = null) {
@@ -103,6 +136,7 @@ ThemeForge.history = {
         }
 
         latestItem.detail = detail;
+        this.saveSession();
     },
 
     getLatestUndoSnapshot() {
@@ -168,6 +202,7 @@ ThemeForge.history = {
     restoreTheme(snapshot) {
         ThemeForge.theme = this.cloneTheme(snapshot);
         ThemeForge.refreshThemeInterface();
+        this.saveSession();
     },
 
     clearContinuousChange() {
