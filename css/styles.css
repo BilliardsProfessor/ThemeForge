@@ -186,6 +186,13 @@ button {
     pointer-events: none;
 }
 
+.icon-button .icon-dice {
+    width: 1.35rem;
+    height: 1.35rem;
+    fill: currentColor;
+    stroke: none;
+}
+
 .preview-size-field {
     display: flex;
     align-items: center;
@@ -1438,6 +1445,7 @@ a {
     padding: 0.4rem 0.45rem;
     border: 1px solid #cbd5e1;
     border-radius: 0.45rem;
+    text-align: center;
 }
 
 .color-editor input[type="number"] {
