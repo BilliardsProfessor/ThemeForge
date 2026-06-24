@@ -303,11 +303,22 @@ body:not([data-app-mode="dark"]) {
 
 .preview-size-field select {
     border: 0;
-    background: transparent;
+    background: var(--color-surface);
     color: var(--color-text);
     font: inherit;
     font-weight: 700;
     cursor: pointer;
+}
+
+.preview-size-field select option {
+    background: var(--color-surface);
+    color: var(--color-text);
+}
+
+body[data-app-mode="dark"] .preview-size-field select,
+body[data-app-mode="dark"] .preview-size-field select option {
+    background: var(--control-surface-raised);
+    color: var(--control-text);
 }
 
 .preview-size-field select:focus-visible {
