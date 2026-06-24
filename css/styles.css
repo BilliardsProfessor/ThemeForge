@@ -194,35 +194,23 @@ button {
     stroke: none;
 }
 
-.theme-mode-switch {
-    display: flex;
-    gap: 0.2rem;
-    min-height: 2.35rem;
-    padding: 0.2rem;
-    border: var(--border-width) solid var(--color-border);
-    border-radius: var(--radius);
-    background: color-mix(in srgb, var(--color-surface), var(--color-muted) 8%);
+.theme-mode-toggle {
+    color: hsl(38 92% 50%);
 }
 
-.header-actions .theme-mode-switch button {
-    border: 0;
-    border-radius: calc(var(--radius) * 0.75);
-    padding: 0.35rem 0.65rem;
-    background: transparent;
-    color: var(--color-muted);
-    font-size: 0.85rem;
-    font-weight: 700;
+.theme-mode-toggle[data-theme-mode="dark"] {
+    border-color: hsl(260 55% 35%);
+    background: hsl(258 55% 14%);
+    color: hsl(260 90% 82%);
 }
 
-.header-actions .theme-mode-switch button[aria-pressed="true"] {
-    background: var(--color-surface);
-    color: var(--color-text);
-    box-shadow: var(--shadow-soft);
+.theme-mode-icon {
+    display: none;
 }
 
-.header-actions .theme-mode-switch button:hover,
-.header-actions .theme-mode-switch button:focus-visible {
-    color: var(--color-primary);
+.theme-mode-toggle[data-theme-mode="light"] .theme-mode-icon-sun,
+.theme-mode-toggle[data-theme-mode="dark"] .theme-mode-icon-moon {
+    display: block;
 }
 
 .preview-size-field {

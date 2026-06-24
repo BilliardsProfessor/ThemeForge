@@ -1,8 +1,14 @@
-function updateThemeModeControls() {
-    document.querySelectorAll("[data-theme-mode]").forEach((button) => {
-        const isActiveMode = button.dataset.themeMode === ThemeForge.getActiveMode();
+function bindThemeModeControls() {
+    const button = document.querySelector("[data-theme-mode-toggle]");
 
-        button.setAttribute("aria-pressed", String(isActiveMode));
+    if (!button) {
+        return;
+    }
+
+    button.addEventListener("click", () => {
+        const nextMode = ThemeForge.getActiveMode() === "light" ? "dark" : "light";
+
+        setThemeMode(nextMode);
     });
 }
 

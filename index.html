@@ -61,10 +61,22 @@
                 </svg>
             </button>
 
-            <div class="theme-mode-switch" aria-label="Theme mode">
-                <button type="button" data-theme-mode="light" aria-pressed="true">Light</button>
-                <button type="button" data-theme-mode="dark" aria-pressed="false">Dark</button>
-            </div>
+            <button type="button" class="icon-button theme-mode-toggle has-tooltip" id="themeModeToggle"
+                data-tooltip="Switch to dark mode" data-tooltip-position="bottom" aria-label="Switch to dark mode"
+                data-theme-mode-toggle>
+                <svg class="icon theme-mode-icon theme-mode-icon-sun" aria-hidden="true" focusable="false"
+                    viewBox="0 0 24 24">
+                    <path
+                        d="M12 3v2.25m0 13.5V21m9-9h-2.25M5.25 12H3m15.364-6.364-1.591 1.591M7.227 16.773l-1.591 1.591m12.728 0-1.591-1.591M7.227 7.227 5.636 5.636" />
+                    <path d="M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+                </svg>
+
+                <svg class="icon theme-mode-icon theme-mode-icon-moon" aria-hidden="true" focusable="false"
+                    viewBox="0 0 24 24">
+                    <path
+                        d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75 9.75 9.75 0 0 1 8.25 6c0-1.33.266-2.598.748-3.752A9.753 9.753 0 0 0 3 11.25 9.75 9.75 0 0 0 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+                </svg>
+            </button>
 
             <label class="preview-size-field">
                 <span>Preview</span>
