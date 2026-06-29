@@ -7,8 +7,6 @@
   const leftDrawerPinnedOpen = document.querySelector('[data-drawer-open-pinned="left"]');
   const leftDrawerClose = document.querySelector('[data-drawer-close="left"]');
   const leftDrawerModeToggle = document.querySelector('[data-drawer-mode-toggle="left"]');
-  const leftDrawerButtons = document.querySelectorAll("[data-drawer-panel]");
-  const leftControlPanels = document.querySelectorAll("[data-control-panel]");
   const controlCardAnimationDuration = 260;
   const leftDrawerRail = document.querySelector(".drawer-rail-left");
 
@@ -136,7 +134,7 @@
       return;
     }
 
-    leftControlPanels.forEach(function (panel) {
+    document.querySelectorAll("[data-control-panel]").forEach(function (panel) {
       if (panel.dataset.controlPanel === panelName) {
         openControlCard(panel);
         return;
@@ -189,6 +187,36 @@
     setLeftDrawerState("pinned");
   }
 
+  function handleDrawerClick(event) {
+    const summary = event.target.closest("summary");
+
+    if (summary && leftDrawer.contains(summary)) {
+      const panel = summary.closest("[data-control-panel]");
+
+      if (!panel) {
+        return;
+      }
+
+      event.preventDefault();
+
+      if (panel.open) {
+        closeControlCard(panel);
+        return;
+      }
+
+      openControlCard(panel);
+      return;
+    }
+
+    const panelButton = event.target.closest("[data-drawer-panel]");
+
+    if (!panelButton || !leftDrawerRail || !leftDrawerRail.contains(panelButton)) {
+      return;
+    }
+
+    openPanelFromRail(panelButton.dataset.drawerPanel);
+  }
+
   function handleDocumentClick(event) {
     if (getLeftDrawerState() !== "temporary") {
       return;
@@ -217,32 +245,12 @@
     closeDrawer();
   }
 
-  leftControlPanels.forEach(function (panel) {
-    const summary = panel.querySelector("summary");
-
-    if (!summary) {
-      return;
-    }
-
-    summary.addEventListener("click", function (event) {
-      event.preventDefault();
-
-      if (panel.open) {
-        closeControlCard(panel);
-        return;
-      }
-
-      openControlCard(panel);
-    });
-  });
-
   leftDrawerPinnedOpen.addEventListener("click", togglePinnedDrawer);
+  leftDrawer.addEventListener("click", handleDrawerClick);
 
-  leftDrawerButtons.forEach(function (button) {
-    button.addEventListener("click", function () {
-      openPanelFromRail(button.dataset.drawerPanel);
-    });
-  });
+  if (leftDrawerRail) {
+    leftDrawerRail.addEventListener("click", handleDrawerClick);
+  }
 
   if (leftDrawerClose) {
     leftDrawerClose.addEventListener("click", closeDrawer);
