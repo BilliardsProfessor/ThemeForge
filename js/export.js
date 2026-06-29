@@ -523,15 +523,19 @@ ThemeForge.export = {
     },
 
     getCssVariableDeclarations(format, mode = ThemeForge.getActiveMode()) {
-        const { typography, shape } = ThemeForge.theme;
+        const { settings, typography, shape } = ThemeForge.theme;
 
         return [
             ...this.getColorVariableDeclarations(format, mode),
             "",
             "--shadow-soft: 0 12px 30px var(--color-shadow-tint);",
             "",
-            `--font-size-base: ${typography.baseFontSize}px;`,
-            `--heading-scale: ${typography.headingScale};`,
+            `--font-size-base: ${ThemeForge.getTokenValue(settings.baseFontSize)};`,
+            `--heading-scale: ${typography.settings.headingScale};`,
+            "",
+            ...this.getFeatureCssDeclarations("layout"),
+            "",
+            ...this.getFeatureCssDeclarations("components"),
             "",
             `--radius: ${shape.radius}px;`,
             `--border-width: ${shape.borderWidth}px;`,
@@ -540,7 +544,7 @@ ThemeForge.export = {
     },
 
     getScssVariableDeclarations(format, mode = ThemeForge.getActiveMode(), prefix = "") {
-        const { typography, shape } = ThemeForge.theme;
+        const { settings, typography, shape } = ThemeForge.theme;
         const variablePrefix = prefix ? `${prefix}-` : "";
 
         return [
@@ -548,12 +552,46 @@ ThemeForge.export = {
             "",
             `$${variablePrefix}shadow-soft: 0 12px 30px $${variablePrefix}color-shadow-tint;`,
             "",
-            `$${variablePrefix}font-size-base: ${typography.baseFontSize}px;`,
-            `$${variablePrefix}heading-scale: ${typography.headingScale};`,
+            `$${variablePrefix}font-size-base: ${ThemeForge.getTokenValue(settings.baseFontSize)};`,
+            `$${variablePrefix}heading-scale: ${typography.settings.headingScale};`,
+            "",
+            ...this.getFeatureScssDeclarations("layout", variablePrefix),
+            "",
+            ...this.getFeatureScssDeclarations("components", variablePrefix),
             "",
             `$${variablePrefix}radius: ${shape.radius}px;`,
             `$${variablePrefix}border-width: ${shape.borderWidth}px;`,
             `$${variablePrefix}overlay-blur: ${shape.overlayBlur}px;`,
+        ];
+    },
+
+    getFeatureCssDeclarations(featureName) {
+        const feature = ThemeForge.theme[featureName];
+
+        return [
+            ...Object.entries(feature.scale).map(([tokenName, token]) => `--${featureName}-${tokenName}: ${ThemeForge.getTokenValue(token)};`),
+            "",
+            ...Object.entries(feature.mappings).map(([mappingName, token]) => {
+                const matchingScaleToken = ThemeForge.findMatchingScaleToken(feature.scale, token);
+                const variableName = `--${this.getCssVariableName(mappingName)}`;
+
+                return matchingScaleToken ? `${variableName}: var(--${featureName}-${matchingScaleToken});` : `${variableName}: ${ThemeForge.getTokenValue(token)};`;
+            }),
+        ];
+    },
+
+    getFeatureScssDeclarations(featureName, prefix = "") {
+        const feature = ThemeForge.theme[featureName];
+
+        return [
+            ...Object.entries(feature.scale).map(([tokenName, token]) => `$${prefix}${featureName}-${tokenName}: ${ThemeForge.getTokenValue(token)};`),
+            "",
+            ...Object.entries(feature.mappings).map(([mappingName, token]) => {
+                const matchingScaleToken = ThemeForge.findMatchingScaleToken(feature.scale, token);
+                const variableName = `$${prefix}${this.getCssVariableName(mappingName)}`;
+
+                return matchingScaleToken ? `${variableName}: $${prefix}${featureName}-${matchingScaleToken};` : `${variableName}: ${ThemeForge.getTokenValue(token)};`;
+            }),
         ];
     },
 
