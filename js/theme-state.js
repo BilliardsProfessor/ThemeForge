@@ -59,6 +59,43 @@ const ThemeForge = {
             borderWidth: 1,
             overlayBlur: 2,
         },
+
+        spacing: {
+            unit: "px",
+
+            scale: {
+                "2xs": 2,
+                xs: 4,
+                sm: 8,
+                md: 12,
+                lg: 16,
+                xl: 24,
+                "2xl": 32,
+                "3xl": 48,
+            },
+
+            assignments: {
+                pagePadding: "xl",
+                sectionGap: "2xl",
+                gridGap: "lg",
+                stackGap: "md",
+
+                cardPadding: "lg",
+                cardGap: "md",
+
+                buttonPaddingX: "lg",
+                buttonPaddingY: "sm",
+
+                formGap: "md",
+                inputPaddingX: "md",
+                inputPaddingY: "sm",
+                labelSpacing: "xs",
+
+                tableCellPaddingX: "md",
+                tableCellPaddingY: "sm",
+                tableRowGap: "xs",
+            },
+        },
     },
 
     normalizeTheme(theme) {
@@ -79,6 +116,10 @@ const ThemeForge = {
 
             delete normalizedTheme.colors;
         }
+
+        normalizedTheme.spacing =
+            normalizedTheme.spacing ||
+            (typeof structuredClone === "function" ? structuredClone(this.theme.spacing) : JSON.parse(JSON.stringify(this.theme.spacing)));
 
         return normalizedTheme;
     },
@@ -126,6 +167,22 @@ const ThemeForge = {
             .padStart(2, "0");
     },
 
+    getCssVariableName(tokenName) {
+        return tokenName.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+    },
+
+    applySpacingVariables(root) {
+        const { spacing } = ThemeForge.theme;
+
+        Object.entries(spacing.scale).forEach(([tokenName, value]) => {
+            root.style.setProperty(`--space-${tokenName}`, `${value}${spacing.unit}`);
+        });
+
+        Object.entries(spacing.assignments).forEach(([assignmentName, tokenName]) => {
+            root.style.setProperty(`--${ThemeForge.getCssVariableName(assignmentName)}`, `var(--space-${tokenName})`);
+        });
+    },
+
     applyTheme() {
         const root = document.querySelector(".preview-area");
         const colors = ThemeForge.getActiveColors();
@@ -156,5 +213,7 @@ const ThemeForge = {
         root.style.setProperty("--radius", `${shape.radius}px`);
         root.style.setProperty("--border-width", `${shape.borderWidth}px`);
         root.style.setProperty("--overlay-blur", `${shape.overlayBlur}px`);
+
+        ThemeForge.applySpacingVariables(root);
     },
 };
