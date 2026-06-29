@@ -4,6 +4,10 @@ const ThemeForge = {
         schemaVersion: 1,
         activeMode: "light",
 
+        settings: {
+            baseFontSize: { value: 16, unit: "px" },
+        },
+
         modes: {
             light: {
                 colors: {
@@ -52,54 +56,69 @@ const ThemeForge = {
             },
         },
 
-        typography: { baseFontSize: 16, headingScale: 1.35 },
+        typography: {
+            settings: {
+                headingScale: 1.35,
+            },
+            scale: {},
+            mappings: {},
+        },
+
+        layout: {
+            settings: {},
+            scale: {
+                xs: { value: 4, unit: "px" },
+                sm: { value: 8, unit: "px" },
+                md: { value: 12, unit: "px" },
+                lg: { value: 16, unit: "px" },
+                xl: { value: 24, unit: "px" },
+            },
+            mappings: {
+                pagePadding: { value: 24, unit: "px" },
+                sectionGap: { value: 32, unit: "px" },
+                gridGap: { value: 16, unit: "px" },
+                stackGap: { value: 12, unit: "px" },
+            },
+        },
+
+        components: {
+            settings: {},
+            scale: {
+                xs: { value: 4, unit: "px" },
+                sm: { value: 8, unit: "px" },
+                md: { value: 12, unit: "px" },
+                lg: { value: 16, unit: "px" },
+                xl: { value: 24, unit: "px" },
+            },
+            mappings: {
+                cardPadding: { value: 16, unit: "px" },
+                cardGap: { value: 12, unit: "px" },
+                buttonPaddingX: { value: 16, unit: "px" },
+                buttonPaddingY: { value: 8, unit: "px" },
+                formGap: { value: 12, unit: "px" },
+                inputPaddingX: { value: 12, unit: "px" },
+                inputPaddingY: { value: 8, unit: "px" },
+                labelSpacing: { value: 4, unit: "px" },
+                tableCellPaddingX: { value: 12, unit: "px" },
+                tableCellPaddingY: { value: 8, unit: "px" },
+                tableRowGap: { value: 4, unit: "px" },
+            },
+        },
 
         shape: {
             radius: 10,
             borderWidth: 1,
             overlayBlur: 2,
         },
+    },
 
-        spacing: {
-            unit: "px",
-
-            scale: {
-                "2xs": 2,
-                xs: 4,
-                sm: 8,
-                md: 12,
-                lg: 16,
-                xl: 24,
-                "2xl": 32,
-                "3xl": 48,
-            },
-
-            assignments: {
-                pagePadding: "xl",
-                sectionGap: "2xl",
-                gridGap: "lg",
-                stackGap: "md",
-
-                cardPadding: "lg",
-                cardGap: "md",
-
-                buttonPaddingX: "lg",
-                buttonPaddingY: "sm",
-
-                formGap: "md",
-                inputPaddingX: "md",
-                inputPaddingY: "sm",
-                labelSpacing: "xs",
-
-                tableCellPaddingX: "md",
-                tableCellPaddingY: "sm",
-                tableRowGap: "xs",
-            },
-        },
+    cloneValue(value) {
+        return typeof structuredClone === "function" ? structuredClone(value) : JSON.parse(JSON.stringify(value));
     },
 
     normalizeTheme(theme) {
-        const normalizedTheme = typeof structuredClone === "function" ? structuredClone(theme) : JSON.parse(JSON.stringify(theme));
+        const normalizedTheme = this.cloneValue(theme || this.theme);
+        const defaultTheme = this.theme;
 
         normalizedTheme.schemaVersion = normalizedTheme.schemaVersion || 1;
         normalizedTheme.activeMode = normalizedTheme.activeMode || "light";
@@ -110,18 +129,101 @@ const ThemeForge = {
                     colors: normalizedTheme.colors,
                 },
                 dark: {
-                    colors: this.theme.modes.dark.colors,
+                    colors: defaultTheme.modes.dark.colors,
                 },
             };
 
             delete normalizedTheme.colors;
         }
 
-        normalizedTheme.spacing =
-            normalizedTheme.spacing ||
-            (typeof structuredClone === "function" ? structuredClone(this.theme.spacing) : JSON.parse(JSON.stringify(this.theme.spacing)));
+        normalizedTheme.settings = {
+            ...this.cloneValue(defaultTheme.settings),
+            ...(normalizedTheme.settings || {}),
+        };
+
+        if (typeof normalizedTheme.settings.baseFontSize === "number") {
+            normalizedTheme.settings.baseFontSize = { value: normalizedTheme.settings.baseFontSize, unit: "px" };
+        }
+
+        if (normalizedTheme.typography?.baseFontSize !== undefined) {
+            normalizedTheme.settings.baseFontSize = { value: normalizedTheme.typography.baseFontSize, unit: "px" };
+        }
+
+        normalizedTheme.typography = this.normalizeTypography(normalizedTheme.typography);
+        normalizedTheme.shape = normalizedTheme.shape || this.cloneValue(defaultTheme.shape);
+
+        this.normalizeFeature(normalizedTheme, "layout");
+        this.normalizeFeature(normalizedTheme, "components");
+
+        if (normalizedTheme.spacing) {
+            this.migrateSpacing(normalizedTheme);
+            delete normalizedTheme.spacing;
+        }
 
         return normalizedTheme;
+    },
+
+    normalizeTypography(typography = {}) {
+        return {
+            settings: {
+                headingScale: typography.settings?.headingScale ?? typography.headingScale ?? this.theme.typography.settings.headingScale,
+            },
+            scale: typography.scale || {},
+            mappings: typography.mappings || {},
+        };
+    },
+
+    normalizeFeature(theme, featureName) {
+        const feature = theme[featureName] || {};
+        const defaultFeature = this.theme[featureName];
+
+        theme[featureName] = {
+            settings: feature.settings || {},
+            scale: this.normalizeValueCollection(feature.scale || defaultFeature.scale),
+            mappings: this.normalizeValueCollection(feature.mappings || defaultFeature.mappings),
+        };
+    },
+
+    normalizeValueCollection(collection) {
+        return Object.fromEntries(
+            Object.entries(collection).map(([key, token]) => [key, this.normalizeValueToken(token)]),
+        );
+    },
+
+    normalizeValueToken(token) {
+        if (typeof token === "number") {
+            return { value: token, unit: "px" };
+        }
+
+        return {
+            value: Number(token?.value ?? 0),
+            unit: token?.unit || "px",
+        };
+    },
+
+    migrateSpacing(theme) {
+        const spacing = theme.spacing;
+        const spacingUnit = spacing.unit || "px";
+        const oldScale = Object.fromEntries(
+            Object.entries(spacing.scale || {}).map(([key, value]) => [key, this.normalizeValueToken({ value, unit: spacingUnit })]),
+        );
+
+        ["layout", "components"].forEach((featureName) => {
+            Object.keys(theme[featureName].scale).forEach((tokenName) => {
+                if (oldScale[tokenName]) {
+                    theme[featureName].scale[tokenName] = this.cloneValue(oldScale[tokenName]);
+                }
+            });
+        });
+
+        Object.entries(spacing.assignments || {}).forEach(([mappingName, tokenName]) => {
+            const featureName = theme.layout.mappings[mappingName] ? "layout" : theme.components.mappings[mappingName] ? "components" : null;
+            const token = oldScale[tokenName];
+
+            if (featureName && token) {
+                theme[featureName].mappings[mappingName] = this.cloneValue(token);
+            }
+        });
     },
 
     getActiveMode() {
@@ -171,22 +273,32 @@ const ThemeForge = {
         return tokenName.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
     },
 
-    applySpacingVariables(root) {
-        const { spacing } = ThemeForge.theme;
+    getTokenValue(token) {
+        return `${Number(token.value)}${token.unit}`;
+    },
 
-        Object.entries(spacing.scale).forEach(([tokenName, value]) => {
-            root.style.setProperty(`--space-${tokenName}`, `${value}${spacing.unit}`);
+    findMatchingScaleToken(scale, mapping) {
+        return Object.entries(scale).find(([, token]) => Number(token.value) === Number(mapping.value) && token.unit === mapping.unit)?.[0] || null;
+    },
+
+    applyFeatureVariables(root, featureName) {
+        const feature = ThemeForge.theme[featureName];
+
+        Object.entries(feature.scale).forEach(([tokenName, token]) => {
+            root.style.setProperty(`--${featureName}-${tokenName}`, ThemeForge.getTokenValue(token));
         });
 
-        Object.entries(spacing.assignments).forEach(([assignmentName, tokenName]) => {
-            root.style.setProperty(`--${ThemeForge.getCssVariableName(assignmentName)}`, `var(--space-${tokenName})`);
+        Object.entries(feature.mappings).forEach(([mappingName, token]) => {
+            root.style.setProperty(`--${ThemeForge.getCssVariableName(mappingName)}`, ThemeForge.getTokenValue(token));
         });
     },
 
     applyTheme() {
+        ThemeForge.theme = ThemeForge.normalizeTheme(ThemeForge.theme);
+
         const root = document.querySelector(".preview-area");
         const colors = ThemeForge.getActiveColors();
-        const { typography, shape } = ThemeForge.theme;
+        const { settings, typography, shape } = ThemeForge.theme;
 
         root.style.setProperty("--color-primary", ThemeForge.getColorValue(colors.primary));
         root.style.setProperty("--color-secondary", ThemeForge.getColorValue(colors.secondary));
@@ -207,13 +319,14 @@ const ThemeForge = {
         root.style.setProperty("--color-overlay", ThemeForge.getColorValue(colors.overlay));
         root.style.setProperty("--shadow-soft", `0 12px 30px ${ThemeForge.getColorValue(colors.shadowTint)}`);
 
-        root.style.setProperty("--font-size-base", `${typography.baseFontSize}px`);
-        root.style.setProperty("--heading-scale", typography.headingScale);
+        root.style.setProperty("--font-size-base", ThemeForge.getTokenValue(settings.baseFontSize));
+        root.style.setProperty("--heading-scale", typography.settings.headingScale);
 
         root.style.setProperty("--radius", `${shape.radius}px`);
         root.style.setProperty("--border-width", `${shape.borderWidth}px`);
         root.style.setProperty("--overlay-blur", `${shape.overlayBlur}px`);
 
-        ThemeForge.applySpacingVariables(root);
+        ThemeForge.applyFeatureVariables(root, "layout");
+        ThemeForge.applyFeatureVariables(root, "components");
     },
 };
