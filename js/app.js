@@ -1,5 +1,33 @@
 const APP_APPEARANCE_STORAGE_KEY = "themeForge.appAppearance";
 const APP_APPEARANCE_OPTIONS = ["light", "dark", "system"];
+const SPACING_UNIT_OPTIONS = ["px", "rem", "em"];
+const SPACING_TOKENS = [
+    { key: "2xs", label: "2XS" },
+    { key: "xs", label: "XS" },
+    { key: "sm", label: "SM" },
+    { key: "md", label: "MD" },
+    { key: "lg", label: "LG" },
+    { key: "xl", label: "XL" },
+    { key: "2xl", label: "2XL" },
+    { key: "3xl", label: "3XL" },
+];
+const SPACING_ASSIGNMENTS = [
+    { key: "pagePadding", label: "Page padding" },
+    { key: "sectionGap", label: "Section gap" },
+    { key: "gridGap", label: "Grid gap" },
+    { key: "stackGap", label: "Stack gap" },
+    { key: "cardPadding", label: "Card padding" },
+    { key: "cardGap", label: "Card gap" },
+    { key: "buttonPaddingX", label: "Button padding X" },
+    { key: "buttonPaddingY", label: "Button padding Y" },
+    { key: "formGap", label: "Form gap" },
+    { key: "inputPaddingX", label: "Input padding X" },
+    { key: "inputPaddingY", label: "Input padding Y" },
+    { key: "labelSpacing", label: "Label spacing" },
+    { key: "tableCellPaddingX", label: "Table cell padding X" },
+    { key: "tableCellPaddingY", label: "Table cell padding Y" },
+    { key: "tableRowGap", label: "Table row gap" },
+];
 
 function getStoredAppAppearancePreference() {
     const preference = localStorage.getItem(APP_APPEARANCE_STORAGE_KEY);
@@ -146,6 +174,177 @@ function setThemeMode(mode) {
     ThemeForge.history.saveSession();
 }
 
+function renderSpacingControls() {
+    renderSpacingRailButton();
+    renderSpacingPanel();
+}
+
+function renderSpacingRailButton() {
+    if (document.querySelector('[data-drawer-panel="spacing"]')) {
+        return;
+    }
+
+    const shapeButton = document.querySelector('[data-drawer-panel="shape"]');
+    const railButton = document.createElement("button");
+    const icon = document.createElement("span");
+
+    railButton.type = "button";
+    railButton.className = "drawer-rail-button has-tooltip";
+    railButton.dataset.drawerPanel = "spacing";
+    railButton.dataset.tooltip = "Spacing";
+    railButton.dataset.tooltipPosition = "right";
+    railButton.setAttribute("aria-controls", "leftDrawer");
+    railButton.setAttribute("aria-label", "Open spacing controls");
+
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = "↕";
+
+    railButton.append(icon);
+
+    shapeButton?.before(railButton);
+}
+
+function renderSpacingPanel() {
+    if (document.querySelector('[data-control-panel="spacing"]')) {
+        return;
+    }
+
+    const shapePanel = document.querySelector('[data-control-panel="shape"]');
+    const panel = document.createElement("details");
+    const summary = document.createElement("summary");
+    const title = document.createElement("span");
+    const content = document.createElement("div");
+
+    panel.className = "control-card";
+    panel.dataset.controlPanel = "spacing";
+
+    title.className = "control-card-title";
+    title.textContent = "Spacing";
+    summary.append(title);
+
+    content.className = "control-card-content";
+    content.append(createSpacingUnitControl(), createSpacingScaleControls(), createSpacingAssignmentControls());
+
+    panel.append(summary, content);
+    shapePanel?.before(panel);
+}
+
+function createSpacingUnitControl() {
+    const fragment = document.createDocumentFragment();
+    const label = document.createElement("label");
+    const select = document.createElement("select");
+    const note = document.createElement("p");
+
+    label.textContent = "Unit";
+    select.id = "spacingUnitControl";
+    select.dataset.themeControl = "spacing";
+
+    SPACING_UNIT_OPTIONS.forEach((unit) => {
+        const option = document.createElement("option");
+
+        option.value = unit;
+        option.textContent = unit;
+        select.append(option);
+    });
+
+    note.textContent = "em is relational and may vary by component context.";
+
+    label.append(select);
+    fragment.append(label, note);
+
+    return fragment;
+}
+
+function createSpacingScaleControls() {
+    const group = document.createElement("fieldset");
+    const legend = document.createElement("legend");
+
+    legend.textContent = "Scale";
+    group.append(legend);
+
+    SPACING_TOKENS.forEach((token) => {
+        const label = document.createElement("label");
+        const input = document.createElement("input");
+
+        label.textContent = token.label;
+        input.type = "number";
+        input.min = "0";
+        input.step = "0.05";
+        input.inputMode = "decimal";
+        input.dataset.themeControl = "spacing";
+        input.dataset.spacingScale = token.key;
+
+        label.append(input);
+        group.append(label);
+    });
+
+    return group;
+}
+
+function createSpacingAssignmentControls() {
+    const group = document.createElement("fieldset");
+    const legend = document.createElement("legend");
+
+    legend.textContent = "Assignments";
+    group.append(legend);
+
+    SPACING_ASSIGNMENTS.forEach((assignment) => {
+        const label = document.createElement("label");
+        const select = document.createElement("select");
+
+        label.textContent = assignment.label;
+        select.dataset.themeControl = "spacing";
+        select.dataset.spacingAssignment = assignment.key;
+
+        SPACING_TOKENS.forEach((token) => {
+            const option = document.createElement("option");
+
+            option.value = token.key;
+            option.textContent = token.label;
+            select.append(option);
+        });
+
+        label.append(select);
+        group.append(label);
+    });
+
+    return group;
+}
+
+function getSpacingTokenLabel(tokenKey) {
+    return SPACING_TOKENS.find((token) => token.key === tokenKey)?.label || tokenKey;
+}
+
+function getSpacingAssignmentLabel(assignmentKey) {
+    return SPACING_ASSIGNMENTS.find((assignment) => assignment.key === assignmentKey)?.label || assignmentKey;
+}
+
+function updateSpacingFromControls() {
+    const { spacing } = ThemeForge.theme;
+    const unitControl = document.querySelector("#spacingUnitControl");
+
+    if (unitControl && SPACING_UNIT_OPTIONS.includes(unitControl.value)) {
+        spacing.unit = unitControl.value;
+    }
+
+    document.querySelectorAll("[data-spacing-scale]").forEach((control) => {
+        const tokenName = control.dataset.spacingScale;
+        const value = Number(control.value);
+
+        if (!Number.isNaN(value)) {
+            spacing.scale[tokenName] = value;
+        }
+    });
+
+    document.querySelectorAll("[data-spacing-assignment]").forEach((control) => {
+        const assignmentName = control.dataset.spacingAssignment;
+
+        if (spacing.scale[control.value] !== undefined) {
+            spacing.assignments[assignmentName] = control.value;
+        }
+    });
+}
+
 function updateThemeFromControls(event) {
     const label = getControlHistoryLabel(event.target);
 
@@ -157,6 +356,8 @@ function updateThemeFromControls(event) {
     ThemeForge.theme.shape.radius = Number(document.querySelector("#radiusControl").value);
     ThemeForge.theme.shape.borderWidth = Number(document.querySelector("#borderWidthControl").value);
     ThemeForge.theme.shape.overlayBlur = Number(document.querySelector("#overlayBlurControl").value);
+
+    updateSpacingFromControls();
 
     ThemeForge.history.updateLatestChangeDetail(getControlHistoryDetail(event.target));
 
@@ -171,7 +372,16 @@ function getControlHistoryLabel(control) {
         radiusControl: "Changed border radius",
         borderWidthControl: "Changed border width",
         overlayBlurControl: "Changed overlay blur",
+        spacingUnitControl: "Changed spacing unit",
     };
+
+    if (control.dataset.spacingScale) {
+        return `Changed spacing token ${getSpacingTokenLabel(control.dataset.spacingScale)}`;
+    }
+
+    if (control.dataset.spacingAssignment) {
+        return `Changed ${getSpacingAssignmentLabel(control.dataset.spacingAssignment).toLowerCase()} spacing`;
+    }
 
     return labels[control.id] || "Changed theme control";
 }
@@ -209,9 +419,14 @@ function getControlHistoryDetail(control) {
             before: `${snapshot.shape.overlayBlur}px`,
             after: `${ThemeForge.theme.shape.overlayBlur}px`,
         },
+        spacingUnitControl: {
+            label: "Spacing Unit",
+            before: snapshot.spacing.unit,
+            after: ThemeForge.theme.spacing.unit,
+        },
     };
 
-    const detail = details[control.id];
+    const detail = details[control.id] || getSpacingControlHistoryDetail(control, snapshot);
 
     if (!detail) {
         return null;
@@ -223,6 +438,30 @@ function getControlHistoryDetail(control) {
     };
 }
 
+function getSpacingControlHistoryDetail(control, snapshot) {
+    if (control.dataset.spacingScale) {
+        const tokenName = control.dataset.spacingScale;
+
+        return {
+            label: `Spacing ${getSpacingTokenLabel(tokenName)}`,
+            before: `${snapshot.spacing.scale[tokenName]}${snapshot.spacing.unit}`,
+            after: `${ThemeForge.theme.spacing.scale[tokenName]}${ThemeForge.theme.spacing.unit}`,
+        };
+    }
+
+    if (control.dataset.spacingAssignment) {
+        const assignmentName = control.dataset.spacingAssignment;
+
+        return {
+            label: getSpacingAssignmentLabel(assignmentName),
+            before: getSpacingTokenLabel(snapshot.spacing.assignments[assignmentName]),
+            after: getSpacingTokenLabel(ThemeForge.theme.spacing.assignments[assignmentName]),
+        };
+    }
+
+    return null;
+}
+
 function syncThemeControlsFromState() {
     document.querySelector("#baseFontSize").value = ThemeForge.theme.typography.baseFontSize;
     document.querySelector("#headingScale").value = ThemeForge.theme.typography.headingScale * 100;
@@ -230,6 +469,25 @@ function syncThemeControlsFromState() {
     document.querySelector("#radiusControl").value = ThemeForge.theme.shape.radius;
     document.querySelector("#borderWidthControl").value = ThemeForge.theme.shape.borderWidth;
     document.querySelector("#overlayBlurControl").value = ThemeForge.theme.shape.overlayBlur;
+
+    syncSpacingControlsFromState();
+}
+
+function syncSpacingControlsFromState() {
+    const { spacing } = ThemeForge.theme;
+    const unitControl = document.querySelector("#spacingUnitControl");
+
+    if (unitControl) {
+        unitControl.value = spacing.unit;
+    }
+
+    document.querySelectorAll("[data-spacing-scale]").forEach((control) => {
+        control.value = spacing.scale[control.dataset.spacingScale];
+    });
+
+    document.querySelectorAll("[data-spacing-assignment]").forEach((control) => {
+        control.value = spacing.assignments[control.dataset.spacingAssignment];
+    });
 }
 
 ThemeForge.refreshThemeInterface = function refreshThemeInterface() {
@@ -241,7 +499,9 @@ ThemeForge.refreshThemeInterface = function refreshThemeInterface() {
 };
 
 function bindControls() {
-    const controls = document.querySelectorAll("#baseFontSize, #headingScale, #radiusControl, #borderWidthControl, #overlayBlurControl");
+    const controls = document.querySelectorAll(
+        "#baseFontSize, #headingScale, #radiusControl, #borderWidthControl, #overlayBlurControl, [data-theme-control='spacing']",
+    );
 
     controls.forEach((control) => {
         control.addEventListener("input", updateThemeFromControls);
@@ -249,6 +509,7 @@ function bindControls() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    renderSpacingControls();
     bindControls();
     bindThemeModeControls();
     bindAppAppearanceControl();
@@ -256,6 +517,7 @@ document.addEventListener("DOMContentLoaded", () => {
     applyAppAppearance(getStoredAppAppearancePreference());
     ThemeForge.history.init();
     updateThemeModeControls();
+    syncThemeControlsFromState();
     ThemeForge.applyTheme();
     ThemeForge.colorEditor.init();
     ThemeForge.accessibility.init();
