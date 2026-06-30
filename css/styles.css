@@ -1484,7 +1484,7 @@ a {
     gap: 0.1rem 0.75rem;
     width: 100%;
     padding: 0.25rem 0.75rem;
-    border: var(--border-width) solid var(--control-surface); */
+    /* border: var(--border-width) solid var(--control-surface); */
     border: 0;
     border-radius: 0.7rem;
     background: var(--control-surface);
@@ -1494,7 +1494,7 @@ a {
 
 .color-token:hover,
 .color-token.active {
-    border: var(--border-width) solid var(--color-primary);    
+    border: var(--border-width) solid var(--color-primary);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary), transparent 82%);
 }
 
@@ -1833,28 +1833,22 @@ a {
 }
 
 .dimensions-scale-snap {
-    border-color: color-mix(in srgb, var(--color-primary), transparent 35%);
-    border-radius: 999px;
-    padding: 0;
-    background: color-mix(in srgb, var(--color-primary), transparent 86%);
-    font-size: 0.67rem;
-    font-weight: 900;
-    letter-spacing: 0.02em;
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 0.2rem 0.25rem;
+    border-color: var(--control-border);
+    border-radius: 0.48rem;
+    background: var(--control-surface);
+    color: var(--control-text);
+    cursor: pointer;
 }
 
-.dimensions-scale-snap:hover:not(:disabled) {
+.dimensions-scale-snap:hover {
     border-color: var(--color-primary);
-    background: color-mix(in srgb, var(--color-primary), transparent 76%);
 }
 
-.dimensions-scale-snap:disabled {
-    border-color: color-mix(in srgb, var(--control-border), var(--color-primary) 24%);
-    background: color-mix(in srgb, var(--control-surface-raised), var(--color-primary) 9%);
-    color: var(--control-muted);
-    cursor: default;
-    opacity: 0.82;
-}
-
-.dimensions-scale-snap[data-scale-match="none"] {
-    visibility: hidden;
+.dimensions-scale-snap option,
+.dimensions-unit-select option {
+    background: var(--control-surface);
+    color: var(--control-text);
 }

@@ -279,7 +279,7 @@ function createValueTokenControl({ label, featureName, tokenType, tokenName, inc
     const text = document.createElement("span");
     const valueInput = document.createElement("input");
     const unitSelect = document.createElement("select");
-    const nearestScale = document.createElement("button");
+    const nearestScale = document.createElement("select");
 
     wrapper.className = `dimensions-token-control dimensions-token-control-${tokenType}`;
     text.className = "dimensions-token-label";
@@ -316,12 +316,20 @@ function createValueTokenControl({ label, featureName, tokenType, tokenName, inc
     wrapper.append(text, valueInput, unitSelect);
 
     if (includeScaleSnap) {
-        nearestScale.type = "button";
         nearestScale.className = "dimensions-scale-snap";
         nearestScale.dataset.scaleSnap = "true";
         nearestScale.dataset.featureName = featureName;
         nearestScale.dataset.tokenName = tokenName;
-        nearestScale.textContent = "";
+        nearestScale.setAttribute("aria-label", `${label} scale`);
+
+        FEATURE_SCALE_TOKENS.forEach((token) => {
+            const option = document.createElement("option");
+
+            option.value = token.key;
+            option.textContent = token.label;
+            nearestScale.append(option);
+        });
+
         wrapper.append(nearestScale);
     }
 
@@ -405,34 +413,22 @@ function updateTokensFromControls() {
 }
 
 function updateNearestScaleButtons() {
-    document.querySelectorAll("[data-scale-snap]").forEach((button) => {
-        const featureName = button.dataset.featureName;
-        const mappingName = button.dataset.tokenName;
+    document.querySelectorAll("[data-scale-snap]").forEach((select) => {
+        const featureName = select.dataset.featureName;
+        const mappingName = select.dataset.tokenName;
         const feature = ThemeForge.theme[featureName];
         const mapping = feature.mappings[mappingName];
-        const match = ThemeForge.findMatchingScaleToken(feature.scale, mapping);
-        const nearest = match || getNearestScaleToken(feature.scale, mapping);
+        const nearest = getNearestScaleToken(feature.scale, mapping);
 
-        button.dataset.scaleToken = nearest || "";
-        button.dataset.scaleMatch = match ? "exact" : nearest ? "near" : "none";
-        button.disabled = Boolean(match || !nearest);
-        button.textContent = nearest ? getScaleTokenLabel(nearest) : "";
-        button.setAttribute(
-            "aria-label",
-            nearest ? `${match ? "Matches" : "Snap to"} ${getFeatureLabel(featureName)} ${getScaleTokenLabel(nearest)}` : "No matching scale value",
-        );
-        button.title = nearest ? `${match ? "Matches" : "Snap to"} ${getFeatureLabel(featureName)} ${getScaleTokenLabel(nearest)}` : "No matching scale value";
+        select.value = nearest || "";
+        select.dataset.scaleToken = nearest || "";
     });
 }
 
 function getNearestScaleToken(scale, mapping) {
     if (!mapping) return null;
 
-    const sameUnitTokens = Object.entries(scale).filter(([, token]) => token.unit === mapping.unit);
-
-    if (!sameUnitTokens.length) return null;
-
-    return sameUnitTokens.reduce((nearest, current) => {
+    return Object.entries(scale).reduce((nearest, current) => {
         const nearestDistance = Math.abs(Number(nearest[1].value) - Number(mapping.value));
         const currentDistance = Math.abs(Number(current[1].value) - Number(mapping.value));
 
@@ -440,12 +436,12 @@ function getNearestScaleToken(scale, mapping) {
     })[0];
 }
 
-function snapMappingToScale(button) {
-    const featureName = button.dataset.featureName;
-    const mappingName = button.dataset.tokenName;
-    const scaleTokenName = button.dataset.scaleToken;
+function snapMappingToScale(select) {
+    const featureName = select.dataset.featureName;
+    const mappingName = select.dataset.tokenName;
+    const scaleTokenName = select.value;
 
-    if (!scaleTokenName || button.disabled) {
+    if (!scaleTokenName) {
         return;
     }
 
@@ -458,7 +454,7 @@ function snapMappingToScale(button) {
     }
 
     ThemeForge.history.recordChange(
-        `Snapped ${getMappingLabel(featureName, mappingName).toLowerCase()} to ${getFeatureLabel(featureName)} ${getScaleTokenLabel(scaleTokenName)}`,
+        `Set ${getMappingLabel(featureName, mappingName).toLowerCase()} to ${getFeatureLabel(featureName)} ${getScaleTokenLabel(scaleTokenName)}`,
     );
 
     mapping.value = scaleToken.value;
@@ -691,9 +687,9 @@ function bindControls() {
         control.addEventListener("keydown", handleTokenValueKeydown);
     });
 
-    document.querySelectorAll("[data-scale-snap]").forEach((button) => {
-        button.addEventListener("click", () => {
-            snapMappingToScale(button);
+    document.querySelectorAll("[data-scale-snap]").forEach((select) => {
+        select.addEventListener("change", () => {
+            snapMappingToScale(select);
         });
     });
 }
