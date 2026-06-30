@@ -275,11 +275,12 @@ function createFeatureMappingControls(featureName) {
 }
 
 function createValueTokenControl({ label, featureName, tokenType, tokenName, includeScaleSnap = false }) {
-    const wrapper = document.createElement("label");
+    const wrapper = document.createElement("div");
     const text = document.createElement("span");
     const valueInput = document.createElement("input");
     const unitSelect = document.createElement("select");
     const nearestScale = document.createElement("select");
+    const nearestScaleButton = document.createElement("button");
 
     wrapper.className = `dimensions-token-control dimensions-token-control-${tokenType}`;
     text.className = "dimensions-token-label";
@@ -313,7 +314,7 @@ function createValueTokenControl({ label, featureName, tokenType, tokenName, inc
         unitSelect.append(option);
     });
 
-    wrapper.append(text, valueInput, unitSelect);
+    wrapper.append(text);
 
     if (includeScaleSnap) {
         nearestScale.className = "dimensions-scale-snap";
@@ -321,7 +322,15 @@ function createValueTokenControl({ label, featureName, tokenType, tokenName, inc
         nearestScale.dataset.featureName = featureName;
         nearestScale.dataset.tokenName = tokenName;
         nearestScale.setAttribute("aria-label", `${label} scale`);
-
+        nearestScaleButton.type = "button";
+        nearestScaleButton.className = "dimensions-nearest-scale-button has-tooltip";
+        nearestScaleButton.dataset.nearestScaleSnap = "true";
+        nearestScaleButton.dataset.featureName = featureName;
+        nearestScaleButton.dataset.tokenName = tokenName;
+        nearestScaleButton.dataset.tooltipPosition = "bottom";
+        nearestScaleButton.textContent = "↺";
+        nearestScaleButton.hidden = true;
+        nearestScaleButton.setAttribute("aria-label", `${label} snap to nearest scale`);
         const customOption = document.createElement("option");
 
         customOption.value = "";
@@ -337,7 +346,11 @@ function createValueTokenControl({ label, featureName, tokenType, tokenName, inc
             nearestScale.append(option);
         });
 
-        wrapper.append(nearestScale);
+        wrapper.append(nearestScaleButton, valueInput, unitSelect, nearestScale);
+    }
+
+    if (!includeScaleSnap) {
+        wrapper.append(valueInput, unitSelect);
     }
 
     return wrapper;
@@ -426,9 +439,20 @@ function updateNearestScaleButtons() {
         const feature = ThemeForge.theme[featureName];
         const mapping = feature.mappings[mappingName];
         const exactMatch = ThemeForge.findMatchingScaleToken(feature.scale, mapping);
+        const nearest = getNearestScaleToken(feature.scale, mapping);
+        const nearestButton = select.closest(".dimensions-token-control")?.querySelector("[data-nearest-scale-snap]");
 
         select.value = exactMatch || "";
         select.dataset.scaleToken = exactMatch || "";
+
+        if (!nearestButton) {
+            return;
+        }
+
+        nearestButton.hidden = Boolean(exactMatch);
+        nearestButton.dataset.scaleToken = nearest || "";
+        nearestButton.dataset.tooltip = nearest ? `Snap to ${getScaleTokenLabel(nearest)}` : "";
+        nearestButton.setAttribute("aria-label", nearest ? `Snap to ${getScaleTokenLabel(nearest)}` : "Snap to nearest scale");
     });
 }
 
@@ -446,8 +470,7 @@ function getNearestScaleToken(scale, mapping) {
 function snapMappingToScale(select) {
     const featureName = select.dataset.featureName;
     const mappingName = select.dataset.tokenName;
-    const scaleTokenName = select.value;
-
+    const scaleTokenName = select.value || select.dataset.scaleToken;
     if (!scaleTokenName) {
         return;
     }
@@ -697,6 +720,12 @@ function bindControls() {
     document.querySelectorAll("[data-scale-snap]").forEach((select) => {
         select.addEventListener("change", () => {
             snapMappingToScale(select);
+        });
+    });
+
+    document.querySelectorAll("[data-nearest-scale-snap]").forEach((button) => {
+        button.addEventListener("click", () => {
+            snapMappingToScale(button);
         });
     });
 }

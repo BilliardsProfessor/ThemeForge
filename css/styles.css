@@ -1,6 +1,6 @@
 :root {
     --app-header-height: 72px;
-    --left-drawer-width: 400px;
+    --left-drawer-width: 350px;
     --drawer-rail-width: 3.25rem;
     --preview-width: 900px;
     --preview-width-transition: 180ms ease;
@@ -1136,8 +1136,8 @@ body.drawer-is-initializing .control-card-content {
 
 .control-card label {
     display: grid;
-    gap: 0.4rem;
-    margin-bottom: var(--space-2);
+    gap: 0.2rem;
+    margin-bottom: var(--space-1);
     color: var(--color-muted);
 }
 
@@ -1696,6 +1696,7 @@ a {
     --dimension-unit-width: 2.5rem;
     --dimension-snap-width: 2rem;
     --dimension-control-height: 1.75rem;
+    --dimension-nearest-width: 1rem;
 }
 
 [data-control-panel="spacing"] .control-card-content {
@@ -1770,6 +1771,7 @@ a {
 .dimensions-token-control-mapping {
     grid-template-columns:
         1fr
+        var(--dimension-nearest-width)
         var(--dimension-value-width)
         var(--dimension-unit-width)
         var(--dimension-snap-width);
@@ -1779,12 +1781,42 @@ a {
 
 .dimensions-token-label {
     min-width: 0;
-    overflow: hidden;
     color: var(--control-muted);
-    font-weight: 800;
     line-height: 1.1;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.dimensions-nearest-scale-button {
+    display: inline-grid;
+    place-items: center;
+    width: 100%;
+    height: var(--dimension-control-height);
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--color-warning);
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 900;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.dimensions-nearest-scale-button[hidden] {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.dimensions-nearest-scale-button:hover,
+.dimensions-nearest-scale-button:focus-visible {
+    color: var(--color-primary);
+}
+
+.dimensions-nearest-scale-button:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--color-primary), transparent 70%);
+    outline-offset: 2px;
+    border-radius: 0.35rem;
 }
 
 .dimensions-token-control-scale .dimensions-token-label {
