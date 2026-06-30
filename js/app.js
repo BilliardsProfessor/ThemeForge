@@ -322,6 +322,13 @@ function createValueTokenControl({ label, featureName, tokenType, tokenName, inc
         nearestScale.dataset.tokenName = tokenName;
         nearestScale.setAttribute("aria-label", `${label} scale`);
 
+        const customOption = document.createElement("option");
+
+        customOption.value = "";
+        customOption.textContent = "···";
+        // customOption.textContent = "⚙";
+        nearestScale.append(customOption);
+
         FEATURE_SCALE_TOKENS.forEach((token) => {
             const option = document.createElement("option");
 
@@ -418,10 +425,10 @@ function updateNearestScaleButtons() {
         const mappingName = select.dataset.tokenName;
         const feature = ThemeForge.theme[featureName];
         const mapping = feature.mappings[mappingName];
-        const nearest = getNearestScaleToken(feature.scale, mapping);
+        const exactMatch = ThemeForge.findMatchingScaleToken(feature.scale, mapping);
 
-        select.value = nearest || "";
-        select.dataset.scaleToken = nearest || "";
+        select.value = exactMatch || "";
+        select.dataset.scaleToken = exactMatch || "";
     });
 }
 

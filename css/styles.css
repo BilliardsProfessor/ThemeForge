@@ -21,6 +21,8 @@
     --color-text: hsl(222 47% 11%);
     --color-muted: hsl(215 16% 47%);
     --color-border: hsl(213 27% 84%);
+    --color-warning: hsl(38 92% 50%);
+    --color-danger: hsl(0 92% 50%);
 
     --tooltip-background: hsl(222 47% 11%);
     --tooltip-text: hsl(0 0% 100%);
@@ -1851,4 +1853,9 @@ a {
 .dimensions-unit-select option {
     background: var(--control-surface);
     color: var(--control-text);
+}
+
+.dimensions-scale-snap[data-scale-token=""] {
+    color: var(--color-text);
+    border-color: var(--color-warning);
 }
