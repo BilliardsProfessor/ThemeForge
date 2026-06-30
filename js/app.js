@@ -186,30 +186,7 @@ function renderSpacingControls() {
     renderSpacingPanel();
 }
 
-function renderSpacingRailButton() {
-    if (document.querySelector('[data-drawer-panel="spacing"]')) {
-        return;
-    }
-
-    const shapeButton = document.querySelector('[data-drawer-panel="shape"]');
-    const railButton = document.createElement("button");
-    const icon = document.createElement("span");
-
-    railButton.type = "button";
-    railButton.className = "drawer-rail-button has-tooltip";
-    railButton.dataset.drawerPanel = "spacing";
-    railButton.dataset.tooltip = "Spacing";
-    railButton.dataset.tooltipPosition = "right";
-    railButton.setAttribute("aria-controls", "leftDrawer");
-    railButton.setAttribute("aria-label", "Open spacing controls");
-
-    icon.setAttribute("aria-hidden", "true");
-    icon.textContent = "S";
-
-    railButton.append(icon);
-
-    shapeButton?.before(railButton);
-}
+function renderSpacingRailButton() {}
 
 function renderSpacingPanel() {
     if (document.querySelector('[data-control-panel="spacing"]')) {
@@ -226,7 +203,7 @@ function renderSpacingPanel() {
     panel.dataset.controlPanel = "spacing";
 
     title.className = "control-card-title";
-    title.textContent = "Spacing";
+    title.textContent = "Dimensions";
     summary.append(title);
 
     content.className = "control-card-content";
@@ -254,12 +231,14 @@ function createFeatureScaleControls(featureName) {
     group.append(legend);
 
     FEATURE_SCALE_TOKENS.forEach((token) => {
-        group.append(createValueTokenControl({
-            label: token.label,
-            featureName,
-            tokenType: "scale",
-            tokenName: token.key,
-        }));
+        group.append(
+            createValueTokenControl({
+                label: token.label,
+                featureName,
+                tokenType: "scale",
+                tokenName: token.key,
+            }),
+        );
     });
 
     return group;
@@ -273,13 +252,15 @@ function createFeatureMappingControls(featureName) {
     group.append(legend);
 
     FEATURE_CONTROLS[featureName].mappings.forEach((mapping) => {
-        group.append(createValueTokenControl({
-            label: mapping.label,
-            featureName,
-            tokenType: "mapping",
-            tokenName: mapping.key,
-            includeScaleSnap: true,
-        }));
+        group.append(
+            createValueTokenControl({
+                label: mapping.label,
+                featureName,
+                tokenType: "mapping",
+                tokenName: mapping.key,
+                includeScaleSnap: true,
+            }),
+        );
     });
 
     return group;
@@ -435,7 +416,9 @@ function snapMappingToScale(button) {
         return;
     }
 
-    ThemeForge.history.recordChange(`Snapped ${getMappingLabel(featureName, mappingName).toLowerCase()} to ${getFeatureLabel(featureName)} ${getScaleTokenLabel(scaleTokenName)}`);
+    ThemeForge.history.recordChange(
+        `Snapped ${getMappingLabel(featureName, mappingName).toLowerCase()} to ${getFeatureLabel(featureName)} ${getScaleTokenLabel(scaleTokenName)}`,
+    );
 
     mapping.value = scaleToken.value;
     mapping.unit = scaleToken.unit;

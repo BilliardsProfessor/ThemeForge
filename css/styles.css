@@ -1675,3 +1675,169 @@ a {
         transition: none;
     }
 }
+
+[data-control-panel="spacing"] .control-card-content {
+    display: grid;
+    gap: 0.7rem;
+}
+
+[data-control-panel="spacing"] fieldset {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+[data-control-panel="spacing"] .control-card-content > fieldset {
+    display: grid;
+    gap: 0.55rem;
+    padding: 0.65rem;
+    border: var(--border-width) solid var(--control-border);
+    border-radius: 0.75rem;
+    background: color-mix(in srgb, var(--control-surface), var(--control-surface-raised) 38%);
+}
+
+[data-control-panel="spacing"] legend {
+    padding: 0;
+    color: var(--control-muted);
+    font-size: 0.72rem;
+    font-weight: 850;
+    letter-spacing: 0.075em;
+    text-transform: uppercase;
+}
+
+[data-control-panel="spacing"] .control-card-content > fieldset > legend {
+    color: var(--control-text);
+    font-size: 0.8rem;
+}
+
+[data-control-panel="spacing"] fieldset fieldset {
+    display: grid;
+    gap: 0.35rem;
+}
+
+[data-control-panel="spacing"] fieldset fieldset > legend {
+    margin-bottom: 0.15rem;
+}
+
+[data-control-panel="spacing"] fieldset fieldset:first-of-type {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    align-items: end;
+}
+
+[data-control-panel="spacing"] fieldset fieldset:first-of-type > legend {
+    grid-column: 1 / -1;
+}
+
+[data-control-panel="spacing"] label {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 4.2rem 3.4rem;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 0;
+    min-width: 0;
+    color: var(--control-muted);
+    font-size: 0.78rem;
+}
+
+[data-control-panel="spacing"] fieldset fieldset:first-of-type label {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.25rem;
+}
+
+[data-control-panel="spacing"] label > span {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--control-muted);
+    font-weight: 750;
+    line-height: 1.15;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+[data-control-panel="spacing"] fieldset fieldset:first-of-type label > span {
+    color: var(--control-text);
+    font-size: 0.68rem;
+    letter-spacing: 0.055em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+[data-control-panel="spacing"] input,
+[data-control-panel="spacing"] select {
+    min-width: 0;
+    height: 1.85rem;
+    border: var(--border-width) solid var(--control-border);
+    border-radius: 0.5rem;
+    background: var(--control-surface);
+    color: var(--control-text);
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+[data-control-panel="spacing"] input {
+    width: 100%;
+    padding: 0.25rem 0.35rem;
+    text-align: right;
+}
+
+[data-control-panel="spacing"] select {
+    width: 100%;
+    padding: 0.25rem 0.3rem;
+}
+
+[data-control-panel="spacing"] input:focus-visible,
+[data-control-panel="spacing"] select:focus-visible,
+[data-control-panel="spacing"] [data-scale-snap]:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--color-primary), transparent 70%);
+    outline-offset: 2px;
+    border-color: var(--color-primary);
+}
+
+[data-control-panel="spacing"] [data-scale-snap] {
+    grid-column: 2 / -1;
+    justify-self: start;
+    min-height: 1.45rem;
+    max-width: 100%;
+    border: var(--border-width) solid color-mix(in srgb, var(--control-border), var(--color-primary) 18%);
+    border-radius: 999px;
+    padding: 0.15rem 0.5rem;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--control-surface-raised), var(--color-primary) 7%);
+    color: var(--control-muted);
+    font-size: 0.68rem;
+    font-weight: 800;
+    line-height: 1.1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+[data-control-panel="spacing"] [data-scale-snap]:hover {
+    border-color: color-mix(in srgb, var(--color-primary), transparent 35%);
+    background: color-mix(in srgb, var(--color-primary), transparent 88%);
+    color: var(--control-text);
+}
+
+[data-control-panel="spacing"] [data-scale-token=""] {
+    border-color: var(--control-border);
+    background: transparent;
+    color: var(--control-muted);
+    cursor: default;
+}
+
+[data-control-panel="spacing"] [data-scale-token=""]:hover {
+    border-color: var(--control-border);
+    background: transparent;
+    color: var(--control-muted);
+}
+
+@media (max-width: 900px) {
+    [data-control-panel="spacing"] fieldset fieldset:first-of-type {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    [data-control-panel="spacing"] label {
+        grid-template-columns: minmax(0, 1fr) 3.8rem 3.2rem;
+    }
+}
