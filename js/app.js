@@ -459,12 +459,24 @@ function updateNearestScaleButtons() {
 function getNearestScaleToken(scale, mapping) {
     if (!mapping) return null;
 
+    const baseFontSize = ThemeForge.theme.settings.baseFontSize.value;
+
     return Object.entries(scale).reduce((nearest, current) => {
-        const nearestDistance = Math.abs(Number(nearest[1].value) - Number(mapping.value));
-        const currentDistance = Math.abs(Number(current[1].value) - Number(mapping.value));
+        const nearestDistance = Math.abs(getComparableTokenValue(nearest[1], baseFontSize) - getComparableTokenValue(mapping, baseFontSize));
+        const currentDistance = Math.abs(getComparableTokenValue(current[1], baseFontSize) - getComparableTokenValue(mapping, baseFontSize));
 
         return currentDistance < nearestDistance ? current : nearest;
     })[0];
+}
+
+function getComparableTokenValue(token, baseFontSize) {
+    const value = Number(token.value);
+
+    if (token.unit === "rem" || token.unit === "em") {
+        return value * baseFontSize;
+    }
+
+    return value;
 }
 
 function snapMappingToScale(select) {
