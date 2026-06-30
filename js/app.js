@@ -1,6 +1,7 @@
 const APP_APPEARANCE_STORAGE_KEY = "themeForge.appAppearance";
 const APP_APPEARANCE_OPTIONS = ["light", "dark", "system"];
 const VALUE_UNIT_OPTIONS = ["px", "rem", "em"];
+const VALUE_STEP = 1;
 const FEATURE_SCALE_TOKENS = [
     { key: "xs", label: "XS" },
     { key: "sm", label: "SM" },
@@ -23,14 +24,14 @@ const FEATURE_CONTROLS = {
         mappings: [
             { key: "cardPadding", label: "Card padding" },
             { key: "cardGap", label: "Card gap" },
-            { key: "buttonPaddingX", label: "Button padding X" },
-            { key: "buttonPaddingY", label: "Button padding Y" },
+            { key: "buttonPaddingX", label: "Btn pad X" },
+            { key: "buttonPaddingY", label: "Btn pad Y" },
             { key: "formGap", label: "Form gap" },
-            { key: "inputPaddingX", label: "Input padding X" },
-            { key: "inputPaddingY", label: "Input padding Y" },
+            { key: "inputPaddingX", label: "Input pad X" },
+            { key: "inputPaddingY", label: "Input pad Y" },
             { key: "labelSpacing", label: "Label spacing" },
-            { key: "tableCellPaddingX", label: "Table cell padding X" },
-            { key: "tableCellPaddingY", label: "Table cell padding Y" },
+            { key: "tableCellPaddingX", label: "Cell pad X" },
+            { key: "tableCellPaddingY", label: "Cell pad Y" },
             { key: "tableRowGap", label: "Table row gap" },
         ],
     },
@@ -206,7 +207,7 @@ function renderSpacingPanel() {
     title.textContent = "Dimensions";
     summary.append(title);
 
-    content.className = "control-card-content";
+    content.className = "control-card-content dimensions-control-content";
     content.append(createFeatureSpacingControls("layout"), createFeatureSpacingControls("components"));
 
     panel.append(summary, content);
@@ -217,7 +218,10 @@ function createFeatureSpacingControls(featureName) {
     const group = document.createElement("fieldset");
     const legend = document.createElement("legend");
 
+    group.className = "dimensions-feature";
+    legend.className = "dimensions-feature-title";
     legend.textContent = FEATURE_CONTROLS[featureName].label;
+
     group.append(legend, createFeatureScaleControls(featureName), createFeatureMappingControls(featureName));
 
     return group;
@@ -227,6 +231,8 @@ function createFeatureScaleControls(featureName) {
     const group = document.createElement("fieldset");
     const legend = document.createElement("legend");
 
+    group.className = "dimensions-scale";
+    legend.className = "dimensions-subtitle";
     legend.textContent = "Scale";
     group.append(legend);
 
@@ -248,6 +254,8 @@ function createFeatureMappingControls(featureName) {
     const group = document.createElement("fieldset");
     const legend = document.createElement("legend");
 
+    group.className = "dimensions-mappings";
+    legend.className = "dimensions-subtitle";
     legend.textContent = "Mappings";
     group.append(legend);
 
@@ -273,23 +281,29 @@ function createValueTokenControl({ label, featureName, tokenType, tokenName, inc
     const unitSelect = document.createElement("select");
     const nearestScale = document.createElement("button");
 
+    wrapper.className = `dimensions-token-control dimensions-token-control-${tokenType}`;
+    text.className = "dimensions-token-label";
     text.textContent = label;
 
-    valueInput.type = "number";
-    valueInput.min = "0";
-    valueInput.step = "0.05";
+    valueInput.type = "text";
     valueInput.inputMode = "decimal";
+    valueInput.autocomplete = "off";
+    valueInput.spellcheck = false;
+    valueInput.className = "dimensions-value-input";
     valueInput.dataset.themeControl = "token";
     valueInput.dataset.featureName = featureName;
     valueInput.dataset.tokenType = tokenType;
     valueInput.dataset.tokenName = tokenName;
     valueInput.dataset.tokenField = "value";
+    valueInput.setAttribute("aria-label", `${label} value`);
 
+    unitSelect.className = "dimensions-unit-select";
     unitSelect.dataset.themeControl = "token";
     unitSelect.dataset.featureName = featureName;
     unitSelect.dataset.tokenType = tokenType;
     unitSelect.dataset.tokenName = tokenName;
     unitSelect.dataset.tokenField = "unit";
+    unitSelect.setAttribute("aria-label", `${label} unit`);
 
     VALUE_UNIT_OPTIONS.forEach((unit) => {
         const option = document.createElement("option");
@@ -303,10 +317,11 @@ function createValueTokenControl({ label, featureName, tokenType, tokenName, inc
 
     if (includeScaleSnap) {
         nearestScale.type = "button";
+        nearestScale.className = "dimensions-scale-snap";
         nearestScale.dataset.scaleSnap = "true";
         nearestScale.dataset.featureName = featureName;
         nearestScale.dataset.tokenName = tokenName;
-        nearestScale.textContent = "Nearest scale: none";
+        nearestScale.textContent = "";
         wrapper.append(nearestScale);
     }
 
@@ -344,6 +359,19 @@ function getTokenFromControl(control, sourceTheme = ThemeForge.theme) {
     return feature?.[collectionName]?.[control.dataset.tokenName];
 }
 
+function cleanNumericText(value) {
+    return value
+        .replace(/[^\d.-]/g, "")
+        .replace(/(?!^)-/g, "")
+        .replace(/(\..*)\./g, "$1");
+}
+
+function getControlNumericValue(control, fallback = 0) {
+    const value = Number(cleanNumericText(control.value));
+
+    return Number.isFinite(value) ? value : fallback;
+}
+
 function updateTokenFromControl(control) {
     const token = getTokenFromControl(control);
 
@@ -352,9 +380,15 @@ function updateTokenFromControl(control) {
     }
 
     if (control.dataset.tokenField === "value") {
-        const value = Number(control.value);
+        const cleanedValue = cleanNumericText(control.value);
 
-        if (!Number.isNaN(value)) {
+        if (control.value !== cleanedValue) {
+            control.value = cleanedValue;
+        }
+
+        const value = Number(cleanedValue);
+
+        if (Number.isFinite(value)) {
             token.value = value;
         }
 
@@ -380,7 +414,14 @@ function updateNearestScaleButtons() {
         const nearest = match || getNearestScaleToken(feature.scale, mapping);
 
         button.dataset.scaleToken = nearest || "";
-        button.textContent = nearest ? `Nearest scale: ${getFeatureLabel(featureName)} ${getScaleTokenLabel(nearest)}` : "Nearest scale: none";
+        button.dataset.scaleMatch = match ? "exact" : nearest ? "near" : "none";
+        button.disabled = Boolean(match || !nearest);
+        button.textContent = nearest ? getScaleTokenLabel(nearest) : "";
+        button.setAttribute(
+            "aria-label",
+            nearest ? `${match ? "Matches" : "Snap to"} ${getFeatureLabel(featureName)} ${getScaleTokenLabel(nearest)}` : "No matching scale value",
+        );
+        button.title = nearest ? `${match ? "Matches" : "Snap to"} ${getFeatureLabel(featureName)} ${getScaleTokenLabel(nearest)}` : "No matching scale value";
     });
 }
 
@@ -404,7 +445,7 @@ function snapMappingToScale(button) {
     const mappingName = button.dataset.tokenName;
     const scaleTokenName = button.dataset.scaleToken;
 
-    if (!scaleTokenName) {
+    if (!scaleTokenName || button.disabled) {
         return;
     }
 
@@ -427,6 +468,37 @@ function snapMappingToScale(button) {
 
     ThemeForge.refreshThemeInterface();
     ThemeForge.history.saveSession();
+}
+
+function stepTokenValueControl(control, direction) {
+    const token = getTokenFromControl(control);
+
+    if (!token) {
+        return;
+    }
+
+    const currentValue = getControlNumericValue(control, Number(token.value));
+    const nextValue = Math.max(0, currentValue + direction * VALUE_STEP);
+
+    control.value = String(Number(nextValue.toFixed(2)));
+
+    updateThemeFromControls({ target: control });
+}
+
+function handleTokenValueKeydown(event) {
+    if (event.target.dataset.tokenField !== "value") {
+        return;
+    }
+
+    if (event.key === "ArrowUp") {
+        event.preventDefault();
+        stepTokenValueControl(event.target, 1);
+    }
+
+    if (event.key === "ArrowDown") {
+        event.preventDefault();
+        stepTokenValueControl(event.target, -1);
+    }
 }
 
 function updateThemeFromControls(event) {
@@ -613,6 +685,10 @@ function bindControls() {
 
     controls.forEach((control) => {
         control.addEventListener("input", updateThemeFromControls);
+    });
+
+    document.querySelectorAll("[data-theme-control='token'][data-token-field='value']").forEach((control) => {
+        control.addEventListener("keydown", handleTokenValueKeydown);
     });
 
     document.querySelectorAll("[data-scale-snap]").forEach((button) => {
