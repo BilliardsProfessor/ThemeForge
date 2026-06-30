@@ -419,23 +419,329 @@
                                 </label>
                             </div>
                         </div>
+                    </div>
                 </details>
 
                 <details class="control-card" data-control-panel="typography">
                     <summary>
                         <span class="control-card-title">Typography</span>
                     </summary>
-                    <div class="control-card-content">
 
-                        <label>
-                            Base size
-                            <input type="range" id="baseFontSize" min="14" max="22" value="16" />
-                        </label>
+                    <div class="control-card-content typography-control-content">
+                        <fieldset class="typography-section">
+                            <legend>Global</legend>
 
-                        <label>
-                            Heading scale
-                            <input type="range" id="headingScale" min="110" max="180" value="135" />
-                        </label>
+                            <label>
+                                Base size
+                                <input type="range" id="baseFontSize" min="14" max="22" value="16" />
+                            </label>
+
+                            <label>
+                                Body font
+                                <select id="bodyFontFamily">
+                                    <option value="systemSans">System Sans</option>
+                                    <option value="serif">Serif</option>
+                                    <option value="mono">Mono</option>
+                                </select>
+                            </label>
+
+                            <label>
+                                Heading font
+                                <select id="headingFontFamily">
+                                    <option value="inherit">Inherit body</option>
+                                    <option value="systemSans">System Sans</option>
+                                    <option value="serif">Serif</option>
+                                    <option value="mono">Mono</option>
+                                </select>
+                            </label>
+
+                            <label>
+                                Mono font
+                                <select id="monoFontFamily">
+                                    <option value="mono">Mono</option>
+                                    <option value="systemSans">System Sans</option>
+                                    <option value="serif">Serif</option>
+                                </select>
+                            </label>
+                        </fieldset>
+
+                        <fieldset class="typography-section">
+                            <legend>Elements</legend>
+
+                            <div class="typography-element-row typography-element-heading" aria-hidden="true">
+                                <span>Element</span>
+                                <span>Size</span>
+                                <span>Unit</span>
+                                <span>Weight</span>
+                                <span>Line</span>
+                                <span>Track</span>
+                            </div>
+
+                            <div class="typography-element-row" data-typography-element="h1">
+                                <span>H1</span>
+                                <input type="text" inputmode="decimal" data-typography-field="size" value="3"
+                                    aria-label="H1 size" />
+                                <select data-typography-field="unit" aria-label="H1 unit">
+                                    <option value="rem">rem</option>
+                                    <option value="px">px</option>
+                                    <option value="em">em</option>
+                                </select>
+                                <select data-typography-field="weight" aria-label="H1 weight">
+                                    <option value="400">400</option>
+                                    <option value="500">500</option>
+                                    <option value="600">600</option>
+                                    <option value="700">700</option>
+                                    <option value="800" selected>800</option>
+                                    <option value="900">900</option>
+                                </select>
+                                <input type="text" inputmode="decimal" data-typography-field="lineHeight" value="1.1"
+                                    aria-label="H1 line height" />
+                                <input type="text" inputmode="decimal" data-typography-field="letterSpacing"
+                                    value="-0.03" aria-label="H1 letter spacing" />
+                            </div>
+
+                            <div class="typography-element-row" data-typography-element="h2">
+                                <span>H2</span>
+                                <input type="text" inputmode="decimal" data-typography-field="size" value="2.25"
+                                    aria-label="H2 size" />
+                                <select data-typography-field="unit" aria-label="H2 unit">
+                                    <option value="rem">rem</option>
+                                    <option value="px">px</option>
+                                    <option value="em">em</option>
+                                </select>
+                                <select data-typography-field="weight" aria-label="H2 weight">
+                                    <option value="400">400</option>
+                                    <option value="500">500</option>
+                                    <option value="600">600</option>
+                                    <option value="700" selected>700</option>
+                                    <option value="800">800</option>
+                                    <option value="900">900</option>
+                                </select>
+                                <input type="text" inputmode="decimal" data-typography-field="lineHeight" value="1.15"
+                                    aria-label="H2 line height" />
+                                <input type="text" inputmode="decimal" data-typography-field="letterSpacing"
+                                    value="-0.02" aria-label="H2 letter spacing" />
+                            </div>
+
+                            <div class="typography-element-row" data-typography-element="h3">
+                                <span>H3</span>
+                                <input type="text" inputmode="decimal" data-typography-field="size" value="1.75"
+                                    aria-label="H3 size" />
+                                <select data-typography-field="unit" aria-label="H3 unit">
+                                    <option value="rem">rem</option>
+                                    <option value="px">px</option>
+                                    <option value="em">em</option>
+                                </select>
+                                <select data-typography-field="weight" aria-label="H3 weight">
+                                    <option value="400">400</option>
+                                    <option value="500">500</option>
+                                    <option value="600">600</option>
+                                    <option value="700" selected>700</option>
+                                    <option value="800">800</option>
+                                    <option value="900">900</option>
+                                </select>
+                                <input type="text" inputmode="decimal" data-typography-field="lineHeight" value="1.2"
+                                    aria-label="H3 line height" />
+                                <input type="text" inputmode="decimal" data-typography-field="letterSpacing"
+                                    value="-0.01" aria-label="H3 letter spacing" />
+                            </div>
+
+                            <div class="typography-element-row" data-typography-element="h4">
+                                <span>H4</span>
+                                <input type="text" inputmode="decimal" data-typography-field="size" value="1.35"
+                                    aria-label="H4 size" />
+                                <select data-typography-field="unit" aria-label="H4 unit">
+                                    <option value="rem">rem</option>
+                                    <option value="px">px</option>
+                                    <option value="em">em</option>
+                                </select>
+                                <select data-typography-field="weight" aria-label="H4 weight">
+                                    <option value="400">400</option>
+                                    <option value="500">500</option>
+                                    <option value="600" selected>600</option>
+                                    <option value="700">700</option>
+                                    <option value="800">800</option>
+                                    <option value="900">900</option>
+                                </select>
+                                <input type="text" inputmode="decimal" data-typography-field="lineHeight" value="1.25"
+                                    aria-label="H4 line height" />
+                                <input type="text" inputmode="decimal" data-typography-field="letterSpacing" value="0"
+                                    aria-label="H4 letter spacing" />
+                            </div>
+
+                            <div class="typography-element-row" data-typography-element="h5">
+                                <span>H5</span>
+                                <input type="text" inputmode="decimal" data-typography-field="size" value="1.15"
+                                    aria-label="H5 size" />
+                                <select data-typography-field="unit" aria-label="H5 unit">
+                                    <option value="rem">rem</option>
+                                    <option value="px">px</option>
+                                    <option value="em">em</option>
+                                </select>
+                                <select data-typography-field="weight" aria-label="H5 weight">
+                                    <option value="400">400</option>
+                                    <option value="500">500</option>
+                                    <option value="600" selected>600</option>
+                                    <option value="700">700</option>
+                                    <option value="800">800</option>
+                                    <option value="900">900</option>
+                                </select>
+                                <input type="text" inputmode="decimal" data-typography-field="lineHeight" value="1.3"
+                                    aria-label="H5 line height" />
+                                <input type="text" inputmode="decimal" data-typography-field="letterSpacing" value="0"
+                                    aria-label="H5 letter spacing" />
+                            </div>
+
+                            <div class="typography-element-row" data-typography-element="h6">
+                                <span>H6</span>
+                                <input type="text" inputmode="decimal" data-typography-field="size" value="1"
+                                    aria-label="H6 size" />
+                                <select data-typography-field="unit" aria-label="H6 unit">
+                                    <option value="rem">rem</option>
+                                    <option value="px">px</option>
+                                    <option value="em">em</option>
+                                </select>
+                                <select data-typography-field="weight" aria-label="H6 weight">
+                                    <option value="400">400</option>
+                                    <option value="500">500</option>
+                                    <option value="600" selected>600</option>
+                                    <option value="700">700</option>
+                                    <option value="800">800</option>
+                                    <option value="900">900</option>
+                                </select>
+                                <input type="text" inputmode="decimal" data-typography-field="lineHeight" value="1.35"
+                                    aria-label="H6 line height" />
+                                <input type="text" inputmode="decimal" data-typography-field="letterSpacing"
+                                    value="0.02" aria-label="H6 letter spacing" />
+                            </div>
+
+                            <div class="typography-element-row" data-typography-element="p">
+                                <span>P</span>
+                                <input type="text" inputmode="decimal" data-typography-field="size" value="1"
+                                    aria-label="Paragraph size" />
+                                <select data-typography-field="unit" aria-label="Paragraph unit">
+                                    <option value="rem">rem</option>
+                                    <option value="px">px</option>
+                                    <option value="em">em</option>
+                                </select>
+                                <select data-typography-field="weight" aria-label="Paragraph weight">
+                                    <option value="400" selected>400</option>
+                                    <option value="500">500</option>
+                                    <option value="600">600</option>
+                                    <option value="700">700</option>
+                                </select>
+                                <input type="text" inputmode="decimal" data-typography-field="lineHeight" value="1.6"
+                                    aria-label="Paragraph line height" />
+                                <input type="text" inputmode="decimal" data-typography-field="letterSpacing" value="0"
+                                    aria-label="Paragraph letter spacing" />
+                            </div>
+
+                            <div class="typography-element-row" data-typography-element="small">
+                                <span>Small</span>
+                                <input type="text" inputmode="decimal" data-typography-field="size" value="0.875"
+                                    aria-label="Small text size" />
+                                <select data-typography-field="unit" aria-label="Small text unit">
+                                    <option value="rem">rem</option>
+                                    <option value="px">px</option>
+                                    <option value="em">em</option>
+                                </select>
+                                <select data-typography-field="weight" aria-label="Small text weight">
+                                    <option value="400" selected>400</option>
+                                    <option value="500">500</option>
+                                    <option value="600">600</option>
+                                    <option value="700">700</option>
+                                </select>
+                                <input type="text" inputmode="decimal" data-typography-field="lineHeight" value="1.45"
+                                    aria-label="Small text line height" />
+                                <input type="text" inputmode="decimal" data-typography-field="letterSpacing" value="0"
+                                    aria-label="Small text letter spacing" />
+                            </div>
+
+                            <div class="typography-element-row" data-typography-element="blockquote">
+                                <span>Quote</span>
+                                <input type="text" inputmode="decimal" data-typography-field="size" value="1.125"
+                                    aria-label="Blockquote size" />
+                                <select data-typography-field="unit" aria-label="Blockquote unit">
+                                    <option value="rem">rem</option>
+                                    <option value="px">px</option>
+                                    <option value="em">em</option>
+                                </select>
+                                <select data-typography-field="weight" aria-label="Blockquote weight">
+                                    <option value="400" selected>400</option>
+                                    <option value="500">500</option>
+                                    <option value="600">600</option>
+                                    <option value="700">700</option>
+                                </select>
+                                <input type="text" inputmode="decimal" data-typography-field="lineHeight" value="1.55"
+                                    aria-label="Blockquote line height" />
+                                <input type="text" inputmode="decimal" data-typography-field="letterSpacing" value="0"
+                                    aria-label="Blockquote letter spacing" />
+                            </div>
+
+                            <div class="typography-element-row" data-typography-element="code">
+                                <span>Code</span>
+                                <input type="text" inputmode="decimal" data-typography-field="size" value="0.9"
+                                    aria-label="Code size" />
+                                <select data-typography-field="unit" aria-label="Code unit">
+                                    <option value="rem">rem</option>
+                                    <option value="px">px</option>
+                                    <option value="em">em</option>
+                                </select>
+                                <select data-typography-field="weight" aria-label="Code weight">
+                                    <option value="400" selected>400</option>
+                                    <option value="500">500</option>
+                                    <option value="600">600</option>
+                                    <option value="700">700</option>
+                                </select>
+                                <input type="text" inputmode="decimal" data-typography-field="lineHeight" value="1.45"
+                                    aria-label="Code line height" />
+                                <input type="text" inputmode="decimal" data-typography-field="letterSpacing" value="0"
+                                    aria-label="Code letter spacing" />
+                            </div>
+
+                            <div class="typography-element-row" data-typography-element="label">
+                                <span>Label</span>
+                                <input type="text" inputmode="decimal" data-typography-field="size" value="0.875"
+                                    aria-label="Label size" />
+                                <select data-typography-field="unit" aria-label="Label unit">
+                                    <option value="rem">rem</option>
+                                    <option value="px">px</option>
+                                    <option value="em">em</option>
+                                </select>
+                                <select data-typography-field="weight" aria-label="Label weight">
+                                    <option value="400">400</option>
+                                    <option value="500">500</option>
+                                    <option value="600" selected>600</option>
+                                    <option value="700">700</option>
+                                </select>
+                                <input type="text" inputmode="decimal" data-typography-field="lineHeight" value="1.25"
+                                    aria-label="Label line height" />
+                                <input type="text" inputmode="decimal" data-typography-field="letterSpacing"
+                                    value="0.01" aria-label="Label letter spacing" />
+                            </div>
+
+                            <div class="typography-element-row" data-typography-element="eyebrow">
+                                <span>Eyebrow</span>
+                                <input type="text" inputmode="decimal" data-typography-field="size" value="0.75"
+                                    aria-label="Eyebrow size" />
+                                <select data-typography-field="unit" aria-label="Eyebrow unit">
+                                    <option value="rem">rem</option>
+                                    <option value="px">px</option>
+                                    <option value="em">em</option>
+                                </select>
+                                <select data-typography-field="weight" aria-label="Eyebrow weight">
+                                    <option value="500">500</option>
+                                    <option value="600">600</option>
+                                    <option value="700">700</option>
+                                    <option value="800" selected>800</option>
+                                    <option value="900">900</option>
+                                </select>
+                                <input type="text" inputmode="decimal" data-typography-field="lineHeight" value="1.2"
+                                    aria-label="Eyebrow line height" />
+                                <input type="text" inputmode="decimal" data-typography-field="letterSpacing"
+                                    value="0.08" aria-label="Eyebrow letter spacing" />
+                            </div>
+                        </fieldset>
                     </div>
                 </details>
 

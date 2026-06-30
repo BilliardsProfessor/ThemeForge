@@ -58,10 +58,24 @@ const ThemeForge = {
 
         typography: {
             settings: {
-                headingScale: 1.35,
+                bodyFontFamily: "systemSans",
+                headingFontFamily: "inherit",
+                monoFontFamily: "mono",
             },
-            scale: {},
-            mappings: {},
+            elements: {
+                h1: { size: { value: 3, unit: "rem" }, weight: 800, lineHeight: 1.1, letterSpacing: -0.03 },
+                h2: { size: { value: 2.25, unit: "rem" }, weight: 700, lineHeight: 1.15, letterSpacing: -0.02 },
+                h3: { size: { value: 1.75, unit: "rem" }, weight: 700, lineHeight: 1.2, letterSpacing: -0.01 },
+                h4: { size: { value: 1.35, unit: "rem" }, weight: 600, lineHeight: 1.25, letterSpacing: 0 },
+                h5: { size: { value: 1.15, unit: "rem" }, weight: 600, lineHeight: 1.3, letterSpacing: 0 },
+                h6: { size: { value: 1, unit: "rem" }, weight: 600, lineHeight: 1.35, letterSpacing: 0.02 },
+                p: { size: { value: 1, unit: "rem" }, weight: 400, lineHeight: 1.6, letterSpacing: 0 },
+                small: { size: { value: 0.875, unit: "rem" }, weight: 400, lineHeight: 1.45, letterSpacing: 0 },
+                blockquote: { size: { value: 1.125, unit: "rem" }, weight: 400, lineHeight: 1.55, letterSpacing: 0 },
+                code: { size: { value: 0.9, unit: "rem" }, weight: 400, lineHeight: 1.45, letterSpacing: 0 },
+                label: { size: { value: 0.875, unit: "rem" }, weight: 600, lineHeight: 1.25, letterSpacing: 0.01 },
+                eyebrow: { size: { value: 0.75, unit: "rem" }, weight: 800, lineHeight: 1.2, letterSpacing: 0.08 },
+            },
         },
 
         layout: {
@@ -164,12 +178,34 @@ const ThemeForge = {
     },
 
     normalizeTypography(typography = {}) {
+        const defaultTypography = this.theme.typography;
+
         return {
             settings: {
-                headingScale: typography.settings?.headingScale ?? typography.headingScale ?? this.theme.typography.settings.headingScale,
+                ...this.cloneValue(defaultTypography.settings),
+                ...(typography.settings || {}),
             },
-            scale: typography.scale || {},
-            mappings: typography.mappings || {},
+            elements: this.normalizeTypographyElements(typography.elements || defaultTypography.elements),
+        };
+    },
+
+    normalizeTypographyElements(elements = {}) {
+        const defaultElements = this.theme.typography.elements;
+
+        return Object.fromEntries(
+            Object.entries(defaultElements).map(([elementName, defaultElement]) => [
+                elementName,
+                this.normalizeTypographyElement(elements[elementName] || defaultElement, defaultElement),
+            ]),
+        );
+    },
+
+    normalizeTypographyElement(element = {}, defaultElement = {}) {
+        return {
+            size: this.normalizeValueToken(element.size || defaultElement.size),
+            weight: Number(element.weight ?? defaultElement.weight ?? 400),
+            lineHeight: Number(element.lineHeight ?? defaultElement.lineHeight ?? 1.5),
+            letterSpacing: Number(element.letterSpacing ?? defaultElement.letterSpacing ?? 0),
         };
     },
 
@@ -318,7 +354,6 @@ const ThemeForge = {
         root.style.setProperty("--shadow-soft", `0 12px 30px ${ThemeForge.getColorValue(colors.shadowTint)}`);
 
         root.style.setProperty("--font-size-base", ThemeForge.getTokenValue(settings.baseFontSize));
-        root.style.setProperty("--heading-scale", typography.settings.headingScale);
 
         root.style.setProperty("--radius", `${shape.radius}px`);
         root.style.setProperty("--border-width", `${shape.borderWidth}px`);

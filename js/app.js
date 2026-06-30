@@ -546,13 +546,34 @@ function updateThemeFromControls(event) {
 
     ThemeForge.theme.settings.baseFontSize.value = Number(document.querySelector("#baseFontSize").value);
     ThemeForge.theme.settings.baseFontSize.unit = "px";
-    ThemeForge.theme.typography.settings.headingScale = Number(document.querySelector("#headingScale").value) / 100;
+    updateTypographyFromControls();
 
     ThemeForge.theme.shape.radius = Number(document.querySelector("#radiusControl").value);
     ThemeForge.theme.shape.borderWidth = Number(document.querySelector("#borderWidthControl").value);
     ThemeForge.theme.shape.overlayBlur = Number(document.querySelector("#overlayBlurControl").value);
 
     updateTokensFromControls();
+
+    function updateTypographyFromControls() {
+        const { settings, elements } = ThemeForge.theme.typography;
+
+        settings.bodyFontFamily = document.querySelector("#bodyFontFamily")?.value || settings.bodyFontFamily;
+        settings.headingFontFamily = document.querySelector("#headingFontFamily")?.value || settings.headingFontFamily;
+        settings.monoFontFamily = document.querySelector("#monoFontFamily")?.value || settings.monoFontFamily;
+
+        document.querySelectorAll("[data-typography-element]").forEach((row) => {
+            const elementName = row.dataset.typographyElement;
+            const element = elements[elementName];
+
+            if (!element) return;
+
+            element.size.value = Number(row.querySelector("[data-typography-field='size']").value);
+            element.size.unit = row.querySelector("[data-typography-field='unit']").value;
+            element.weight = Number(row.querySelector("[data-typography-field='weight']").value);
+            element.lineHeight = Number(row.querySelector("[data-typography-field='lineHeight']").value);
+            element.letterSpacing = Number(row.querySelector("[data-typography-field='letterSpacing']").value);
+        });
+    }
 
     ThemeForge.history.updateLatestChangeDetail(getControlHistoryDetail(event.target));
 
@@ -683,13 +704,34 @@ function syncThemeControlsFromState() {
     ThemeForge.theme = ThemeForge.normalizeTheme(ThemeForge.theme);
 
     document.querySelector("#baseFontSize").value = ThemeForge.theme.settings.baseFontSize.value;
-    document.querySelector("#headingScale").value = ThemeForge.theme.typography.settings.headingScale * 100;
+
+    syncTypographyControlsFromState();
 
     document.querySelector("#radiusControl").value = ThemeForge.theme.shape.radius;
     document.querySelector("#borderWidthControl").value = ThemeForge.theme.shape.borderWidth;
     document.querySelector("#overlayBlurControl").value = ThemeForge.theme.shape.overlayBlur;
 
     syncFeatureControlsFromState();
+}
+
+function syncTypographyControlsFromState() {
+    const { settings, elements } = ThemeForge.theme.typography;
+
+    document.querySelector("#bodyFontFamily").value = settings.bodyFontFamily;
+    document.querySelector("#headingFontFamily").value = settings.headingFontFamily;
+    document.querySelector("#monoFontFamily").value = settings.monoFontFamily;
+
+    document.querySelectorAll("[data-typography-element]").forEach((row) => {
+        const element = elements[row.dataset.typographyElement];
+
+        if (!element) return;
+
+        row.querySelector("[data-typography-field='size']").value = element.size.value;
+        row.querySelector("[data-typography-field='unit']").value = element.size.unit;
+        row.querySelector("[data-typography-field='weight']").value = element.weight;
+        row.querySelector("[data-typography-field='lineHeight']").value = element.lineHeight;
+        row.querySelector("[data-typography-field='letterSpacing']").value = element.letterSpacing;
+    });
 }
 
 function syncFeatureControlsFromState() {
@@ -718,7 +760,17 @@ ThemeForge.refreshThemeInterface = function refreshThemeInterface() {
 
 function bindControls() {
     const controls = document.querySelectorAll(
-        "#baseFontSize, #headingScale, #radiusControl, #borderWidthControl, #overlayBlurControl, [data-theme-control='token']",
+        [
+            "#baseFontSize",
+            "#bodyFontFamily",
+            "#headingFontFamily",
+            "#monoFontFamily",
+            "#radiusControl",
+            "#borderWidthControl",
+            "#overlayBlurControl",
+            "[data-theme-control='token']",
+            "[data-typography-field]",
+        ].join(", "),
     );
 
     controls.forEach((control) => {

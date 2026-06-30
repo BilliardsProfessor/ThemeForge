@@ -1,6 +1,6 @@
 :root {
     --app-header-height: 72px;
-    --left-drawer-width: 350px;
+    --left-drawer-width: 500px;
     --drawer-rail-width: 3.25rem;
     --preview-width: 900px;
     --preview-width-transition: 180ms ease;
@@ -28,7 +28,6 @@
     --tooltip-text: hsl(0 0% 100%);
 
     --font-size-base: 16px;
-    --heading-scale: 1.35;
 
     --radius: 10px;
     --border-width: 1px;
@@ -1486,8 +1485,8 @@ a {
     gap: 0.1rem 0.75rem;
     width: 100%;
     padding: 0.25rem 0.75rem;
-    /* border: var(--border-width) solid var(--control-surface); */
-    border: 0;
+    border: var(--border-width) solid var(--control-surface);
+    /* border: 0; */
     border-radius: 0.7rem;
     background: var(--control-surface);
     color: var(--control-text);
@@ -1689,7 +1688,43 @@ a {
     }
 }
 
-/* Dimensions drawer */
+/* Typography drawer panel */
+
+.typography-control-content,
+.typography-section {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.typography-section {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.typography-section legend {
+    margin-bottom: 0.35rem;
+    color: var(--control-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.typography-element-row {
+    display: grid;
+    grid-template-columns: 4rem 3rem 3rem 4rem 3rem 3rem;
+    gap: 0.35rem;
+    align-items: center;
+}
+
+.typography-element-row input,
+.typography-element-row select,
+.typography-control-content select {
+    min-width: 0;
+    width: 100%;
+}
+
+/* Dimensions drawer panel*/
 
 [data-control-panel="spacing"] {
     --dimension-value-width: 2rem;
