@@ -1,6 +1,6 @@
 :root {
     --app-header-height: 72px;
-    --left-drawer-width: 500px;
+    --left-drawer-width: 400px;
     --drawer-rail-width: 3.25rem;
     --preview-width: 900px;
     --preview-width-transition: 180ms ease;
@@ -1239,7 +1239,6 @@ body.drawer-is-initializing .control-card-content {
 .control-range {
     --control-range-track-height: 0.45rem;
     --control-range-thumb-size: 1.15rem;
-
     min-width: 0;
     width: 100%;
     appearance: none;
@@ -1934,6 +1933,26 @@ a {
     display: grid;
     gap: 0.25rem;
     font-size: 0.85rem;
+    transition:
+        filter 250ms ease,
+        opacity 250ms ease,
+        transform 250ms ease,
+        box-shadow 250ms ease;
+}
+
+.editor-shell.is-editing .editor-list {
+    opacity: 0.62;
+    filter: blur(1.5px);
+    transform: scale(0.95);
+    box-shadow:
+        inset 0 0 1.5rem rgb(15 23 42 / 0.22),
+        inset 0 0 0 1px rgb(15 23 42 / 0.08);
+}
+
+.editor-shell.is-editing .editor-list {
+    pointer-events: none;
+    opacity: 0.5;
+    filter: blur(1.5px) brightness(0.72);
 }
 
 .editor-list-row {
@@ -1990,6 +2009,17 @@ a {
     border-radius: var(--workspace-panel-radius);
     background: var(--control-surface);
     box-shadow: var(--workspace-shadow);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+    transition:
+        opacity 250ms ease,
+        transform 250ms ease,
+        box-shadow 250ms ease;
+}
+
+.editor-panel.is-visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
 }
 
 .editor-panel[hidden] {

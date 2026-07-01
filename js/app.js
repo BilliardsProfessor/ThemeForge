@@ -282,6 +282,10 @@ function openTypographyEditor(elementName) {
     }
 
     panel.hidden = false;
+    requestAnimationFrame(() => {
+        panel.classList.add("is-visible");
+    });
+    panel.closest(".editor-shell")?.classList.add("is-editing");
     panel.dataset.typographyElement = elementName;
     panel.innerHTML = `
         <header class="editor-panel-header">
@@ -386,10 +390,37 @@ function openTypographyEditor(elementName) {
 function closeTypographyEditor() {
     const panel = document.querySelector("[data-typography-editor-panel]");
 
-    if (panel) {
-        panel.hidden = true;
-        delete panel.dataset.typographyElement;
+    if (!panel || panel.hidden) {
+        return;
     }
+
+    panel.classList.remove("is-visible");
+    panel.closest(".editor-shell")?.classList.remove("is-editing");
+
+    window.setTimeout(() => {
+        if (!panel.classList.contains("is-visible")) {
+            panel.hidden = true;
+            delete panel.dataset.typographyElement;
+        }
+    }, 250);
+}
+
+function handleTypographyEditorOutsidePointerDown(event) {
+    const panel = document.querySelector("[data-typography-editor-panel]");
+
+    if (!panel || panel.hidden || panel.contains(event.target)) {
+        return;
+    }
+
+    closeTypographyEditor();
+}
+
+function bindTypographyEditorDismissal() {
+    document.addEventListener(
+        "pointerdown",
+        handleTypographyEditorOutsidePointerDown,
+        true,
+    );
 }
 
 function renderSpacingControls() {
@@ -619,6 +650,10 @@ function getFormattedTokenValue(token) {
     return `${Number(token.value)}${token.unit}`;
 }
 
+function cloneThemeSnapshot(theme) {
+    return JSON.parse(JSON.stringify(theme));
+}
+
 function updateBaseFontSizeValue() {
     const input = document.querySelector("#baseFontSize");
     const output = document.querySelector("#baseFontSizeValue");
@@ -691,6 +726,10 @@ function enhanceWorkspaceNumberInput(input, options = {}) {
             return;
         }
 
+        input.workspaceNumberDragSnapshot = cloneThemeSnapshot(
+            ThemeForge.theme,
+        );
+
         dragState = {
             pointerId: event.pointerId,
             startX: event.clientX,
@@ -728,7 +767,7 @@ function enhanceWorkspaceNumberInput(input, options = {}) {
         const nextValue = clampWorkspaceNumberValue(rawValue, options);
 
         input.value = formatWorkspaceNumberValue(nextValue, options);
-        input.dispatchEvent(new Event("input", { bubbles: true }));
+        dispatchWorkspaceNumberInput(input, { isPreviewOnly: true });
     });
 
     input.addEventListener("pointerup", (event) => {
@@ -736,12 +775,25 @@ function enhanceWorkspaceNumberInput(input, options = {}) {
             return;
         }
 
+        const shouldCommitChange = dragState.isDragging;
+
         dragState = null;
+
+        if (shouldCommitChange) {
+            dispatchWorkspaceNumberInput(input);
+        }
+
+        delete input.workspaceNumberDragSnapshot;
     });
 
     input.addEventListener("pointercancel", () => {
+        delete input.workspaceNumberDragSnapshot;
         dragState = null;
     });
+}
+
+function dispatchWorkspaceNumberInput(input, detail = {}) {
+    input.dispatchEvent(new CustomEvent("input", { bubbles: true, detail }));
 }
 
 function getWorkspaceNumberStep(event, options) {
@@ -946,8 +998,11 @@ function handleTokenValueKeydown(event) {
 
 function updateThemeFromControls(event) {
     const label = getControlHistoryLabel(event.target);
+    const isPreviewOnly = event.detail?.isPreviewOnly;
 
-    ThemeForge.history.recordContinuousChange(label);
+    if (!isPreviewOnly) {
+        ThemeForge.history.recordContinuousChange(label);
+    }
 
     ThemeForge.theme.settings.baseFontSize.value = Number(
         document.querySelector("#baseFontSize").value,
@@ -969,9 +1024,11 @@ function updateThemeFromControls(event) {
     updateTokensFromControls();
     updateTypographySummaryRows();
 
-    ThemeForge.history.updateLatestChangeDetail(
-        getControlHistoryDetail(event.target),
-    );
+    if (!isPreviewOnly) {
+        ThemeForge.history.updateLatestChangeDetail(
+            getControlHistoryDetail(event.target),
+        );
+    }
 
     ThemeForge.applyTheme();
     ThemeForge.accessibility.updateScoreBadge();
@@ -1102,7 +1159,9 @@ function getTypographyFieldLabel(fieldName) {
 }
 
 function getControlHistoryDetail(control) {
-    const snapshot = ThemeForge.history.getLatestUndoSnapshot();
+    const snapshot =
+        control.workspaceNumberDragSnapshot ||
+        ThemeForge.history.getLatestUndoSnapshot();
     const normalizedSnapshot = snapshot
         ? ThemeForge.normalizeTheme(snapshot)
         : null;
@@ -1360,6 +1419,7 @@ function bindControls() {
 
 document.addEventListener("DOMContentLoaded", () => {
     renderTypographyControls();
+    bindTypographyEditorDismissal();
     renderSpacingControls();
     bindControls();
     bindThemeModeControls();
