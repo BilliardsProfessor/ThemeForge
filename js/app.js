@@ -2,6 +2,8 @@ const APP_APPEARANCE_STORAGE_KEY = "themeForge.appAppearance";
 const APP_APPEARANCE_OPTIONS = ["light", "dark", "system"];
 const VALUE_UNIT_OPTIONS = ["px", "rem", "em"];
 const VALUE_STEP = 1;
+const WORKSPACE_NUMBER_DRAG_THRESHOLD = 3;
+const WORKSPACE_NUMBER_PIXELS_PER_STEP = 8;
 const FEATURE_SCALE_TOKENS = [
     { key: "xs", label: "XS" },
     { key: "sm", label: "SM" },
@@ -284,7 +286,22 @@ function openTypographyEditor(elementName) {
     panel.innerHTML = `
         <header class="editor-panel-header">
             <h3>${getTypographyElementLabel(elementName)}</h3>
-            <button type="button" data-close-typography-editor aria-label="Close typography editor">Done</button>
+            <button
+                type="button"
+                class="editor-panel-close"
+                data-close-typography-editor
+                aria-label="Close typography editor"
+            >
+                <svg
+                    class="icon"
+                    aria-hidden="true"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                >
+                    <path d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5" />
+                    <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+            </button>
         </header>
 
         <div class="editor-panel-content" data-typography-element="${elementName}">
@@ -313,11 +330,49 @@ function openTypographyEditor(elementName) {
             </label>
 
             <label>
-                Letter
+                Track
                 <input type="text" inputmode="decimal" data-typography-field="letterSpacing" value="${element.letterSpacing}" aria-label="${getTypographyElementLabel(elementName)} letter spacing" />
             </label>
         </div>
     `;
+
+    panel
+        .querySelectorAll(
+            [
+                "[data-typography-field='size']",
+                "[data-typography-field='lineHeight']",
+                "[data-typography-field='letterSpacing']",
+            ].join(", "),
+        )
+        .forEach((control) => {
+            const fieldOptions = {
+                size: {
+                    min: 0,
+                    step: 0.1,
+                    fineStep: 0.01,
+                    coarseStep: 1,
+                    decimals: 2,
+                },
+                lineHeight: {
+                    min: 0,
+                    step: 0.05,
+                    fineStep: 0.01,
+                    coarseStep: 0.25,
+                    decimals: 2,
+                },
+                letterSpacing: {
+                    step: 0.01,
+                    fineStep: 0.001,
+                    coarseStep: 0.05,
+                    decimals: 3,
+                },
+            };
+
+            enhanceWorkspaceNumberInput(
+                control,
+                fieldOptions[control.dataset.typographyField],
+            );
+        });
 
     panel.querySelectorAll("[data-typography-field]").forEach((control) => {
         control.addEventListener("input", updateThemeFromControls);
@@ -564,6 +619,18 @@ function getFormattedTokenValue(token) {
     return `${Number(token.value)}${token.unit}`;
 }
 
+function updateBaseFontSizeValue() {
+    const input = document.querySelector("#baseFontSize");
+    const output = document.querySelector("#baseFontSizeValue");
+
+    if (!input || !output) {
+        return;
+    }
+
+    output.value = `${input.value}px`;
+    output.textContent = `${input.value}px`;
+}
+
 function getTokenFromControl(control, sourceTheme = ThemeForge.theme) {
     const feature = sourceTheme[control.dataset.featureName];
     const collectionName =
@@ -583,6 +650,130 @@ function getControlNumericValue(control, fallback = 0) {
     const value = Number(cleanNumericText(control.value));
 
     return Number.isFinite(value) ? value : fallback;
+}
+
+function createWorkspaceNumberInput(options = {}) {
+    const input = document.createElement("input");
+
+    input.type = "text";
+    input.inputMode = "decimal";
+    input.autocomplete = "off";
+    input.spellcheck = false;
+
+    if (options.className) {
+        input.className = options.className;
+    }
+
+    if (options.value !== undefined) {
+        input.value = options.value;
+    }
+
+    if (options.ariaLabel) {
+        input.setAttribute("aria-label", options.ariaLabel);
+    }
+
+    Object.entries(options.dataset || {}).forEach(([key, value]) => {
+        input.dataset[key] = value;
+    });
+
+    enhanceWorkspaceNumberInput(input, options);
+
+    return input;
+}
+
+function enhanceWorkspaceNumberInput(input, options = {}) {
+    input.classList.add("workspace-number-input");
+
+    let dragState = null;
+
+    input.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0) {
+            return;
+        }
+
+        dragState = {
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            startValue: getControlNumericValue(
+                input,
+                Number(options.value) || 0,
+            ),
+            isDragging: false,
+        };
+
+        input.setPointerCapture(event.pointerId);
+    });
+
+    input.addEventListener("pointermove", (event) => {
+        if (!dragState || event.pointerId !== dragState.pointerId) {
+            return;
+        }
+
+        const deltaX = event.clientX - dragState.startX;
+
+        if (
+            !dragState.isDragging &&
+            Math.abs(deltaX) < WORKSPACE_NUMBER_DRAG_THRESHOLD
+        ) {
+            return;
+        }
+
+        dragState.isDragging = true;
+        event.preventDefault();
+
+        const step = getWorkspaceNumberStep(event, options);
+        const rawValue =
+            dragState.startValue +
+            (deltaX / WORKSPACE_NUMBER_PIXELS_PER_STEP) * step;
+        const nextValue = clampWorkspaceNumberValue(rawValue, options);
+
+        input.value = formatWorkspaceNumberValue(nextValue, options);
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+
+    input.addEventListener("pointerup", (event) => {
+        if (!dragState || event.pointerId !== dragState.pointerId) {
+            return;
+        }
+
+        dragState = null;
+    });
+
+    input.addEventListener("pointercancel", () => {
+        dragState = null;
+    });
+}
+
+function getWorkspaceNumberStep(event, options) {
+    if (event.shiftKey) {
+        return options.fineStep ?? 0.1;
+    }
+
+    if (event.ctrlKey || event.metaKey) {
+        return options.coarseStep ?? 10;
+    }
+
+    return options.step ?? 1;
+}
+
+function clampWorkspaceNumberValue(value, options) {
+    let nextValue = value;
+
+    if (Number.isFinite(options.min)) {
+        nextValue = Math.max(options.min, nextValue);
+    }
+
+    if (Number.isFinite(options.max)) {
+        nextValue = Math.min(options.max, nextValue);
+    }
+
+    return nextValue;
+}
+
+function formatWorkspaceNumberValue(value, options) {
+    const decimals = options.decimals ?? 2;
+
+    return String(Number(value.toFixed(decimals)));
 }
 
 function updateTokenFromControl(control) {
@@ -762,6 +953,7 @@ function updateThemeFromControls(event) {
         document.querySelector("#baseFontSize").value,
     );
     ThemeForge.theme.settings.baseFontSize.unit = "px";
+    updateBaseFontSizeValue();
     updateTypographyFromControls();
 
     ThemeForge.theme.shape.radius = Number(
@@ -872,7 +1064,7 @@ function getControlHistoryLabel(control) {
             ?.dataset.typographyElement;
         const fieldName = control.dataset.typographyField;
 
-        return `Changed ${getTypographyElementLabel(elementName)} ${getTypographyFieldLabel(fieldName)}`;
+        return `${getTypographyElementLabel(elementName)} ${getTypographyFieldLabel(fieldName)}`;
     }
 
     return labels[control.id] || "Changed theme control";
@@ -903,7 +1095,7 @@ function getTypographyFieldLabel(fieldName) {
         unit: "unit",
         weight: "weight",
         lineHeight: "line height",
-        letterSpacing: "letter spacing",
+        letterSpacing: "track",
     };
 
     return labels[fieldName] || "setting";
@@ -953,7 +1145,8 @@ function getControlHistoryDetail(control) {
 
     const detail =
         details[control.id] ||
-        getTokenControlHistoryDetail(control, normalizedSnapshot);
+        getTokenControlHistoryDetail(control, normalizedSnapshot) ||
+        getTypographyControlHistoryDetail(control, normalizedSnapshot);
 
     if (!detail) {
         return null;
@@ -979,6 +1172,36 @@ function getTokenControlHistoryDetail(control, snapshot) {
         label,
         before: getFormattedTokenValue(beforeToken),
         after: getFormattedTokenValue(afterToken),
+    };
+}
+
+function getTypographyControlHistoryDetail(control, snapshot) {
+    if (!control.dataset.typographyField) {
+        return null;
+    }
+
+    const elementName = control.closest("[data-typography-element]")?.dataset
+        .typographyElement;
+    const fieldName = control.dataset.typographyField;
+    const beforeElement = snapshot.typography.elements[elementName];
+    const afterElement = ThemeForge.theme.typography.elements[elementName];
+
+    if (!beforeElement || !afterElement) {
+        return null;
+    }
+
+    if (fieldName === "size") {
+        return {
+            label: `${getTypographyElementLabel(elementName)} size`,
+            before: getFormattedTokenValue(beforeElement.size),
+            after: getFormattedTokenValue(afterElement.size),
+        };
+    }
+
+    return {
+        label: `${getTypographyElementLabel(elementName)} ${getTypographyFieldLabel(fieldName)}`,
+        before: beforeElement[fieldName],
+        after: afterElement[fieldName],
     };
 }
 
@@ -1026,6 +1249,7 @@ function syncThemeControlsFromState() {
 
     document.querySelector("#baseFontSize").value =
         ThemeForge.theme.settings.baseFontSize.value;
+    updateBaseFontSizeValue();
 
     syncTypographyControlsFromState();
 

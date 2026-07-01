@@ -16,9 +16,11 @@
 
     --color-primary: hsl(221 83% 53%);
     --color-secondary: hsl(262 83% 58%);
+    --color-secondary-text: hsl(262 83% 98%);
     --color-background: hsl(210 40% 98%);
     --color-surface: hsl(0 0% 100%);
     --color-text: hsl(222 47% 11%);
+    --color-text-faded: hsl(222 47% 11% / 0.5);
     --color-muted: hsl(215 16% 47%);
     --color-border: hsl(213 27% 84%);
     --color-warning: hsl(38 92% 50%);
@@ -275,6 +277,7 @@ body[data-app-mode="dark"] {
     --color-background: hsl(222 47% 8%);
     --color-surface: hsl(222 40% 13%);
     --color-text: hsl(210 40% 98%);
+    --color-text-faded: hsl(210 40% 98% / 0.5);
     --color-muted: hsl(215 20% 70%);
     --color-border: hsl(217 33% 24%);
     --tooltip-background: hsl(210 40% 98%);
@@ -289,6 +292,7 @@ body[data-app-mode="dark"] {
     --control-border: hsl(217 33% 30%);
     --control-border-strong: hsl(217 33% 42%);
     --control-text: hsl(210 40% 98%);
+    --control-text-faded: hsl(210 40% 98% / 0.5);
     --control-muted: hsl(215 20% 72%);
     --swatch-border: hsl(210 40% 96%);
 }
@@ -300,6 +304,7 @@ body:not([data-app-mode="dark"]) {
     --control-border: hsl(214 32% 84%);
     --control-border-strong: hsl(215 20% 58%);
     --control-text: hsl(222 47% 11%);
+    --control-text-faded: hsl(222 47% 11% / 0.5);
     --control-muted: hsl(215 16% 47%);
     --swatch-border: hsl(222 47% 11%);
 }
@@ -1179,14 +1184,136 @@ body.drawer-is-initializing .control-card-content {
 }
 
 .control-card label {
-    display: grid;
-    gap: 0.2rem;
-    margin-bottom: var(--space-1);
     color: var(--color-muted);
 }
 
-.control-card input {
+.control-card input,
+.control-card select {
     width: 100%;
+}
+
+.control-field {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: var(--space-1);
+}
+
+.control-field-range {
+    grid-template-columns: max-content minmax(0, 1fr) 3.5rem;
+}
+
+.control-label {
+    color: var(--control-muted);
+    font-weight: 650;
+}
+
+.control-input,
+.workspace-number-input,
+.editor-panel-content select {
+    min-width: 0;
+    padding: 0.4rem 0.45rem;
+    border: var(--border-width) solid var(--control-border);
+    border-radius: 0.45rem;
+    background: var(--control-surface);
+    color: var(--control-text);
+}
+
+.control-input:focus-visible,
+.workspace-number-input:focus-visible,
+.editor-panel-content select:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--color-primary), transparent 70%);
+    outline-offset: 2px;
+    border-color: var(--color-primary);
+}
+
+.control-value {
+    color: var(--control-muted);
+    font-size: 0.8rem;
+    font-weight: 750;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+.control-range {
+    --control-range-track-height: 0.45rem;
+    --control-range-thumb-size: 1.15rem;
+
+    min-width: 0;
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.control-range:focus {
+    outline: none;
+}
+
+.control-range::-webkit-slider-runnable-track {
+    height: var(--control-range-track-height);
+    border-radius: 999px;
+    background: color-mix(
+        in srgb,
+        var(--control-border),
+        var(--control-surface) 25%
+    );
+}
+
+.control-range::-moz-range-track {
+    height: var(--control-range-track-height);
+    border-radius: 999px;
+    background: color-mix(
+        in srgb,
+        var(--control-border),
+        var(--control-surface) 25%
+    );
+}
+
+.control-range::-webkit-slider-thumb {
+    width: var(--control-range-thumb-size);
+    height: var(--control-range-thumb-size);
+    margin-top: calc(
+        (var(--control-range-track-height) / 2) -
+            (var(--control-range-thumb-size) / 2)
+    );
+    border: var(--border-width) solid var(--color-primary);
+    border-radius: 999px;
+    appearance: none;
+    -webkit-appearance: none;
+    background: var(--control-surface);
+    box-shadow: 0 0 0 0.2rem
+        color-mix(in srgb, var(--color-primary), transparent 82%);
+}
+
+.control-range::-moz-range-thumb {
+    width: var(--control-range-thumb-size);
+    height: var(--control-range-thumb-size);
+    border: var(--border-width) solid var(--color-primary);
+    border-radius: 999px;
+    background: var(--control-surface);
+    box-shadow: 0 0 0 0.2rem
+        color-mix(in srgb, var(--color-primary), transparent 82%);
+}
+
+.control-range:focus-visible::-webkit-slider-thumb {
+    outline: 3px solid color-mix(in srgb, var(--color-primary), transparent 65%);
+    outline-offset: 2px;
+}
+
+.control-range:focus-visible::-moz-range-thumb {
+    outline: 3px solid color-mix(in srgb, var(--color-primary), transparent 65%);
+    outline-offset: 2px;
+}
+
+.workspace-number-input {
+    cursor: ew-resize;
+}
+
+.workspace-number-input:focus {
+    cursor: text;
 }
 
 .preview-area {
@@ -1756,7 +1883,7 @@ a {
 
 .control-section-title {
     margin: 0;
-    color: var(--control-text);
+    color: var(--color-secondary-text);
     font-size: 0.72rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -1874,11 +2001,53 @@ a {
     align-items: center;
     justify-content: space-between;
     gap: var(--workspace-panel-gap);
+    margin: calc(var(--workspace-panel-padding) * -1)
+        calc(var(--workspace-panel-padding) * -1) 0;
+    padding: 0.65rem 0.75rem;
+    border-radius: calc(var(--workspace-panel-radius) - 1px)
+        calc(var(--workspace-panel-radius) - 1px) 0 0;
+    background: linear-gradient(
+        135deg,
+        var(--color-secondary),
+        color-mix(in srgb, var(--color-secondary), var(--color-primary) 35%)
+    );
+    color: white;
 }
 
 .editor-panel-header h3 {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 850;
+    letter-spacing: 0.01em;
+}
+
+.editor-panel-close {
+    display: grid;
+    place-items: center;
+    width: 1.85rem;
+    height: 1.85rem;
+    border: 0;
+    border-radius: 999px;
+    padding: 0;
+    background: transparent;
+    color: var(--color-secondary-text);
+}
+
+.editor-panel-close .icon {
+    width: 1.7rem;
+    height: 1.7rem;
+    stroke-width: 1.8;
+}
+
+.editor-panel-close:hover,
+.editor-panel-close:focus-visible {
+    background: rgb(255 255 255 / 0.24);
+    border-color: rgb(255 255 255 / 0.75);
+}
+
+.editor-panel-close:focus-visible {
+    outline: 3px solid rgb(255 255 255 / 0.35);
+    outline-offset: 2px;
 }
 
 .editor-panel-content {

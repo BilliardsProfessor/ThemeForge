@@ -947,20 +947,33 @@
                             <section class="control-section">
                                 <h3 class="control-section-title">Global</h3>
 
-                                <label>
-                                    Base size
+                                <label
+                                    class="control-field control-field-range"
+                                >
+                                    <span class="control-label">Base size</span>
                                     <input
                                         type="range"
                                         id="baseFontSize"
-                                        min="14"
-                                        max="22"
+                                        min="8"
+                                        max="24"
+                                        step="1"
                                         value="16"
+                                        class="control-range"
                                     />
+                                    <output
+                                        class="control-value"
+                                        for="baseFontSize"
+                                        id="baseFontSizeValue"
+                                        >16px</output
+                                    >
                                 </label>
 
-                                <label>
-                                    Body font
-                                    <select id="bodyFontFamily">
+                                <label class="control-field">
+                                    <span class="control-label">Body font</span>
+                                    <select
+                                        id="bodyFontFamily"
+                                        class="control-input"
+                                    >
                                         <option value="systemSans">
                                             System Sans
                                         </option>
@@ -969,9 +982,14 @@
                                     </select>
                                 </label>
 
-                                <label>
-                                    Heading font
-                                    <select id="headingFontFamily">
+                                <label class="control-field">
+                                    <span class="control-label"
+                                        >Heading font</span
+                                    >
+                                    <select
+                                        id="headingFontFamily"
+                                        class="control-input"
+                                    >
                                         <option value="inherit">
                                             Inherit body
                                         </option>
@@ -983,9 +1001,12 @@
                                     </select>
                                 </label>
 
-                                <label>
-                                    Mono font
-                                    <select id="monoFontFamily">
+                                <label class="control-field">
+                                    <span class="control-label">Mono font</span>
+                                    <select
+                                        id="monoFontFamily"
+                                        class="control-input"
+                                    >
                                         <option value="mono">Mono</option>
                                         <option value="systemSans">
                                             System Sans
