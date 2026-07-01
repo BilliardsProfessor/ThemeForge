@@ -311,6 +311,37 @@ const ThemeForge = {
         return `${Number(token.value)}${token.unit}`;
     },
 
+    getFontFamilyValue(fontFamilyKey) {
+        const fontFamilies = {
+            inherit: "inherit",
+            systemSans: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+            serif: 'Georgia, "Times New Roman", serif',
+            mono: 'Consolas, Monaco, "Courier New", monospace',
+        };
+
+        return fontFamilies[fontFamilyKey] || fontFamilies.systemSans;
+    },
+
+    applyTypographyVariables(root) {
+        const { settings, elements } = ThemeForge.theme.typography;
+
+        root.style.setProperty("--font-family-body", ThemeForge.getFontFamilyValue(settings.bodyFontFamily));
+        root.style.setProperty(
+            "--font-family-heading",
+            settings.headingFontFamily === "inherit" ? "var(--font-family-body)" : ThemeForge.getFontFamilyValue(settings.headingFontFamily),
+        );
+        root.style.setProperty("--font-family-mono", ThemeForge.getFontFamilyValue(settings.monoFontFamily));
+
+        Object.entries(elements).forEach(([elementName, element]) => {
+            const cssName = ThemeForge.getCssVariableName(elementName);
+
+            root.style.setProperty(`--typography-${cssName}-size`, ThemeForge.getTokenValue(element.size));
+            root.style.setProperty(`--typography-${cssName}-weight`, element.weight);
+            root.style.setProperty(`--typography-${cssName}-line-height`, element.lineHeight);
+            root.style.setProperty(`--typography-${cssName}-letter-spacing`, `${element.letterSpacing}em`);
+        });
+    },
+
     findMatchingScaleToken(scale, mapping) {
         return Object.entries(scale).find(([, token]) => Number(token.value) === Number(mapping.value) && token.unit === mapping.unit)?.[0] || null;
     },
@@ -354,6 +385,7 @@ const ThemeForge = {
         root.style.setProperty("--shadow-soft", `0 12px 30px ${ThemeForge.getColorValue(colors.shadowTint)}`);
 
         root.style.setProperty("--font-size-base", ThemeForge.getTokenValue(settings.baseFontSize));
+        ThemeForge.applyTypographyVariables(root);
 
         root.style.setProperty("--radius", `${shape.radius}px`);
         root.style.setProperty("--border-width", `${shape.borderWidth}px`);

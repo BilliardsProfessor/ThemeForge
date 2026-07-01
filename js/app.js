@@ -554,32 +554,32 @@ function updateThemeFromControls(event) {
 
     updateTokensFromControls();
 
-    function updateTypographyFromControls() {
-        const { settings, elements } = ThemeForge.theme.typography;
-
-        settings.bodyFontFamily = document.querySelector("#bodyFontFamily")?.value || settings.bodyFontFamily;
-        settings.headingFontFamily = document.querySelector("#headingFontFamily")?.value || settings.headingFontFamily;
-        settings.monoFontFamily = document.querySelector("#monoFontFamily")?.value || settings.monoFontFamily;
-
-        document.querySelectorAll("[data-typography-element]").forEach((row) => {
-            const elementName = row.dataset.typographyElement;
-            const element = elements[elementName];
-
-            if (!element) return;
-
-            element.size.value = Number(row.querySelector("[data-typography-field='size']").value);
-            element.size.unit = row.querySelector("[data-typography-field='unit']").value;
-            element.weight = Number(row.querySelector("[data-typography-field='weight']").value);
-            element.lineHeight = Number(row.querySelector("[data-typography-field='lineHeight']").value);
-            element.letterSpacing = Number(row.querySelector("[data-typography-field='letterSpacing']").value);
-        });
-    }
-
     ThemeForge.history.updateLatestChangeDetail(getControlHistoryDetail(event.target));
 
     ThemeForge.applyTheme();
     ThemeForge.accessibility.updateScoreBadge();
     updateNearestScaleButtons();
+}
+
+function updateTypographyFromControls() {
+    const { settings, elements } = ThemeForge.theme.typography;
+
+    settings.bodyFontFamily = document.querySelector("#bodyFontFamily")?.value || settings.bodyFontFamily;
+    settings.headingFontFamily = document.querySelector("#headingFontFamily")?.value || settings.headingFontFamily;
+    settings.monoFontFamily = document.querySelector("#monoFontFamily")?.value || settings.monoFontFamily;
+
+    document.querySelectorAll("[data-typography-element]").forEach((row) => {
+        const elementName = row.dataset.typographyElement;
+        const element = elements[elementName];
+
+        if (!element) return;
+
+        element.size.value = Number(row.querySelector("[data-typography-field='size']").value);
+        element.size.unit = row.querySelector("[data-typography-field='unit']").value;
+        element.weight = Number(row.querySelector("[data-typography-field='weight']").value);
+        element.lineHeight = Number(row.querySelector("[data-typography-field='lineHeight']").value);
+        element.letterSpacing = Number(row.querySelector("[data-typography-field='letterSpacing']").value);
+    });
 }
 
 function getControlHistoryLabel(control) {
@@ -589,6 +589,9 @@ function getControlHistoryLabel(control) {
         radiusControl: "Changed border radius",
         borderWidthControl: "Changed border width",
         overlayBlurControl: "Changed overlay blur",
+        bodyFontFamily: "Changed body font",
+        headingFontFamily: "Changed heading font",
+        monoFontFamily: "Changed mono font",
     };
 
     if (control.dataset.themeControl === "token") {
@@ -602,7 +605,45 @@ function getControlHistoryLabel(control) {
         return `Changed ${label.toLowerCase()}`;
     }
 
+    if (control.dataset.typographyField) {
+        const elementName = control.closest("[data-typography-element]")?.dataset.typographyElement;
+        const fieldName = control.dataset.typographyField;
+
+        return `Changed ${getTypographyElementLabel(elementName)} ${getTypographyFieldLabel(fieldName)}`;
+    }
+
     return labels[control.id] || "Changed theme control";
+}
+
+function getTypographyElementLabel(elementName) {
+    const labels = {
+        h1: "H1",
+        h2: "H2",
+        h3: "H3",
+        h4: "H4",
+        h5: "H5",
+        h6: "H6",
+        p: "paragraph",
+        small: "small text",
+        blockquote: "quote",
+        code: "code",
+        label: "label",
+        eyebrow: "eyebrow",
+    };
+
+    return labels[elementName] || "typography";
+}
+
+function getTypographyFieldLabel(fieldName) {
+    const labels = {
+        size: "size",
+        unit: "unit",
+        weight: "weight",
+        lineHeight: "line height",
+        letterSpacing: "letter spacing",
+    };
+
+    return labels[fieldName] || "setting";
 }
 
 function getControlHistoryDetail(control) {

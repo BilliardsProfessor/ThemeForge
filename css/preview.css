@@ -2,6 +2,113 @@
     display: none;
 }
 
+.preview-area {
+    font-family: var(--font-family-body);
+}
+
+.preview-area h1,
+.preview-area h2,
+.preview-area h3,
+.preview-area h4,
+.preview-area h5,
+.preview-area h6 {
+    font-family: var(--font-family-heading);
+}
+
+.preview-area code,
+.preview-area pre {
+    font-family: var(--font-family-mono);
+}
+
+.preview-area h1 {
+    font-size: var(--typography-h1-size);
+    font-weight: var(--typography-h1-weight);
+    line-height: var(--typography-h1-line-height);
+    letter-spacing: var(--typography-h1-letter-spacing);
+}
+
+.preview-area h2 {
+    font-size: var(--typography-h2-size);
+    font-weight: var(--typography-h2-weight);
+    line-height: var(--typography-h2-line-height);
+    letter-spacing: var(--typography-h2-letter-spacing);
+}
+
+.preview-area h3 {
+    font-size: var(--typography-h3-size);
+    font-weight: var(--typography-h3-weight);
+    line-height: var(--typography-h3-line-height);
+    letter-spacing: var(--typography-h3-letter-spacing);
+}
+
+.preview-area h4 {
+    font-size: var(--typography-h4-size);
+    font-weight: var(--typography-h4-weight);
+    line-height: var(--typography-h4-line-height);
+    letter-spacing: var(--typography-h4-letter-spacing);
+}
+
+.preview-area h5 {
+    font-size: var(--typography-h5-size);
+    font-weight: var(--typography-h5-weight);
+    line-height: var(--typography-h5-line-height);
+    letter-spacing: var(--typography-h5-letter-spacing);
+}
+
+.preview-area h6 {
+    font-size: var(--typography-h6-size);
+    font-weight: var(--typography-h6-weight);
+    line-height: var(--typography-h6-line-height);
+    letter-spacing: var(--typography-h6-letter-spacing);
+}
+
+.preview-area p,
+.preview-area li,
+.preview-area td,
+.preview-area th {
+    font-size: var(--typography-p-size);
+    font-weight: var(--typography-p-weight);
+    line-height: var(--typography-p-line-height);
+    letter-spacing: var(--typography-p-letter-spacing);
+}
+
+.preview-area small {
+    font-size: var(--typography-small-size);
+    font-weight: var(--typography-small-weight);
+    line-height: var(--typography-small-line-height);
+    letter-spacing: var(--typography-small-letter-spacing);
+}
+
+.preview-area blockquote {
+    font-size: var(--typography-blockquote-size);
+    font-weight: var(--typography-blockquote-weight);
+    line-height: var(--typography-blockquote-line-height);
+    letter-spacing: var(--typography-blockquote-letter-spacing);
+}
+
+.preview-area code,
+.preview-area pre {
+    font-size: var(--typography-code-size);
+    font-weight: var(--typography-code-weight);
+    line-height: var(--typography-code-line-height);
+    letter-spacing: var(--typography-code-letter-spacing);
+}
+
+.preview-area label,
+.preview-area legend {
+    font-size: var(--typography-label-size);
+    font-weight: var(--typography-label-weight);
+    line-height: var(--typography-label-line-height);
+    letter-spacing: var(--typography-label-letter-spacing);
+}
+
+.preview-area .eyebrow {
+    font-size: var(--typography-eyebrow-size);
+    font-weight: var(--typography-eyebrow-weight);
+    line-height: var(--typography-eyebrow-line-height);
+    letter-spacing: var(--typography-eyebrow-letter-spacing);
+}
+
 .sample-page {
     display: grid;
     gap: var(--section-gap);
@@ -167,8 +274,6 @@
 
 .sample-hero h2 {
     margin: 0 0 1rem;
-    font-size: calc(var(--font-size-base) * var(--heading-scale) * 1.6);
-    line-height: 1.05;
 }
 
 .sample-hero p,
@@ -184,7 +289,6 @@
 
 .sample-section h3 {
     margin: 0;
-    font-size: calc(var(--font-size-base) * var(--heading-scale));
 }
 
 .sample-card-grid {
@@ -452,7 +556,6 @@
 
 .preview-modal-header h3 {
     margin: 0;
-    font-size: calc(var(--font-size-base) * var(--heading-scale));
 }
 
 .preview-modal-close {
