@@ -221,19 +221,19 @@ function renderTypographyControls() {
   const editor = document.createElement("div");
   const list = document.createElement("div");
 
-  shell.className = "typography-elements-shell";
-  editor.className = "typography-editor-panel";
+  shell.className = "editor-shell";
+  editor.className = "editor-panel";
   editor.dataset.typographyEditorPanel = "true";
   editor.hidden = true;
 
-  list.className = "typography-summary-list";
+  list.className = "editor-list";
   list.dataset.typographySummaryList = "true";
 
   TYPOGRAPHY_ELEMENTS.forEach((element) => {
     const row = document.createElement("button");
 
     row.type = "button";
-    row.className = "typography-summary-row";
+    row.className = "editor-list-row";
     row.dataset.typographySummaryElement = element.key;
     row.addEventListener("click", () => openTypographyEditor(element.key));
 
@@ -277,12 +277,12 @@ function openTypographyEditor(elementName) {
   panel.hidden = false;
   panel.dataset.typographyElement = elementName;
   panel.innerHTML = `
-        <header class="typography-editor-header">
+        <header class="editor-panel-header">
             <h3>${getTypographyElementLabel(elementName)}</h3>
             <button type="button" data-close-typography-editor aria-label="Close typography editor">Done</button>
         </header>
 
-        <div class="typography-editor-grid">
+        <div class="editor-panel-content" data-typography-element="${elementName}">
             <label>
                 Size
                 <input type="text" inputmode="decimal" data-typography-field="size" value="${element.size.value}" aria-label="${getTypographyElementLabel(elementName)} size" />
@@ -787,28 +787,41 @@ function updateTypographyFromControls() {
   settings.monoFontFamily =
     document.querySelector("#monoFontFamily")?.value || settings.monoFontFamily;
 
-  document.querySelectorAll("[data-typography-element]").forEach((row) => {
-    const elementName = row.dataset.typographyElement;
-    const element = elements[elementName];
+  document;
+  document
+    .querySelectorAll("[data-typography-element]")
+    .forEach((container) => {
+      if (container.closest("[hidden], [disabled]")) return;
 
-    if (!element) return;
+      const elementName = container.dataset.typographyElement;
+      const element = elements[elementName];
 
-    element.size.value = Number(
-      row.querySelector("[data-typography-field='size']").value,
-    );
-    element.size.unit = row.querySelector(
-      "[data-typography-field='unit']",
-    ).value;
-    element.weight = Number(
-      row.querySelector("[data-typography-field='weight']").value,
-    );
-    element.lineHeight = Number(
-      row.querySelector("[data-typography-field='lineHeight']").value,
-    );
-    element.letterSpacing = Number(
-      row.querySelector("[data-typography-field='letterSpacing']").value,
-    );
-  });
+      if (!element) return;
+
+      const sizeControl = container.querySelector(
+        "[data-typography-field='size']",
+      );
+      const unitControl = container.querySelector(
+        "[data-typography-field='unit']",
+      );
+      const weightControl = container.querySelector(
+        "[data-typography-field='weight']",
+      );
+      const lineHeightControl = container.querySelector(
+        "[data-typography-field='lineHeight']",
+      );
+      const letterSpacingControl = container.querySelector(
+        "[data-typography-field='letterSpacing']",
+      );
+
+      if (sizeControl) element.size.value = Number(sizeControl.value);
+      if (unitControl) element.size.unit = unitControl.value;
+      if (weightControl) element.weight = Number(weightControl.value);
+      if (lineHeightControl)
+        element.lineHeight = Number(lineHeightControl.value);
+      if (letterSpacingControl)
+        element.letterSpacing = Number(letterSpacingControl.value);
+    });
 }
 
 function getControlHistoryLabel(control) {
@@ -1019,6 +1032,8 @@ function syncTypographyControlsFromState() {
   document.querySelector("#monoFontFamily").value = settings.monoFontFamily;
 
   document.querySelectorAll("[data-typography-element]").forEach((row) => {
+    if (row.closest("[hidden], [disabled]")) return;
+
     const element = elements[row.dataset.typographyElement];
 
     if (!element) return;

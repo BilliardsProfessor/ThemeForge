@@ -38,11 +38,19 @@
   --space-4: 2rem;
 
   --shadow-soft: 0 12px 30px rgb(15 23 42 / 0.08);
-  --control-shadow: 0 16px 30px rgb(15 23 42 / 0.14);
+
+  --workspace-shadow: 0 16px 30px rgb(15 23 42 / 0.14);
+  --workspace-panel-radius: 0.75rem;
+  --workspace-panel-padding: 0.75rem;
+  --workspace-panel-gap: 0.75rem;
 }
 
 * {
   box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
 }
 
 body {
@@ -1763,17 +1771,18 @@ a {
   width: 100%;
 }
 
-.typography-elements-shell {
+.editor-shell {
+  position: relative;
   display: grid;
-  gap: 0.75rem;
+  gap: var(--workspace-panel-gap);
 }
 
-.typography-summary-list {
+.editor-list {
   display: grid;
   gap: 0.25rem;
 }
 
-.typography-summary-row {
+.editor-list-row {
   display: grid;
   grid-template-columns: minmax(5rem, 1fr) 4.25rem 3.25rem 5rem;
   gap: 0.5rem;
@@ -1789,7 +1798,7 @@ a {
   cursor: pointer;
 }
 
-.typography-summary-row:nth-child(even) {
+.editor-list-row:nth-child(even) {
   background: color-mix(
     in srgb,
     var(--control-surface),
@@ -1797,60 +1806,66 @@ a {
   );
 }
 
-.typography-summary-row:hover,
-.typography-summary-row:focus-visible {
+.editor-list-row:hover,
+.editor-list-row:focus-visible {
   background: color-mix(in srgb, var(--control-primary), transparent 88%);
 }
 
-.typography-summary-row:focus-visible {
+.editor-list-row:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--control-primary), transparent 70%);
   outline-offset: 2px;
 }
 
-.typography-summary-row span:not(:first-child) {
+.editor-list-row span:not(:first-child) {
   color: var(--control-muted);
   font-variant-numeric: tabular-nums;
 }
 
-.typography-editor-panel {
+.editor-panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 5;
+  width: min(100%, 24rem);
+  transform: translate(-50%, -50%);
   display: grid;
-  gap: 0.75rem;
-  padding: 0.75rem;
+  gap: var(--workspace-panel-gap);
+  padding: var(--workspace-panel-padding);
   border: 1px solid var(--control-border);
-  border-radius: 0.75rem;
+  border-radius: var(--workspace-panel-radius);
   background: var(--control-surface);
-  box-shadow: var(--control-shadow);
+  box-shadow: var(--workspace-shadow);
 }
 
-.typography-editor-panel[hidden] {
+.editor-panel[hidden] {
   display: none;
 }
 
-.typography-editor-header {
+.editor-panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: var(--workspace-panel-gap);
 }
 
-.typography-editor-header h3 {
+.editor-panel-header h3 {
   margin: 0;
   font-size: 0.9rem;
 }
 
-.typography-editor-grid {
+.editor-panel-content {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.65rem;
 }
 
-.typography-editor-grid label {
+.editor-panel-content label {
   display: grid;
   gap: 0.3rem;
 }
 
-.typography-editor-grid input,
-.typography-editor-grid select {
+.editor-panel-content input,
+.editor-panel-content select {
   min-width: 0;
   width: 100%;
 }
@@ -1971,6 +1986,7 @@ a {
 }
 
 .dimensions-nearest-scale-button[hidden] {
+  display: inline-grid;
   visibility: hidden;
   pointer-events: none;
 }
