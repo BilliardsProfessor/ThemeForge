@@ -174,10 +174,9 @@ ThemeForge.colorEditor = {
         input.addEventListener(
             "input",
             (event) => {
-                if (
-                    !getDeferredControlSnapshot(input) ||
-                    event.detail?.isDeferredCommit
-                ) {
+                const historySnapshot = getDeferredControlSnapshot(input);
+
+                if (!historySnapshot) {
                     return;
                 }
 
@@ -185,14 +184,24 @@ ThemeForge.colorEditor = {
 
                 this.updateColorFromControl(input, detailLabel, {
                     isPreviewOnly: true,
-                    historySnapshot: getDeferredControlSnapshot(input),
+                    historySnapshot,
                 });
             },
             true,
         );
 
         input.addEventListener("pointerup", () => {
-            commitDeferredControlChange(input);
+            const historySnapshot = getDeferredControlSnapshot(input);
+
+            if (!historySnapshot) {
+                return;
+            }
+
+            this.updateColorFromControl(input, detailLabel, {
+                historySnapshot,
+            });
+
+            cancelDeferredControlChange(input);
         });
 
         input.addEventListener("pointercancel", () => {
