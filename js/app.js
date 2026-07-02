@@ -487,6 +487,9 @@ function createValueTokenControl({ label, featureName, tokenType, tokenName, inc
     const nearestScaleButton = document.createElement("button");
 
     wrapper.className = `spacing-token-control spacing-token-control-${tokenType}`;
+    if (tokenType === "mapping") {
+        wrapper.classList.add("control-row");
+    }
     text.className = "spacing-token-label";
     text.textContent = label;
 
