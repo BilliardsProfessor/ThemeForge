@@ -17,6 +17,8 @@
     --color-primary: hsl(221 83% 53%);
     --color-secondary: hsl(262 83% 58%);
     --color-secondary-text: hsl(262 83% 98%);
+    --color-accent: hsl(48 96% 53%);
+    --color-accent-text: hsl(221 39% 11%);
     --color-background: hsl(210 40% 98%);
     --color-surface: hsl(0 0% 100%);
     --color-text: hsl(222 47% 11%);
@@ -1837,7 +1839,7 @@ a {
 
 .control-subsection-title {
     padding: 0;
-    color: var(--control-muted);
+    color: var(--color-accent);
     font-size: 0.68rem;
     font-weight: 850;
     letter-spacing: 0.08em;
@@ -2039,17 +2041,6 @@ a {
     gap: 0.85rem;
 }
 
-[data-control-panel="spacing"] fieldset {
-    min-width: 0;
-    margin: 0;
-    /* padding: 0; */
-    border: 0;
-}
-
-[data-control-panel="spacing"] legend {
-    padding: 0;
-}
-
 .spacing-feature {
     display: grid;
     gap: 0.5rem;
@@ -2063,6 +2054,11 @@ a {
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 0.3rem;
     align-items: end;
+}
+
+.spacing-scale .control-subsection-title,
+.spacing-mappings .control-subsection-title {
+    grid-column: 1 / -1;
 }
 
 .spacing-mappings {
@@ -2154,7 +2150,7 @@ a {
     color: var(--control-text);
     font: inherit;
     font-size: 0.76rem;
-    font-weight: 800;
+    font-weight: 500;
     line-height: 1;
     text-align: center;
 }
@@ -2206,4 +2202,23 @@ a {
 .spacing-scale-snap[data-scale-token=""] {
     color: var(--color-text);
     border-color: var(--color-warning);
+}
+
+.spacing-mappings {
+    gap: 0.15rem;
+}
+
+.spacing-token-control-mapping {
+    margin-inline: -0.35rem;
+    padding: 0.32rem 0.35rem;
+    border-radius: 0.45rem;
+}
+
+.spacing-token-control-mapping:nth-of-type(even) {
+    background: color-mix(in srgb, var(--control-surface), var(--control-border) 35%);
+}
+
+.spacing-token-control-mapping:hover,
+.spacing-token-control-mapping:focus-within {
+    background: color-mix(in srgb, var(--control-primary), transparent 88%);
 }

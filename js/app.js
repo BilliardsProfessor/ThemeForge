@@ -432,16 +432,16 @@ function createFeatureSpacingControls(featureName) {
 }
 
 function createFeatureScaleControls(featureName) {
-    const group = document.createElement("fieldset");
-    const legend = document.createElement("legend");
+    const section = document.createElement("section");
+    const title = document.createElement("h4");
 
-    group.className = "control-subsection spacing-scale";
-    legend.className = "control-subsection-title";
-    legend.textContent = "Scale";
-    group.append(legend);
+    section.className = "control-subsection spacing-scale";
+    title.className = "control-subsection-title";
+    title.textContent = "Scale";
+    section.append(title);
 
     FEATURE_SCALE_TOKENS.forEach((token) => {
-        group.append(
+        section.append(
             createValueTokenControl({
                 label: token.label,
                 featureName,
@@ -451,20 +451,20 @@ function createFeatureScaleControls(featureName) {
         );
     });
 
-    return group;
+    return section;
 }
 
 function createFeatureMappingControls(featureName) {
-    const group = document.createElement("fieldset");
-    const legend = document.createElement("legend");
+    const section = document.createElement("section");
+    const title = document.createElement("h4");
 
-    group.className = "control-subsection spacing-mappings";
-    legend.className = "control-subsection-title";
-    legend.textContent = "Mappings";
-    group.append(legend);
+    section.className = "control-subsection spacing-mappings";
+    title.className = "control-subsection-title";
+    title.textContent = "Mappings";
+    section.append(title);
 
     FEATURE_CONTROLS[featureName].mappings.forEach((mapping) => {
-        group.append(
+        section.append(
             createValueTokenControl({
                 label: mapping.label,
                 featureName,
@@ -475,7 +475,7 @@ function createFeatureMappingControls(featureName) {
         );
     });
 
-    return group;
+    return section;
 }
 
 function createValueTokenControl({ label, featureName, tokenType, tokenName, includeScaleSnap = false }) {
