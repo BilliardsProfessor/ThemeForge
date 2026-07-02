@@ -537,9 +537,7 @@ ThemeForge.export = {
             "",
             ...this.getFeatureCssDeclarations("components"),
             "",
-            `--radius: ${shape.radius}px;`,
-            `--border-width: ${shape.borderWidth}px;`,
-            `--overlay-blur: ${shape.overlayBlur}px;`,
+            ...this.getShapeCssDeclarations(),
         ];
     },
 
@@ -559,9 +557,71 @@ ThemeForge.export = {
             "",
             ...this.getFeatureScssDeclarations("components", variablePrefix),
             "",
-            `$${variablePrefix}radius: ${shape.radius}px;`,
-            `$${variablePrefix}border-width: ${shape.borderWidth}px;`,
-            `$${variablePrefix}overlay-blur: ${shape.overlayBlur}px;`,
+            ...this.getShapeScssDeclarations(variablePrefix),
+        ];
+    },
+
+    getShapeCssDeclarations() {
+        const { corners, borders, overlayBlur } = ThemeForge.theme.shape;
+
+        return [
+            ...Object.entries(corners.scale).map(([tokenName, token]) => `--radius-${tokenName}: ${ThemeForge.getTokenValue(token)};`),
+            "",
+            ...Object.entries(corners.mappings).map(([mappingName, token]) => {
+                const matchingScaleToken = ThemeForge.findMatchingScaleToken(corners.scale, token);
+                const variableName = `--${this.getCssVariableName(mappingName)}`;
+
+                return matchingScaleToken ? `${variableName}: var(--radius-${matchingScaleToken});` : `${variableName}: ${ThemeForge.getTokenValue(token)};`;
+            }),
+            "",
+            ...Object.entries(borders.scale).map(([tokenName, token]) => `--border-width-${tokenName}: ${ThemeForge.getTokenValue(token)};`),
+            "",
+            ...Object.entries(borders.mappings).map(([mappingName, token]) => {
+                const matchingScaleToken = ThemeForge.findMatchingScaleToken(borders.scale, token);
+                const variableName = `--${this.getCssVariableName(mappingName)}`;
+
+                return matchingScaleToken
+                    ? `${variableName}: var(--border-width-${matchingScaleToken});`
+                    : `${variableName}: ${ThemeForge.getTokenValue(token)};`;
+            }),
+            "",
+            `--corner-shape: ${corners.settings.cornerShape};`,
+            `--overlay-blur: ${overlayBlur}px;`,
+            "",
+            "--radius: var(--card-radius);",
+            "--border-width: var(--card-border-width);",
+        ];
+    },
+
+    getShapeScssDeclarations(prefix = "") {
+        const { corners, borders, overlayBlur } = ThemeForge.theme.shape;
+
+        return [
+            ...Object.entries(corners.scale).map(([tokenName, token]) => `$${prefix}radius-${tokenName}: ${ThemeForge.getTokenValue(token)};`),
+            "",
+            ...Object.entries(corners.mappings).map(([mappingName, token]) => {
+                const matchingScaleToken = ThemeForge.findMatchingScaleToken(corners.scale, token);
+                const variableName = `$${prefix}${this.getCssVariableName(mappingName)}`;
+
+                return matchingScaleToken ? `${variableName}: $${prefix}radius-${matchingScaleToken};` : `${variableName}: ${ThemeForge.getTokenValue(token)};`;
+            }),
+            "",
+            ...Object.entries(borders.scale).map(([tokenName, token]) => `$${prefix}border-width-${tokenName}: ${ThemeForge.getTokenValue(token)};`),
+            "",
+            ...Object.entries(borders.mappings).map(([mappingName, token]) => {
+                const matchingScaleToken = ThemeForge.findMatchingScaleToken(borders.scale, token);
+                const variableName = `$${prefix}${this.getCssVariableName(mappingName)}`;
+
+                return matchingScaleToken
+                    ? `${variableName}: $${prefix}border-width-${matchingScaleToken};`
+                    : `${variableName}: ${ThemeForge.getTokenValue(token)};`;
+            }),
+            "",
+            `$${prefix}corner-shape: ${corners.settings.cornerShape};`,
+            `$${prefix}overlay-blur: ${overlayBlur}px;`,
+            "",
+            `$${prefix}radius: $${prefix}card-radius;`,
+            `$${prefix}border-width: $${prefix}card-border-width;`,
         ];
     },
 
@@ -575,7 +635,9 @@ ThemeForge.export = {
                 const matchingScaleToken = ThemeForge.findMatchingScaleToken(feature.scale, token);
                 const variableName = `--${this.getCssVariableName(mappingName)}`;
 
-                return matchingScaleToken ? `${variableName}: var(--${featureName}-${matchingScaleToken});` : `${variableName}: ${ThemeForge.getTokenValue(token)};`;
+                return matchingScaleToken
+                    ? `${variableName}: var(--${featureName}-${matchingScaleToken});`
+                    : `${variableName}: ${ThemeForge.getTokenValue(token)};`;
             }),
         ];
     },
@@ -590,7 +652,9 @@ ThemeForge.export = {
                 const matchingScaleToken = ThemeForge.findMatchingScaleToken(feature.scale, token);
                 const variableName = `$${prefix}${this.getCssVariableName(mappingName)}`;
 
-                return matchingScaleToken ? `${variableName}: $${prefix}${featureName}-${matchingScaleToken};` : `${variableName}: ${ThemeForge.getTokenValue(token)};`;
+                return matchingScaleToken
+                    ? `${variableName}: $${prefix}${featureName}-${matchingScaleToken};`
+                    : `${variableName}: ${ThemeForge.getTokenValue(token)};`;
             }),
         ];
     },

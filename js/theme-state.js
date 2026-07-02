@@ -120,8 +120,44 @@ const ThemeForge = {
         },
 
         shape: {
-            radius: 10,
-            borderWidth: 1,
+            corners: {
+                settings: {
+                    cornerShape: "round",
+                },
+                scale: {
+                    none: { value: 0, unit: "px" },
+                    xs: { value: 2, unit: "px" },
+                    sm: { value: 4, unit: "px" },
+                    md: { value: 8, unit: "px" },
+                    lg: { value: 12, unit: "px" },
+                    xl: { value: 20, unit: "px" },
+                    pill: { value: 999, unit: "px" },
+                },
+                mappings: {
+                    cardRadius: { value: 12, unit: "px" },
+                    buttonRadius: { value: 8, unit: "px" },
+                    inputRadius: { value: 8, unit: "px" },
+                    badgeRadius: { value: 999, unit: "px" },
+                    dialogRadius: { value: 16, unit: "px" },
+                },
+            },
+
+            borders: {
+                scale: {
+                    none: { value: 0, unit: "px" },
+                    thin: { value: 1, unit: "px" },
+                    md: { value: 2, unit: "px" },
+                    thick: { value: 4, unit: "px" },
+                },
+                mappings: {
+                    cardBorderWidth: { value: 1, unit: "px" },
+                    buttonBorderWidth: { value: 1, unit: "px" },
+                    inputBorderWidth: { value: 1, unit: "px" },
+                    dividerWidth: { value: 1, unit: "px" },
+                    focusRingWidth: { value: 2, unit: "px" },
+                },
+            },
+
             overlayBlur: 2,
         },
     },
@@ -164,7 +200,7 @@ const ThemeForge = {
         }
 
         normalizedTheme.typography = this.normalizeTypography(normalizedTheme.typography);
-        normalizedTheme.shape = normalizedTheme.shape || this.cloneValue(defaultTheme.shape);
+        normalizedTheme.shape = this.normalizeShape(normalizedTheme.shape);
 
         this.normalizeFeature(normalizedTheme, "layout");
         this.normalizeFeature(normalizedTheme, "components");
@@ -218,6 +254,52 @@ const ThemeForge = {
             scale: this.normalizeValueCollection(feature.scale || defaultFeature.scale),
             mappings: this.normalizeValueCollection(feature.mappings || defaultFeature.mappings),
         };
+    },
+
+    normalizeShape(shape = {}) {
+        const defaultShape = this.theme.shape;
+
+        if (shape.radius !== undefined || shape.borderWidth !== undefined) {
+            shape = this.migrateShape(shape);
+        }
+
+        return {
+            corners: {
+                settings: {
+                    ...this.cloneValue(defaultShape.corners.settings),
+                    ...(shape.corners?.settings || {}),
+                },
+                scale: this.normalizeValueCollection(shape.corners?.scale || defaultShape.corners.scale),
+                mappings: this.normalizeValueCollection(shape.corners?.mappings || defaultShape.corners.mappings),
+            },
+
+            borders: {
+                scale: this.normalizeValueCollection(shape.borders?.scale || defaultShape.borders.scale),
+                mappings: this.normalizeValueCollection(shape.borders?.mappings || defaultShape.borders.mappings),
+            },
+
+            overlayBlur: Number(shape.overlayBlur ?? defaultShape.overlayBlur),
+        };
+    },
+
+    migrateShape(shape = {}) {
+        const migratedShape = this.cloneValue(this.theme.shape);
+
+        if (shape.radius !== undefined) {
+            Object.keys(migratedShape.corners.mappings).forEach((mappingName) => {
+                migratedShape.corners.mappings[mappingName] = { value: Number(shape.radius), unit: "px" };
+            });
+        }
+
+        if (shape.borderWidth !== undefined) {
+            Object.keys(migratedShape.borders.mappings).forEach((mappingName) => {
+                migratedShape.borders.mappings[mappingName] = { value: Number(shape.borderWidth), unit: "px" };
+            });
+        }
+
+        migratedShape.overlayBlur = Number(shape.overlayBlur ?? migratedShape.overlayBlur);
+
+        return migratedShape;
     },
 
     normalizeValueCollection(collection) {
@@ -358,6 +440,32 @@ const ThemeForge = {
         });
     },
 
+    applyShapeVariables(root) {
+        const { corners, borders, overlayBlur } = ThemeForge.theme.shape;
+
+        Object.entries(corners.scale).forEach(([tokenName, token]) => {
+            root.style.setProperty(`--radius-${tokenName}`, ThemeForge.getTokenValue(token));
+        });
+
+        Object.entries(corners.mappings).forEach(([mappingName, token]) => {
+            root.style.setProperty(`--${ThemeForge.getCssVariableName(mappingName)}`, ThemeForge.getTokenValue(token));
+        });
+
+        Object.entries(borders.scale).forEach(([tokenName, token]) => {
+            root.style.setProperty(`--border-width-${tokenName}`, ThemeForge.getTokenValue(token));
+        });
+
+        Object.entries(borders.mappings).forEach(([mappingName, token]) => {
+            root.style.setProperty(`--${ThemeForge.getCssVariableName(mappingName)}`, ThemeForge.getTokenValue(token));
+        });
+
+        root.style.setProperty("--corner-shape", corners.settings.cornerShape);
+        root.style.setProperty("--overlay-blur", `${overlayBlur}px`);
+
+        root.style.setProperty("--radius", ThemeForge.getTokenValue(corners.mappings.cardRadius));
+        root.style.setProperty("--border-width", ThemeForge.getTokenValue(borders.mappings.cardBorderWidth));
+    },
+
     applyTheme() {
         ThemeForge.theme = ThemeForge.normalizeTheme(ThemeForge.theme);
 
@@ -387,9 +495,7 @@ const ThemeForge = {
         root.style.setProperty("--font-size-base", ThemeForge.getTokenValue(settings.baseFontSize));
         ThemeForge.applyTypographyVariables(root);
 
-        root.style.setProperty("--radius", `${shape.radius}px`);
-        root.style.setProperty("--border-width", `${shape.borderWidth}px`);
-        root.style.setProperty("--overlay-blur", `${shape.overlayBlur}px`);
+        ThemeForge.applyShapeVariables(root);
 
         ThemeForge.applyFeatureVariables(root, "layout");
         ThemeForge.applyFeatureVariables(root, "components");

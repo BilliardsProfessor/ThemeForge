@@ -607,6 +607,21 @@ body[data-app-mode="dark"] .preview-size-field select option {
     border-color: var(--color-primary);
 }
 
+.app-about {
+    display: grid;
+    gap: var(--space-2);
+    line-height: 1.6;
+}
+
+.app-about p {
+    margin: 0;
+}
+
+.app-about-copyright {
+    color: var(--color-muted);
+    font-size: 0.9rem;
+}
+
 .export-options-form {
     display: grid;
     gap: var(--space-2);

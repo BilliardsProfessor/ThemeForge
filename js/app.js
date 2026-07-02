@@ -52,6 +52,55 @@ const TYPOGRAPHY_ELEMENTS = [
     { key: "label", label: "Label" },
     { key: "eyebrow", label: "Eyebrow" },
 ];
+const SHAPE_CORNER_SHAPE_OPTIONS = [
+    { value: "round", label: "Round" },
+    { value: "squircle", label: "Squircle" },
+    { value: "bevel", label: "Bevel" },
+    { value: "notch", label: "Notch" },
+    { value: "scoop", label: "Scoop" },
+];
+
+const SHAPE_CONTROLS = {
+    corners: {
+        label: "Corners",
+        scaleLabel: "Radius scale",
+        mappingLabel: "Radius mappings",
+        scale: [
+            { key: "none", label: "None" },
+            { key: "xs", label: "XS" },
+            { key: "sm", label: "SM" },
+            { key: "md", label: "MD" },
+            { key: "lg", label: "LG" },
+            { key: "xl", label: "XL" },
+            { key: "pill", label: "Pill" },
+        ],
+        mappings: [
+            { key: "cardRadius", label: "Card" },
+            { key: "buttonRadius", label: "Button" },
+            { key: "inputRadius", label: "Input" },
+            { key: "badgeRadius", label: "Badge" },
+            { key: "dialogRadius", label: "Dialog" },
+        ],
+    },
+    borders: {
+        label: "Borders",
+        scaleLabel: "Border scale",
+        mappingLabel: "Border mappings",
+        scale: [
+            { key: "none", label: "None" },
+            { key: "thin", label: "Thin" },
+            { key: "md", label: "MD" },
+            { key: "thick", label: "Thick" },
+        ],
+        mappings: [
+            { key: "cardBorderWidth", label: "Card" },
+            { key: "buttonBorderWidth", label: "Button" },
+            { key: "inputBorderWidth", label: "Input" },
+            { key: "dividerWidth", label: "Divider" },
+            { key: "focusRingWidth", label: "Focus ring" },
+        ],
+    },
+};
 
 function getStoredAppAppearancePreference() {
     const preference = localStorage.getItem(APP_APPEARANCE_STORAGE_KEY);
@@ -122,10 +171,25 @@ function bindAppAppearanceControl() {
 }
 
 function openSettingsDialog() {
-    const message = document.createElement("p");
+    const body = document.createElement("div");
     const closeButton = document.createElement("button");
 
-    message.textContent = "Wouldn't it be nice if there were actually settings in here?";
+    body.className = "app-about";
+    body.innerHTML = `
+        <p>
+            Theme Forge is a personal project by Michael Glass, shared for feedback,
+            experimentation, and design-system exploration.
+        </p>
+
+        <p>
+            It provides a framework-free sandbox for testing colors, typography,
+            spacing, accessibility, and exportable theme ideas.
+        </p>
+
+        <p class="app-about-copyright">
+            &copy; 2026 Michael Glass. All rights reserved.
+        </p>
+    `;
 
     closeButton.type = "button";
     closeButton.textContent = "Close";
@@ -134,9 +198,9 @@ function openSettingsDialog() {
     });
 
     ThemeForge.appModal.open({
-        eyebrow: "Settings",
-        title: "Theme Forge Settings",
-        body: message,
+        eyebrow: "About",
+        title: "Theme Forge",
+        body,
         footer: [closeButton],
         initialFocusElement: closeButton,
     });
@@ -389,6 +453,143 @@ function bindTypographyEditorDismissal() {
 function renderSpacingControls() {
     renderSpacingRailButton();
     renderSpacingPanel();
+}
+
+function renderShapeControls() {
+    const content = document.querySelector('[data-control-panel="shape"] .control-card-content');
+
+    if (!content) {
+        return;
+    }
+
+    content.classList.add("shape-control-content");
+    content.replaceChildren(createShapeFeatureControls("corners"), createShapeFeatureControls("borders"));
+}
+
+function createShapeFeatureControls(featureName) {
+    const section = document.createElement("section");
+    const title = document.createElement("h3");
+
+    section.className = "control-section shape-feature";
+    title.className = "control-section-title";
+    title.textContent = SHAPE_CONTROLS[featureName].label;
+
+    section.append(title, createShapeScaleControls(featureName));
+
+    if (featureName === "corners" && CSS.supports("corner-shape: squircle")) {
+        section.append(createCornerShapeControl());
+    }
+
+    section.append(createShapeMappingControls(featureName));
+
+    return section;
+}
+
+function createShapeScaleControls(featureName) {
+    const section = document.createElement("section");
+    const title = document.createElement("h4");
+
+    section.className = "control-subsection shape-scale";
+    title.className = "control-subsection-title";
+    title.textContent = SHAPE_CONTROLS[featureName].scaleLabel;
+    section.append(title);
+
+    SHAPE_CONTROLS[featureName].scale.forEach((token) => {
+        section.append(createShapeTokenControl(featureName, "scale", token.key, token.label));
+    });
+
+    return section;
+}
+
+function createShapeMappingControls(featureName) {
+    const section = document.createElement("section");
+    const title = document.createElement("h4");
+
+    section.className = "control-subsection shape-mappings";
+    title.className = "control-subsection-title";
+    title.textContent = SHAPE_CONTROLS[featureName].mappingLabel;
+    section.append(title);
+
+    SHAPE_CONTROLS[featureName].mappings.forEach((mapping) => {
+        section.append(createShapeTokenControl(featureName, "mapping", mapping.key, mapping.label));
+    });
+
+    return section;
+}
+
+function createShapeTokenControl(featureName, tokenType, tokenName, label) {
+    const wrapper = document.createElement("label");
+    const text = document.createElement("span");
+    const valueInput = createWorkspaceNumberInput({
+        className: "control-input shape-value-input",
+        ariaLabel: `${label} value`,
+        min: 0,
+        step: 1,
+        fineStep: 1,
+        coarseStep: 4,
+        decimals: 0,
+        dataset: {
+            shapeControl: "token",
+            shapeFeature: featureName,
+            tokenType,
+            tokenName,
+            tokenField: "value",
+        },
+    });
+    const unitSelect = document.createElement("select");
+
+    wrapper.className = `shape-token-control shape-token-control-${tokenType}`;
+    if (tokenType === "mapping") {
+        wrapper.classList.add("control-row");
+    }
+
+    text.className = "shape-token-label";
+    text.textContent = label;
+
+    unitSelect.className = "control-input shape-unit-select";
+    unitSelect.dataset.shapeControl = "token";
+    unitSelect.dataset.shapeFeature = featureName;
+    unitSelect.dataset.tokenType = tokenType;
+    unitSelect.dataset.tokenName = tokenName;
+    unitSelect.dataset.tokenField = "unit";
+    unitSelect.setAttribute("aria-label", `${label} unit`);
+
+    VALUE_UNIT_OPTIONS.forEach((unit) => {
+        const option = document.createElement("option");
+
+        option.value = unit;
+        option.textContent = unit;
+        unitSelect.append(option);
+    });
+
+    wrapper.append(text, valueInput, unitSelect);
+
+    return wrapper;
+}
+
+function createCornerShapeControl() {
+    const label = document.createElement("label");
+    const text = document.createElement("span");
+    const select = document.createElement("select");
+
+    label.className = "control-field";
+    text.className = "control-label";
+    text.textContent = "Corner shape";
+
+    select.className = "control-input";
+    select.dataset.shapeControl = "cornerShape";
+
+    SHAPE_CORNER_SHAPE_OPTIONS.forEach((optionData) => {
+        const option = document.createElement("option");
+
+        option.value = optionData.value;
+        option.textContent = optionData.label;
+        select.append(option);
+    });
+
+    label.append(text, select);
+
+    return label;
 }
 
 function renderSpacingRailButton() {}
@@ -766,9 +967,7 @@ function enhanceDeferredHistoryControl(control) {
 }
 
 function bindDeferredHistoryControls() {
-    document
-        .querySelectorAll(["#baseFontSize", "#radiusControl", "#borderWidthControl", "#overlayBlurControl"].join(", "))
-        .forEach(enhanceDeferredHistoryControl);
+    document.querySelectorAll(["#baseFontSize"].join(", ")).forEach(enhanceDeferredHistoryControl);
 }
 
 function dispatchControlInput(control, detail = {}) {
@@ -1000,11 +1199,7 @@ function updateThemeFromControls(event) {
     ThemeForge.theme.settings.baseFontSize.unit = "px";
     updateBaseFontSizeValue();
     updateTypographyFromControls();
-
-    ThemeForge.theme.shape.radius = Number(document.querySelector("#radiusControl").value);
-    ThemeForge.theme.shape.borderWidth = Number(document.querySelector("#borderWidthControl").value);
-    ThemeForge.theme.shape.overlayBlur = Number(document.querySelector("#overlayBlurControl").value);
-
+    updateShapeFromControls();
     updateTokensFromControls();
     updateTypographySummaryRows();
 
@@ -1046,6 +1241,49 @@ function updateTypographyFromControls() {
         if (lineHeightControl) element.lineHeight = Number(lineHeightControl.value);
         if (letterSpacingControl) element.letterSpacing = Number(letterSpacingControl.value);
     });
+}
+
+function updateShapeFromControls() {
+    document.querySelectorAll("[data-shape-control='token']").forEach((control) => {
+        const token = getShapeTokenFromControl(control);
+
+        if (!token) {
+            return;
+        }
+
+        if (control.dataset.tokenField === "value") {
+            const cleanedValue = cleanNumericText(control.value);
+
+            if (control.value !== cleanedValue) {
+                control.value = cleanedValue;
+            }
+
+            const value = Number(cleanedValue);
+
+            if (Number.isFinite(value)) {
+                token.value = value;
+            }
+
+            return;
+        }
+
+        if (control.dataset.tokenField === "unit" && VALUE_UNIT_OPTIONS.includes(control.value)) {
+            token.unit = control.value;
+        }
+    });
+
+    const cornerShapeControl = document.querySelector("[data-shape-control='cornerShape']");
+
+    if (cornerShapeControl) {
+        ThemeForge.theme.shape.corners.settings.cornerShape = cornerShapeControl.value;
+    }
+}
+
+function getShapeTokenFromControl(control, sourceTheme = ThemeForge.theme) {
+    const feature = sourceTheme.shape?.[control.dataset.shapeFeature];
+    const collectionName = control.dataset.tokenType === "scale" ? "scale" : "mappings";
+
+    return feature?.[collectionName]?.[control.dataset.tokenName];
 }
 
 function getControlHistoryLabel(control) {
@@ -1113,7 +1351,7 @@ function getTypographyFieldLabel(fieldName) {
 }
 
 function getControlHistoryDetail(control, snapshot = null) {
-    snapshot = snapshot || ThemeForge.history.getLatestUndoSnapshot();
+    snapshot = snapshot || ThemeForge.history.getLatestSnapshot();
     const normalizedSnapshot = snapshot ? ThemeForge.normalizeTheme(snapshot) : null;
 
     if (!normalizedSnapshot) {
@@ -1241,11 +1479,7 @@ function syncThemeControlsFromState() {
     updateBaseFontSizeValue();
 
     syncTypographyControlsFromState();
-
-    document.querySelector("#radiusControl").value = ThemeForge.theme.shape.radius;
-    document.querySelector("#borderWidthControl").value = ThemeForge.theme.shape.borderWidth;
-    document.querySelector("#overlayBlurControl").value = ThemeForge.theme.shape.overlayBlur;
-
+    syncShapeControlsFromState();
     syncFeatureControlsFromState();
 }
 
@@ -1270,6 +1504,24 @@ function syncTypographyControlsFromState() {
         row.querySelector("[data-typography-field='letterSpacing']").value = element.letterSpacing;
     });
     updateTypographySummaryRows();
+}
+
+function syncShapeControlsFromState() {
+    document.querySelectorAll("[data-shape-control='token']").forEach((control) => {
+        const token = getShapeTokenFromControl(control);
+
+        if (!token) {
+            return;
+        }
+
+        control.value = token[control.dataset.tokenField];
+    });
+
+    const cornerShapeControl = document.querySelector("[data-shape-control='cornerShape']");
+
+    if (cornerShapeControl) {
+        cornerShapeControl.value = ThemeForge.theme.shape.corners.settings.cornerShape;
+    }
 }
 
 function syncFeatureControlsFromState() {
@@ -1303,11 +1555,9 @@ function bindControls() {
             "#bodyFontFamily",
             "#headingFontFamily",
             "#monoFontFamily",
-            "#radiusControl",
-            "#borderWidthControl",
-            "#overlayBlurControl",
             "[data-theme-control='token']",
             "[data-typography-field]",
+            "[data-shape-control]",
         ].join(", "),
     );
 
@@ -1336,6 +1586,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderTypographyControls();
     bindTypographyEditorDismissal();
     renderSpacingControls();
+    renderShapeControls();
     bindControls();
     bindDeferredHistoryControls();
     bindThemeModeControls();
