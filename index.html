@@ -1,1931 +1,1153 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Theme Forge</title>
 
-        <link rel="stylesheet" href="css/styles.css" />
-        <link rel="stylesheet" href="css/preview.css" />
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Theme Forge</title>
 
-        <script src="js/color-utils.js" defer></script>
-        <script src="js/theme-state.js" defer></script>
-        <script src="js/app-modal.js" defer></script>
-        <script src="js/color-editor.js" defer></script>
-        <script src="js/history.js" defer></script>
-        <script src="js/export.js" defer></script>
-        <script src="js/accessibility.js" defer></script>
-        <script src="js/randomizer.js" defer></script>
-        <script src="js/preview.js" defer></script>
-        <script src="js/drawers.js" defer></script>
-        <script src="js/full-preview.js" defer></script>
-        <script src="js/preview-size.js" defer></script>
-        <script src="js/app.js" defer></script>
-    </head>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/preview.css" />
 
-    <body
-        class="drawer-is-initializing"
-        data-left-drawer-state="pinned"
-        data-preview-mode="workbench"
-    >
-        <header class="app-header">
-            <div class="app-title">
-                <h1>Theme Forge</h1>
-                <p>Build, test, randomize, and export design themes.</p>
-            </div>
+    <script src="js/color-utils.js" defer></script>
+    <script src="js/theme-state.js" defer></script>
+    <script src="js/app-modal.js" defer></script>
+    <script src="js/color-editor.js" defer></script>
+    <script src="js/history.js" defer></script>
+    <script src="js/export.js" defer></script>
+    <script src="js/accessibility.js" defer></script>
+    <script src="js/randomizer.js" defer></script>
+    <script src="js/preview.js" defer></script>
+    <script src="js/drawers.js" defer></script>
+    <script src="js/full-preview.js" defer></script>
+    <script src="js/preview-size.js" defer></script>
+    <script src="js/app.js" defer></script>
+</head>
 
-            <div class="header-actions">
-                <button
-                    type="button"
-                    class="icon-button has-tooltip"
-                    id="undoBtn"
-                    data-tooltip="Undo"
-                    data-tooltip-position="bottom"
-                    aria-label="Undo"
-                >
-                    <svg
-                        class="icon icon-arrow-uturn-left"
-                        aria-hidden="true"
-                        focusable="false"
-                        viewBox="0 0 24 24"
-                    >
-                        <path d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
-                    </svg>
-                </button>
+<body class="drawer-is-initializing" data-left-drawer-state="pinned" data-preview-mode="workbench">
+    <header class="app-header">
+        <div class="app-title">
+            <h1>Theme Forge</h1>
+            <p>Build, test, randomize, and export design themes.</p>
+        </div>
 
-                <button
-                    type="button"
-                    class="icon-button has-tooltip"
-                    id="redoBtn"
-                    data-tooltip="Redo"
-                    data-tooltip-position="bottom"
-                    aria-label="Redo"
-                >
-                    <svg
-                        class="icon icon-arrow-uturn-right"
-                        aria-hidden="true"
-                        focusable="false"
-                        viewBox="0 0 24 24"
-                    >
-                        <path d="m15 15 6-6m0 0-6-6m6 6H9a6 6 0 0 0 0 12h3" />
-                    </svg>
-                </button>
+        <div class="header-actions">
+            <button type="button" class="icon-button has-tooltip" id="undoBtn" data-tooltip="Undo"
+                data-tooltip-position="bottom" aria-label="Undo">
+                <svg class="icon icon-arrow-uturn-left" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                    <path d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+                </svg>
+            </button>
 
-                <div
-                    id="historyMenu"
-                    class="history-menu"
-                    role="menu"
-                    hidden
-                ></div>
+            <button type="button" class="icon-button has-tooltip" id="redoBtn" data-tooltip="Redo"
+                data-tooltip-position="bottom" aria-label="Redo">
+                <svg class="icon icon-arrow-uturn-right" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                    <path d="m15 15 6-6m0 0-6-6m6 6H9a6 6 0 0 0 0 12h3" />
+                </svg>
+            </button>
 
-                <button
-                    type="button"
-                    class="icon-button has-tooltip"
-                    id="randomizeBtn"
-                    data-tooltip="Randomize"
-                    data-tooltip-position="bottom"
-                    aria-label="Randomize"
-                >
-                    <svg
-                        class="icon icon-dice"
-                        style="
+            <div id="historyMenu" class="history-menu" role="menu" hidden></div>
+
+            <button type="button" class="icon-button has-tooltip" id="randomizeBtn" data-tooltip="Randomize"
+                data-tooltip-position="bottom" aria-label="Randomize">
+                <svg class="icon icon-dice" style="
                             vertical-align: middle;
                             fill: currentColor;
                             overflow: hidden;
-                        "
-                        viewBox="0 0 1024 1024"
-                        version="1.1"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            d="M341.333333 385.706667c-11.946667 0-22.186667-4.266667-30.72-12.8-7.970133-7.970133-11.946667-17.92-11.946666-29.866667s3.976533-22.186667 11.946666-30.72c8.533333-7.953067 18.773333-11.946667 30.72-11.946667s21.896533 3.976533 29.866667 11.946667c8.533333 8.533333 12.8 18.773333 12.8 30.72s-4.266667 21.896533-12.8 29.866667c-7.970133 8.533333-17.92 12.8-29.866667 12.8z m128-213.333334c11.946667 0 21.896533 3.976533 29.866667 11.946667 8.533333 8.533333 12.8 18.773333 12.8 30.72s-4.266667 21.896533-12.8 29.866667c-7.970133 8.533333-17.92 12.8-29.866667 12.8s-22.186667-4.266667-30.72-12.8c-7.970133-7.970133-11.946667-17.92-11.946666-29.866667s3.976533-22.186667 11.946666-30.72c8.533333-7.970133 18.773333-11.946667 30.72-11.946667zM243.2 500.906667c-7.970133 8.533333-17.92 12.8-29.866667 12.8s-22.186667-4.266667-30.72-12.8c-7.970133-7.970133-11.946667-17.92-11.946666-29.866667s3.976533-22.186667 11.946666-30.72c8.533333-7.953067 18.773333-11.946667 30.72-11.946667s21.896533 3.976533 29.866667 11.946667c8.533333 8.533333 12.8 18.773333 12.8 30.72s-4.266667 21.896533-12.8 29.866667z"
-                        />
-                        <path
-                            d="M512 954.026667c-27.0336-0.682667-50.176-10.683733-69.239467-29.730134-19.3024-19.3536-30.429867-42.666667-33.0752-69.2736L409.6 616.106667H170.666667c-27.0336-0.682667-50.176-10.683733-69.239467-29.730134-19.285333-19.319467-30.4128-42.615467-33.0752-69.256533L68.266667 169.813333c2.082133-27.562667 12.629333-50.414933 31.4368-69.239466 19.626667-19.626667 43.3664-29.917867 70.536533-30.583467h344.302933c27.016533 0.682667 50.158933 10.666667 69.239467 29.730133 19.643733 19.626667 29.934933 43.349333 30.6176 70.519467V407.893333h241.493333c27.050667 0.7168 50.176 10.7008 69.239467 29.7472 19.6096 19.626667 29.917867 43.3664 30.600533 70.519467V854.186667c-2.065067 27.5456-12.612267 50.397867-31.453866 69.256533-19.643733 19.626667-43.3664 29.917867-70.536534 30.600533H512z m-68.266667-354.986667V853.333333c1.792 17.152 9.403733 33.041067 23.176534 46.848 12.817067 12.817067 27.716267 19.268267 45.5168 19.712H853.333333c17.937067-0.443733 33.399467-7.202133 46.813867-20.599466 13.073067-13.090133 20.1216-28.279467 21.504-46.421334L921.6 508.586667c-0.443733-17.954133-7.202133-33.399467-20.599467-46.813867-12.834133-12.817067-27.733333-19.285333-45.550933-19.7632L512 442.026667c-17.937067 0.4608-33.399467 7.202133-46.830933 20.616533-13.056 13.073067-20.087467 28.245333-21.486934 46.404267L443.733333 599.04zM123.8528 124.706133c-13.073067 13.073067-20.104533 28.2624-21.504 46.421334L102.4 515.413333c1.792 17.169067 9.403733 33.058133 23.159467 46.813867 12.817067 12.834133 27.733333 19.285333 45.533866 19.729067H409.6v-74.24c2.082133-27.562667 12.629333-50.414933 31.4368-69.239467 19.643733-19.6096 43.3664-29.9008 70.519467-30.583467h68.693333V170.666667c-0.443733-17.954133-7.202133-33.399467-20.599467-46.813867-12.834133-12.8512-27.733333-19.3024-45.5168-19.746133H170.666667c-17.954133 0.443733-33.399467 7.185067-46.813867 20.599466z"
-                        />
-                        <path
-                            d="M840.533333 522.24c8.533333 8.533333 12.8 18.773333 12.8 30.72 0 11.9296-4.266667 21.896533-12.8 29.866667-7.970133 8.533333-17.92 12.8-29.866666 12.8s-22.186667-4.266667-30.72-12.8c-7.9872-7.953067-11.946667-17.92-11.946667-29.866667s3.959467-22.203733 11.946667-30.737067c8.533333-7.970133 18.773333-11.963733 30.72-11.963733s21.896533 4.027733 29.866666 11.9808z m0 128c8.533333 8.533333 12.8 18.773333 12.8 30.72 0 11.9296-4.266667 21.896533-12.8 29.866667-7.970133 8.533333-17.92 12.8-29.866666 12.8s-22.186667-4.266667-30.72-12.8c-7.9872-7.953067-11.946667-17.92-11.946667-29.866667s3.959467-22.203733 11.946667-30.737067c8.533333-7.970133 18.773333-11.9296 30.72-11.9296s21.896533 3.9936 29.866666 11.946667z m-60.586666 128c8.533333-7.953067 18.773333-11.9296 30.72-11.9296s21.896533 3.976533 29.866666 11.9296c8.533333 8.533333 12.8 18.773333 12.8 30.72 0 11.9296-4.266667 21.896533-12.8 29.866667-7.970133 8.533333-17.92 12.8-29.866666 12.8s-22.186667-4.266667-30.72-12.8c-7.9872-7.953067-11.946667-17.92-11.946667-29.866667s3.959467-22.186667 11.946667-30.72zM597.333333 552.96c0 11.9296-4.266667 21.896533-12.8 29.866667-7.970133 8.533333-17.92 12.8-29.866666 12.8s-22.186667-4.266667-30.72-12.8c-7.970133-7.953067-11.946667-17.92-11.946667-29.866667s3.976533-22.203733 11.946667-30.737067c8.533333-7.970133 18.773333-11.963733 30.72-11.963733s21.896533 3.9936 29.866666 11.963733c8.533333 8.5504 12.8 18.7904 12.8 30.737067z m-73.386666 225.28c8.533333-7.953067 18.773333-11.9296 30.72-11.9296s21.896533 3.976533 29.866666 11.9296c8.533333 8.533333 12.8 18.773333 12.8 30.72 0 11.9296-4.266667 21.896533-12.8 29.866667-7.970133 8.533333-17.92 12.8-29.866666 12.8s-22.186667-4.266667-30.72-12.8c-7.970133-7.953067-11.946667-17.92-11.946667-29.866667s3.976533-22.186667 11.946667-30.72z m-11.946667-97.28c0-11.946667 3.976533-22.203733 11.946667-30.737067 8.533333-7.970133 18.773333-11.9296 30.72-11.9296s21.896533 3.959467 29.866666 11.9296c8.533333 8.5504 12.8 18.7904 12.8 30.737067 0 11.9296-4.266667 21.896533-12.8 29.866667-7.970133 8.533333-17.92 12.8-29.866666 12.8s-22.186667-4.266667-30.72-12.8c-7.970133-7.953067-11.946667-17.92-11.946667-29.866667z"
-                        />
-                    </svg>
+                        " viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M341.333333 385.706667c-11.946667 0-22.186667-4.266667-30.72-12.8-7.970133-7.970133-11.946667-17.92-11.946666-29.866667s3.976533-22.186667 11.946666-30.72c8.533333-7.953067 18.773333-11.946667 30.72-11.946667s21.896533 3.976533 29.866667 11.946667c8.533333 8.533333 12.8 18.773333 12.8 30.72s-4.266667 21.896533-12.8 29.866667c-7.970133 8.533333-17.92 12.8-29.866667 12.8z m128-213.333334c11.946667 0 21.896533 3.976533 29.866667 11.946667 8.533333 8.533333 12.8 18.773333 12.8 30.72s-4.266667 21.896533-12.8 29.866667c-7.970133 8.533333-17.92 12.8-29.866667 12.8s-22.186667-4.266667-30.72-12.8c-7.970133-7.970133-11.946667-17.92-11.946666-29.866667s3.976533-22.186667 11.946666-30.72c8.533333-7.970133 18.773333-11.946667 30.72-11.946667zM243.2 500.906667c-7.970133 8.533333-17.92 12.8-29.866667 12.8s-22.186667-4.266667-30.72-12.8c-7.970133-7.970133-11.946667-17.92-11.946666-29.866667s3.976533-22.186667 11.946666-30.72c8.533333-7.953067 18.773333-11.946667 30.72-11.946667s21.896533 3.976533 29.866667 11.946667c8.533333 8.533333 12.8 18.773333 12.8 30.72s-4.266667 21.896533-12.8 29.866667z" />
+                    <path
+                        d="M512 954.026667c-27.0336-0.682667-50.176-10.683733-69.239467-29.730134-19.3024-19.3536-30.429867-42.666667-33.0752-69.2736L409.6 616.106667H170.666667c-27.0336-0.682667-50.176-10.683733-69.239467-29.730134-19.285333-19.319467-30.4128-42.615467-33.0752-69.256533L68.266667 169.813333c2.082133-27.562667 12.629333-50.414933 31.4368-69.239466 19.626667-19.626667 43.3664-29.917867 70.536533-30.583467h344.302933c27.016533 0.682667 50.158933 10.666667 69.239467 29.730133 19.643733 19.626667 29.934933 43.349333 30.6176 70.519467V407.893333h241.493333c27.050667 0.7168 50.176 10.7008 69.239467 29.7472 19.6096 19.626667 29.917867 43.3664 30.600533 70.519467V854.186667c-2.065067 27.5456-12.612267 50.397867-31.453866 69.256533-19.643733 19.626667-43.3664 29.917867-70.536534 30.600533H512z m-68.266667-354.986667V853.333333c1.792 17.152 9.403733 33.041067 23.176534 46.848 12.817067 12.817067 27.716267 19.268267 45.5168 19.712H853.333333c17.937067-0.443733 33.399467-7.202133 46.813867-20.599466 13.073067-13.090133 20.1216-28.279467 21.504-46.421334L921.6 508.586667c-0.443733-17.954133-7.202133-33.399467-20.599467-46.813867-12.834133-12.817067-27.733333-19.285333-45.550933-19.7632L512 442.026667c-17.937067 0.4608-33.399467 7.202133-46.830933 20.616533-13.056 13.073067-20.087467 28.245333-21.486934 46.404267L443.733333 599.04zM123.8528 124.706133c-13.073067 13.073067-20.104533 28.2624-21.504 46.421334L102.4 515.413333c1.792 17.169067 9.403733 33.058133 23.159467 46.813867 12.817067 12.834133 27.733333 19.285333 45.533866 19.729067H409.6v-74.24c2.082133-27.562667 12.629333-50.414933 31.4368-69.239467 19.643733-19.6096 43.3664-29.9008 70.519467-30.583467h68.693333V170.666667c-0.443733-17.954133-7.202133-33.399467-20.599467-46.813867-12.834133-12.8512-27.733333-19.3024-45.5168-19.746133H170.666667c-17.954133 0.443733-33.399467 7.185067-46.813867 20.599466z" />
+                    <path
+                        d="M840.533333 522.24c8.533333 8.533333 12.8 18.773333 12.8 30.72 0 11.9296-4.266667 21.896533-12.8 29.866667-7.970133 8.533333-17.92 12.8-29.866666 12.8s-22.186667-4.266667-30.72-12.8c-7.9872-7.953067-11.946667-17.92-11.946667-29.866667s3.959467-22.203733 11.946667-30.737067c8.533333-7.970133 18.773333-11.963733 30.72-11.963733s21.896533 4.027733 29.866666 11.9808z m0 128c8.533333 8.533333 12.8 18.773333 12.8 30.72 0 11.9296-4.266667 21.896533-12.8 29.866667-7.970133 8.533333-17.92 12.8-29.866666 12.8s-22.186667-4.266667-30.72-12.8c-7.9872-7.953067-11.946667-17.92-11.946667-29.866667s3.959467-22.203733 11.946667-30.737067c8.533333-7.970133 18.773333-11.9296 30.72-11.9296s21.896533 3.9936 29.866666 11.946667z m-60.586666 128c8.533333-7.953067 18.773333-11.9296 30.72-11.9296s21.896533 3.976533 29.866666 11.9296c8.533333 8.533333 12.8 18.773333 12.8 30.72 0 11.9296-4.266667 21.896533-12.8 29.866667-7.970133 8.533333-17.92 12.8-29.866666 12.8s-22.186667-4.266667-30.72-12.8c-7.9872-7.953067-11.946667-17.92-11.946667-29.866667s3.959467-22.186667 11.946667-30.72zM597.333333 552.96c0 11.9296-4.266667 21.896533-12.8 29.866667-7.970133 8.533333-17.92 12.8-29.866666 12.8s-22.186667-4.266667-30.72-12.8c-7.970133-7.953067-11.946667-17.92-11.946667-29.866667s3.976533-22.203733 11.946667-30.737067c8.533333-7.970133 18.773333-11.963733 30.72-11.963733s21.896533 3.9936 29.866666 11.963733c8.533333 8.5504 12.8 18.7904 12.8 30.737067z m-73.386666 225.28c8.533333-7.953067 18.773333-11.9296 30.72-11.9296s21.896533 3.976533 29.866666 11.9296c8.533333 8.533333 12.8 18.773333 12.8 30.72 0 11.9296-4.266667 21.896533-12.8 29.866667-7.970133 8.533333-17.92 12.8-29.866666 12.8s-22.186667-4.266667-30.72-12.8c-7.970133-7.953067-11.946667-17.92-11.946667-29.866667s3.976533-22.186667 11.946667-30.72z m-11.946667-97.28c0-11.946667 3.976533-22.203733 11.946667-30.737067 8.533333-7.970133 18.773333-11.9296 30.72-11.9296s21.896533 3.959467 29.866666 11.9296c8.533333 8.5504 12.8 18.7904 12.8 30.737067 0 11.9296-4.266667 21.896533-12.8 29.866667-7.970133 8.533333-17.92 12.8-29.866666 12.8s-22.186667-4.266667-30.72-12.8c-7.970133-7.953067-11.946667-17.92-11.946667-29.866667z" />
+                </svg>
+            </button>
+
+            <button type="button" class="icon-button theme-mode-toggle has-tooltip" id="themeModeToggle"
+                data-tooltip="Switch to dark mode" data-tooltip-position="bottom" aria-label="Switch to dark mode"
+                data-theme-mode-toggle>
+                <svg class="icon theme-mode-icon theme-mode-icon-sun" aria-hidden="true" focusable="false"
+                    viewBox="0 0 24 24">
+                    <path
+                        d="M12 3v2.25m0 13.5V21m9-9h-2.25M5.25 12H3m15.364-6.364-1.591 1.591M7.227 16.773l-1.591 1.591m12.728 0-1.591-1.591M7.227 7.227 5.636 5.636" />
+                    <path d="M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+                </svg>
+
+                <svg class="icon theme-mode-icon theme-mode-icon-moon" aria-hidden="true" focusable="false"
+                    viewBox="0 0 24 24">
+                    <path
+                        d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75 9.75 9.75 0 0 1 8.25 6c0-1.33.266-2.598.748-3.752A9.753 9.753 0 0 0 3 11.25 9.75 9.75 0 0 0 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+                </svg>
+            </button>
+
+            <label class="preview-size-field">
+                <span>Preview</span>
+                <select id="previewSizeSelect">
+                    <option value="desktop" selected>Desktop</option>
+                    <option value="tablet">Tablet</option>
+                    <option value="mobile">Mobile</option>
+                    <option value="fluid">Fluid</option>
+                    <option value="custom">Custom</option>
+                </select>
+            </label>
+
+            <button type="button" id="fullPreviewBtn">Full Preview</button>
+            <div class="export-menu" data-export-menu>
+                <button type="button" id="exportMenuBtn" aria-haspopup="true" aria-expanded="false">
+                    Export
                 </button>
 
-                <button
-                    type="button"
-                    class="icon-button theme-mode-toggle has-tooltip"
-                    id="themeModeToggle"
-                    data-tooltip="Switch to dark mode"
-                    data-tooltip-position="bottom"
-                    aria-label="Switch to dark mode"
-                    data-theme-mode-toggle
-                >
-                    <svg
-                        class="icon theme-mode-icon theme-mode-icon-sun"
-                        aria-hidden="true"
-                        focusable="false"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            d="M12 3v2.25m0 13.5V21m9-9h-2.25M5.25 12H3m15.364-6.364-1.591 1.591M7.227 16.773l-1.591 1.591m12.728 0-1.591-1.591M7.227 7.227 5.636 5.636"
-                        />
-                        <path
-                            d="M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
-                        />
-                    </svg>
+                <div class="export-menu-list" data-export-menu-list hidden>
+                    <button type="button" data-export-type="json">
+                        JSON Theme
+                    </button>
+                    <button type="button" data-export-type="css">
+                        Styles
+                    </button>
+                </div>
+            </div>
+            <button type="button" class="score-badge" id="scoreBadge">
+                A11y 100
+            </button>
+        </div>
+        <div class="app-actions" aria-label="Application controls">
+            <button type="button" class="icon-button app-appearance-toggle has-tooltip" id="appAppearanceToggle"
+                data-tooltip="Switch app appearance to dark" data-tooltip-position="bottom"
+                aria-label="Switch app appearance to dark" data-app-appearance-toggle>
+                <svg class="icon app-appearance-icon app-appearance-icon-sun" aria-hidden="true" focusable="false"
+                    viewBox="0 0 24 24">
+                    <path
+                        d="M12 3v2.25m0 13.5V21m9-9h-2.25M5.25 12H3m15.364-6.364-1.591 1.591M7.227 16.773l-1.591 1.591m12.728 0-1.591-1.591M7.227 7.227 5.636 5.636" />
+                    <path d="M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+                </svg>
 
-                    <svg
-                        class="icon theme-mode-icon theme-mode-icon-moon"
-                        aria-hidden="true"
-                        focusable="false"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75 9.75 9.75 0 0 1 8.25 6c0-1.33.266-2.598.748-3.752A9.753 9.753 0 0 0 3 11.25 9.75 9.75 0 0 0 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"
-                        />
-                    </svg>
-                </button>
+                <svg class="icon app-appearance-icon app-appearance-icon-moon" aria-hidden="true" focusable="false"
+                    viewBox="0 0 24 24">
+                    <path
+                        d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75 9.75 9.75 0 0 1 8.25 6c0-1.33.266-2.598.748-3.752A9.753 9.753 0 0 0 3 11.25 9.75 9.75 0 0 0 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+                </svg>
 
-                <label class="preview-size-field">
-                    <span>Preview</span>
-                    <select id="previewSizeSelect">
-                        <option value="desktop" selected>Desktop</option>
-                        <option value="tablet">Tablet</option>
-                        <option value="mobile">Mobile</option>
-                        <option value="fluid">Fluid</option>
-                        <option value="custom">Custom</option>
-                    </select>
-                </label>
+                <svg class="icon app-appearance-icon app-appearance-icon-system" aria-hidden="true" focusable="false"
+                    viewBox="0 0 24 24">
+                    <path d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25" />
+                    <path
+                        d="M3.75 4.5h16.5A1.5 1.5 0 0 1 21.75 6v9.75a1.5 1.5 0 0 1-1.5 1.5H3.75a1.5 1.5 0 0 1-1.5-1.5V6a1.5 1.5 0 0 1 1.5-1.5Z" />
+                </svg>
+            </button>
 
-                <button type="button" id="fullPreviewBtn">Full Preview</button>
-                <div class="export-menu" data-export-menu>
-                    <button
-                        type="button"
-                        id="exportMenuBtn"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                    >
-                        Export
+            <button type="button" class="icon-button has-tooltip" id="settingsBtn" data-tooltip="Settings"
+                data-tooltip-position="bottom" aria-label="Settings">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" aria-hidden="true" focusable="false" fill="none"
+                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <main class="app-shell">
+        <nav class="drawer-rail drawer-rail-left" aria-label="Theme Forge controls">
+            <button type="button" class="drawer-rail-button drawer-rail-home has-tooltip" data-drawer-open-pinned="left"
+                data-tooltip="Open controls" data-tooltip-position="right" aria-controls="leftDrawer"
+                aria-expanded="false" aria-label="Open controls drawer">
+                <span class="drawer-logo" aria-hidden="true">TF</span>
+                <svg class="icon drawer-sidebar-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                    <path
+                        d="M4.5 5.25h15a1.5 1.5 0 0 1 1.5 1.5v10.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.25V6.75a1.5 1.5 0 0 1 1.5-1.5Z" />
+                    <path d="M9 5.25v13.5" />
+                </svg>
+            </button>
+
+            <button type="button" class="drawer-rail-button has-tooltip" data-drawer-panel="colors"
+                data-tooltip="Colors" data-tooltip-position="right" aria-controls="leftDrawer"
+                aria-label="Open colors controls">
+                <span aria-hidden="true">🎨</span>
+            </button>
+
+            <button type="button" class="drawer-rail-button has-tooltip" data-drawer-panel="typography"
+                data-tooltip="Typography" data-tooltip-position="right" aria-controls="leftDrawer"
+                aria-label="Open typography controls">
+                <span aria-hidden="true">Aa</span>
+            </button>
+
+            <button type="button" class="drawer-rail-button has-tooltip" data-drawer-panel="spacing"
+                data-tooltip="Spacing" data-tooltip-position="right" aria-controls="leftDrawer"
+                aria-label="Open spacing controls">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                    <path fill-rule="evenodd"
+                        d="M1.5 7.125c0-1.036.84-1.875 1.875-1.875h6c1.036 0 1.875.84 1.875 1.875v3.75c0 1.036-.84 1.875-1.875 1.875h-6A1.875 1.875 0 0 1 1.5 10.875v-3.75Zm12 1.5c0-1.036.84-1.875 1.875-1.875h5.25c1.035 0 1.875.84 1.875 1.875v8.25c0 1.035-.84 1.875-1.875 1.875h-5.25a1.875 1.875 0 0 1-1.875-1.875v-8.25ZM3 16.125c0-1.036.84-1.875 1.875-1.875h5.25c1.036 0 1.875.84 1.875 1.875v2.25c0 1.035-.84 1.875-1.875 1.875h-5.25A1.875 1.875 0 0 1 3 18.375v-2.25Z"
+                        clip-rule="evenodd" />
+                </svg>
+
+            </button>
+
+            <button type="button" class="drawer-rail-button has-tooltip" data-drawer-panel="shape" data-tooltip="Shape"
+                data-tooltip-position="right" aria-controls="leftDrawer" aria-label="Open shape controls">
+                <svg data-slot="icon" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"></path>
+                </svg>
+            </button>
+        </nav>
+
+        <aside class="left-drawer drawer drawer-left" id="leftDrawer" aria-label="Left drawer">
+            <div class="drawer-header">
+                <h2 class="drawer-title">Theme Forge</h2>
+
+                <div class="drawer-header-actions">
+                    <button type="button" class="drawer-icon-button has-tooltip" data-drawer-mode-toggle="left"
+                        data-tooltip="Unlock drawer" data-tooltip-position="bottom" aria-label="Unlock drawer">
+                        <svg class="icon drawer-lock-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                            <rect x="5.25" y="10.5" width="13.5" height="9" rx="2" />
+                            <path d="M8.25 10.5V8.25a3.75 3.75 0 0 1 7.5 0v2.25" />
+                        </svg>
+                        <svg class="icon drawer-unlock-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                            <rect x="5.25" y="10.5" width="13.5" height="9" rx="2" />
+                            <path d="M8.25 10.5V8.25a3.75 3.75 0 0 1 6.45-2.6" />
+                        </svg>
                     </button>
 
-                    <div class="export-menu-list" data-export-menu-list hidden>
-                        <button type="button" data-export-type="json">
-                            JSON Theme
-                        </button>
-                        <button type="button" data-export-type="css">
-                            Styles
-                        </button>
-                    </div>
+                    <button type="button" class="drawer-icon-button has-tooltip" data-drawer-close="left"
+                        data-tooltip="Collapse drawer" data-tooltip-position="bottom"
+                        aria-label="Collapse controls drawer">
+                        <svg class="icon icon-sidebar-left" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                            <path
+                                d="M4.5 5.25h15a1.5 1.5 0 0 1 1.5 1.5v10.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.25V6.75a1.5 1.5 0 0 1 1.5-1.5Z" />
+                            <path d="M9 5.25v13.5" />
+                        </svg>
+                    </button>
                 </div>
-                <button type="button" class="score-badge" id="scoreBadge">
-                    A11y 100
+            </div>
+            <div class="drawer-content">
+                <details class="control-card" data-control-panel="colors" open>
+                    <summary>
+                        <span class="control-card-title">Colors</span>
+                    </summary>
+                    <div class="control-card-content">
+                        <div class="color-group-tabs" aria-label="Color token groups" data-active-group="core">
+                            <button type="button" class="active" data-color-group-tab="core">
+                                Core
+                            </button>
+                            <button type="button" data-color-group-tab="states">
+                                States
+                            </button>
+                            <button type="button" data-color-group-tab="text">
+                                Text
+                            </button>
+                            <button type="button" data-color-group-tab="ui">
+                                UI
+                            </button>
+                        </div>
+
+                        <div class="color-token-list">
+                            <div class="color-token-list">
+                                <button type="button" class="color-token active" data-color-token="primary"
+                                    data-color-group="core">
+                                    <span class="color-token-name">Primary</span>
+                                    <span class="color-token-swatch"></span>
+                                    <span class="color-token-value">#2563eb</span>
+                                </button>
+
+                                <button type="button" class="color-token" data-color-token="secondary"
+                                    data-color-group="core">
+                                    <span class="color-token-name">Secondary</span>
+                                    <span class="color-token-swatch"></span>
+                                    <span class="color-token-value">#7c3aed</span>
+                                </button>
+
+                                <button type="button" class="color-token" data-color-token="background"
+                                    data-color-group="core">
+                                    <span class="color-token-name">Background</span>
+                                    <span class="color-token-swatch"></span>
+                                    <span class="color-token-value">#f8fafc</span>
+                                </button>
+
+                                <button type="button" class="color-token" data-color-token="surface"
+                                    data-color-group="core">
+                                    <span class="color-token-name">Surface</span>
+                                    <span class="color-token-swatch"></span>
+                                    <span class="color-token-value">#ffffff</span>
+                                </button>
+
+                                <button type="button" class="color-token" data-color-token="success"
+                                    data-color-group="states">
+                                    <span class="color-token-name">Success</span>
+                                    <span class="color-token-swatch"></span>
+                                    <span class="color-token-value">#22c55e</span>
+                                </button>
+
+                                <button type="button" class="color-token" data-color-token="warning"
+                                    data-color-group="states">
+                                    <span class="color-token-name">Warning</span>
+                                    <span class="color-token-swatch"></span>
+                                    <span class="color-token-value">#f59e0b</span>
+                                </button>
+
+                                <button type="button" class="color-token" data-color-token="danger"
+                                    data-color-group="states">
+                                    <span class="color-token-name">Danger</span>
+                                    <span class="color-token-swatch"></span>
+                                    <span class="color-token-value">#ef4444</span>
+                                </button>
+
+                                <button type="button" class="color-token" data-color-token="info"
+                                    data-color-group="states">
+                                    <span class="color-token-name">Info</span>
+                                    <span class="color-token-swatch"></span>
+                                    <span class="color-token-value">#0ea5e9</span>
+                                </button>
+
+                                <button type="button" class="color-token" data-color-token="text"
+                                    data-color-group="text">
+                                    <span class="color-token-name">Text</span>
+                                    <span class="color-token-swatch"></span>
+                                    <span class="color-token-value">#0f172a</span>
+                                </button>
+
+                                <button type="button" class="color-token" data-color-token="mutedText"
+                                    data-color-group="text">
+                                    <span class="color-token-name">Muted Text</span>
+                                    <span class="color-token-swatch"></span>
+                                    <span class="color-token-value">#64748b</span>
+                                </button>
+
+                                <button type="button" class="color-token" data-color-token="link"
+                                    data-color-group="text">
+                                    <span class="color-token-name">Link</span>
+                                    <span class="color-token-swatch"></span>
+                                    <span class="color-token-value">#2563eb</span>
+                                </button>
+
+                                <button type="button" class="color-token" data-color-token="border"
+                                    data-color-group="ui">
+                                    <span class="color-token-name">Border</span>
+                                    <span class="color-token-swatch"></span>
+                                    <span class="color-token-value">#e2e8f0</span>
+                                </button>
+
+                                <button type="button" class="color-token" data-color-token="focus"
+                                    data-color-group="ui">
+                                    <span class="color-token-name">Focus</span>
+                                    <span class="color-token-swatch"></span>
+                                    <span class="color-token-value">#2563eb</span>
+                                </button>
+
+                                <button type="button" class="color-token" data-color-token="overlay"
+                                    data-color-group="ui">
+                                    <span class="color-token-name">Overlay</span>
+                                    <span class="color-token-swatch"></span>
+                                    <span class="color-token-value">hsl(222 47% 11% / 0.55)</span>
+                                </button>
+
+                                <button type="button" class="color-token" data-color-token="shadowTint"
+                                    data-color-group="ui">
+                                    <span class="color-token-name">Shadow Tint</span>
+                                    <span class="color-token-swatch"></span>
+                                    <span class="color-token-value">hsl(222 47% 11% / 0.08)</span>
+                                </button>
+                            </div>
+
+                            <div class="color-editor">
+                                <h3>
+                                    Editing:
+                                    <span id="activeColorName">Primary</span>
+                                </h3>
+
+                                <input type="color" id="colorNativePicker" value="#2563eb" />
+
+                                <div class="segmented-control" aria-label="Color format" data-active-format="hex">
+                                    <button type="button" class="active" data-color-format="hex">
+                                        HEX
+                                    </button>
+                                    <button type="button" data-color-format="rgb">
+                                        RGB
+                                    </button>
+                                    <button type="button" data-color-format="hsl">
+                                        HSL
+                                    </button>
+                                </div>
+
+                                <div data-format-panel="hex">
+                                    <label>
+                                        HEX
+                                        <input type="text" id="hexValue" value="#2563eb" />
+                                    </label>
+                                </div>
+
+                                <div data-format-panel="rgb" hidden>
+                                    <label>
+                                        R
+                                        <input class="control-range" type="range" id="rgbR" min="0" max="255" value="37"
+                                            data-rgb-channel="r" class="has-tooltip" data-tooltip="Red"
+                                            data-tooltip-position="bottom" />
+                                        <input type="text" inputmode="numeric" id="rgbRNumber" min="0" max="255"
+                                            value="37" data-rgb-channel="r" />
+                                    </label>
+
+                                    <label>
+                                        G
+                                        <input class="control-range" type="range" id="rgbG" min="0" max="255" value="99"
+                                            data-rgb-channel="g" class="has-tooltip" data-tooltip="Green"
+                                            data-tooltip-position="bottom" />
+                                        <input type="text" inputmode="numeric" id="rgbGNumber" min="0" max="255"
+                                            value="99" data-rgb-channel="g" />
+                                    </label>
+
+                                    <label>
+                                        B
+                                        <input class="control-range" type="range" id="rgbB" min="0" max="255"
+                                            value="235" data-rgb-channel="b" class="has-tooltip" data-tooltip="Blue"
+                                            data-tooltip-position="bottom" />
+                                        <input type="text" inputmode="numeric" id="rgbBNumber" min="0" max="255"
+                                            value="235" data-rgb-channel="b" />
+                                    </label>
+                                </div>
+
+                                <div data-format-panel="hsl" hidden>
+                                    <label>
+                                        H
+                                        <input class="control-range" type="range" id="hslH" min="0" max="359"
+                                            value="217" data-hsl-channel="h" class="has-tooltip" data-tooltip="Hue"
+                                            data-tooltip-position="bottom" />
+                                        <input type="text" inputmode="numeric" id="hslHNumber" min="0" max="359"
+                                            value="217" data-hsl-channel="h" />
+                                    </label>
+
+                                    <label>
+                                        S
+                                        <input class="control-range" type="range" id="hslS" min="0" max="100" value="91"
+                                            data-hsl-channel="s" class="has-tooltip" data-tooltip="Saturation"
+                                            data-tooltip-position="bottom" />
+                                        <input type="text" inputmode="numeric" id="hslSNumber" min="0" max="100"
+                                            value="91" data-hsl-channel="s" />
+                                    </label>
+
+                                    <label>
+                                        L
+                                        <input class="control-range" type="range" id="hslL" min="0" max="100" value="60"
+                                            data-hsl-channel="l" class="has-tooltip" data-tooltip="Lightness"
+                                            data-tooltip-position="bottom" />
+                                        <input type="text" inputmode="numeric" id="hslLNumber" min="0" max="100"
+                                            value="60" data-hsl-channel="l" />
+                                    </label>
+                                </div>
+
+                                <label class="alpha-control">
+                                    A%
+                                    <input class="control-range" type="range" id="alphaValue" min="0" max="100" step="1"
+                                        value="100" class="has-tooltip" data-tooltip="Alpha"
+                                        data-tooltip-position="bottom" />
+                                    <input type="text" inputmode="numeric" id="alphaNumber" min="0" max="100" step="1"
+                                        value="100" />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="control-card" data-control-panel="typography">
+                    <summary>
+                        <span class="control-card-title">Typography</span>
+                    </summary>
+
+                    <div class="control-card-content typography-control-content">
+                        <section class="control-section">
+                            <h3 class="control-section-title">Global</h3>
+
+                            <label class="control-field control-field-range">
+                                <span class="control-label">Base size</span>
+                                <input class="control-range" type="range" id="baseFontSize" min="8" max="24" step="1"
+                                    value="16" class="control-range" />
+                                <output class="control-value" for="baseFontSize" id="baseFontSizeValue">16px</output>
+                            </label>
+
+                            <label class="control-field">
+                                <span class="control-label">Body font</span>
+                                <select id="bodyFontFamily" class="control-input">
+                                    <option value="systemSans">
+                                        System Sans
+                                    </option>
+                                    <option value="serif">Serif</option>
+                                    <option value="mono">Mono</option>
+                                </select>
+                            </label>
+
+                            <label class="control-field">
+                                <span class="control-label">Heading font</span>
+                                <select id="headingFontFamily" class="control-input">
+                                    <option value="inherit">
+                                        Inherit body
+                                    </option>
+                                    <option value="systemSans">
+                                        System Sans
+                                    </option>
+                                    <option value="serif">Serif</option>
+                                    <option value="mono">Mono</option>
+                                </select>
+                            </label>
+
+                            <label class="control-field">
+                                <span class="control-label">Mono font</span>
+                                <select id="monoFontFamily" class="control-input">
+                                    <option value="mono">Mono</option>
+                                    <option value="systemSans">
+                                        System Sans
+                                    </option>
+                                    <option value="serif">Serif</option>
+                                </select>
+                            </label>
+                        </section>
+
+                        <section class="control-section">
+                            <h3 class="control-section-title">Elements</h3>
+                            <div class="typography-elements-shell" data-typography-elements-shell></div>
+                        </section>
+                    </div>
+                </details>
+
+                <details class="control-card" data-control-panel="shape">
+                    <summary>
+                        <span class="control-card-title">Shape</span>
+                    </summary>
+                    <div class="control-card-content">
+                        <label>
+                            Border Radius
+                            <input class="control-range" type="range" id="radiusControl" min="0" max="32" value="10" />
+                        </label>
+
+                        <label>
+                            Border Width
+                            <input class="control-range" type="range" id="borderWidthControl" min="0" max="10"
+                                value="1" />
+                        </label>
+
+                        <label>
+                            Overlay Blur
+                            <input class="control-range" type="range" id="overlayBlurControl" min="0" max="10"
+                                value="2" />
+                        </label>
+                    </div>
+                </details>
+            </div>
+        </aside>
+
+        <div class="drawer-dock-spacer drawer-dock-spacer-left" aria-hidden="true"></div>
+
+        <section class="preview-area" aria-label="Theme preview">
+            <div class="preview-custom-toolbar" id="previewCustomToolbar" hidden>
+                <label class="preview-custom-width-field">
+                    <span>Custom width</span>
+                    <input type="number" id="previewCustomWidthInput" min="320" step="1" inputmode="numeric" />
+                    <span>px</span>
+                </label>
+
+                <button type="button" class="preview-custom-reset has-tooltip" id="previewCustomResetBtn"
+                    data-tooltip="Restore to 900px" data-tooltip-position="bottom"
+                    aria-label="Restore custom preview width to desktop width">
+                    Reset
                 </button>
             </div>
-            <div class="app-actions" aria-label="Application controls">
-                <button
-                    type="button"
-                    class="icon-button app-appearance-toggle has-tooltip"
-                    id="appAppearanceToggle"
-                    data-tooltip="Switch app appearance to dark"
-                    data-tooltip-position="bottom"
-                    aria-label="Switch app appearance to dark"
-                    data-app-appearance-toggle
-                >
-                    <svg
-                        class="icon app-appearance-icon app-appearance-icon-sun"
-                        aria-hidden="true"
-                        focusable="false"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            d="M12 3v2.25m0 13.5V21m9-9h-2.25M5.25 12H3m15.364-6.364-1.591 1.591M7.227 16.773l-1.591 1.591m12.728 0-1.591-1.591M7.227 7.227 5.636 5.636"
-                        />
-                        <path
-                            d="M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
-                        />
-                    </svg>
 
-                    <svg
-                        class="icon app-appearance-icon app-appearance-icon-moon"
-                        aria-hidden="true"
-                        focusable="false"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75 9.75 9.75 0 0 1 8.25 6c0-1.33.266-2.598.748-3.752A9.753 9.753 0 0 0 3 11.25 9.75 9.75 0 0 0 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"
-                        />
-                    </svg>
-
-                    <svg
-                        class="icon app-appearance-icon app-appearance-icon-system"
-                        aria-hidden="true"
-                        focusable="false"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25"
-                        />
-                        <path
-                            d="M3.75 4.5h16.5A1.5 1.5 0 0 1 21.75 6v9.75a1.5 1.5 0 0 1-1.5 1.5H3.75a1.5 1.5 0 0 1-1.5-1.5V6a1.5 1.5 0 0 1 1.5-1.5Z"
-                        />
-                    </svg>
+            <nav class="preview-tabs" aria-label="Preview tabs" data-active-preview-tab="page">
+                <button type="button" class="active" data-preview-tab="page">
+                    Page
                 </button>
-
-                <button
-                    type="button"
-                    class="icon-button has-tooltip"
-                    id="settingsBtn"
-                    data-tooltip="Settings"
-                    data-tooltip-position="bottom"
-                    aria-label="Settings"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="icon"
-                        aria-hidden="true"
-                        focusable="false"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        class="size-6"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"
-                        />
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                        />
-                    </svg>
+                <button type="button" data-preview-tab="form">Form</button>
+                <button type="button" data-preview-tab="table">
+                    Table
                 </button>
-            </div>
-        </header>
-
-        <main class="app-shell">
-            <nav
-                class="drawer-rail drawer-rail-left"
-                aria-label="Theme Forge controls"
-            >
-                <button
-                    type="button"
-                    class="drawer-rail-button drawer-rail-home has-tooltip"
-                    data-drawer-open-pinned="left"
-                    data-tooltip="Open controls"
-                    data-tooltip-position="right"
-                    aria-controls="leftDrawer"
-                    aria-expanded="false"
-                    aria-label="Open controls drawer"
-                >
-                    <span class="drawer-logo" aria-hidden="true">TF</span>
-                    <svg
-                        class="icon drawer-sidebar-icon"
-                        aria-hidden="true"
-                        focusable="false"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            d="M4.5 5.25h15a1.5 1.5 0 0 1 1.5 1.5v10.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.25V6.75a1.5 1.5 0 0 1 1.5-1.5Z"
-                        />
-                        <path d="M9 5.25v13.5" />
-                    </svg>
-                </button>
-
-                <button
-                    type="button"
-                    class="drawer-rail-button has-tooltip"
-                    data-drawer-panel="colors"
-                    data-tooltip="Colors"
-                    data-tooltip-position="right"
-                    aria-controls="leftDrawer"
-                    aria-label="Open colors controls"
-                >
-                    <span aria-hidden="true">🎨</span>
-                </button>
-
-                <button
-                    type="button"
-                    class="drawer-rail-button has-tooltip"
-                    data-drawer-panel="typography"
-                    data-tooltip="Typography"
-                    data-tooltip-position="right"
-                    aria-controls="leftDrawer"
-                    aria-label="Open typography controls"
-                >
-                    <span aria-hidden="true">Aa</span>
-                </button>
-
-                <button
-                    type="button"
-                    class="drawer-rail-button has-tooltip"
-                    data-drawer-panel="spacing"
-                    data-tooltip="Dimensions"
-                    data-tooltip-position="right"
-                    aria-controls="leftDrawer"
-                    aria-label="Open dimensions controls"
-                >
-                    <svg
-                        class="icon"
-                        aria-hidden="true"
-                        focusable="false"
-                        viewBox="0 0 16 16"
-                    >
-                        <path
-                            d="M5 2V0H0v5h2v6H0v5h5v-2h6v2h5v-5h-2V5h2V0h-5v2zm6 1v2h2v6h-2v2H5v-2H3V5h2V3zm1-2h3v3h-3zm3 11v3h-3v-3zM4 15H1v-3h3zM1 4V1h3v3z"
-                        />
-                    </svg>
-                </button>
-
-                <button
-                    type="button"
-                    class="drawer-rail-button has-tooltip"
-                    data-drawer-panel="shape"
-                    data-tooltip="Shape"
-                    data-tooltip-position="right"
-                    aria-controls="leftDrawer"
-                    aria-label="Open shape controls"
-                >
-                    <svg
-                        data-slot="icon"
-                        fill="none"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
-                        ></path>
-                    </svg>
+                <button type="button" data-preview-tab="cards">
+                    Cards
                 </button>
             </nav>
 
-            <aside
-                class="left-drawer drawer drawer-left"
-                id="leftDrawer"
-                aria-label="Left drawer"
-            >
-                <div class="drawer-header">
-                    <h2 class="drawer-title">Theme Forge</h2>
+            <div class="preview-resize-frame" id="previewResizeFrame">
+                <button type="button" class="preview-resize-handle preview-resize-handle-left"
+                    data-preview-resize-handle="left" aria-label="Resize preview from left edge"></button>
 
-                    <div class="drawer-header-actions">
-                        <button
-                            type="button"
-                            class="drawer-icon-button has-tooltip"
-                            data-drawer-mode-toggle="left"
-                            data-tooltip="Unlock drawer"
-                            data-tooltip-position="bottom"
-                            aria-label="Unlock drawer"
-                        >
-                            <svg
-                                class="icon drawer-lock-icon"
-                                aria-hidden="true"
-                                focusable="false"
-                                viewBox="0 0 24 24"
-                            >
-                                <rect
-                                    x="5.25"
-                                    y="10.5"
-                                    width="13.5"
-                                    height="9"
-                                    rx="2"
-                                />
-                                <path
-                                    d="M8.25 10.5V8.25a3.75 3.75 0 0 1 7.5 0v2.25"
-                                />
-                            </svg>
-                            <svg
-                                class="icon drawer-unlock-icon"
-                                aria-hidden="true"
-                                focusable="false"
-                                viewBox="0 0 24 24"
-                            >
-                                <rect
-                                    x="5.25"
-                                    y="10.5"
-                                    width="13.5"
-                                    height="9"
-                                    rx="2"
-                                />
-                                <path
-                                    d="M8.25 10.5V8.25a3.75 3.75 0 0 1 6.45-2.6"
-                                />
-                            </svg>
-                        </button>
+                <section class="preview-panel">
+                    <div class="preview-tab-panel sample-page" data-preview-panel="page">
+                        <section class="sample-hero">
+                            <p class="eyebrow">Page Preview</p>
 
-                        <button
-                            type="button"
-                            class="drawer-icon-button has-tooltip"
-                            data-drawer-close="left"
-                            data-tooltip="Collapse drawer"
-                            data-tooltip-position="bottom"
-                            aria-label="Collapse controls drawer"
-                        >
-                            <svg
-                                class="icon icon-sidebar-left"
-                                aria-hidden="true"
-                                focusable="false"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    d="M4.5 5.25h15a1.5 1.5 0 0 1 1.5 1.5v10.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.25V6.75a1.5 1.5 0 0 1 1.5-1.5Z"
-                                />
-                                <path d="M9 5.25v13.5" />
-                            </svg>
-                        </button>
+                            <h2>Forge themes worthy of dwarven praise.</h2>
+
+                            <p>
+                                Shape colors, typography, states, overlays,
+                                cards, forms, and tables in one living
+                                preview. No frameworks. No build step. No
+                                innocent CSS harmed.
+                            </p>
+
+                            <div class="button-row">
+                                <button type="button" class="primary-button" id="lightTheBeaconsBtn">
+                                    Light the beacons
+                                </button>
+                            </div>
+
+                            <div class="sample-hero-visual" aria-hidden="true">
+                                <div class="hero-window">
+                                    <div class="hero-window-bar">
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+
+                                    <div class="hero-window-body">
+                                        <div class="hero-sidebar">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+
+                                        <div class="hero-content-card">
+                                            <div class="hero-line wide"></div>
+                                            <div class="hero-line medium"></div>
+                                            <div class="hero-pill-row">
+                                                <span class="hero-pill primary"></span>
+                                                <span class="hero-pill secondary"></span>
+                                                <span class="hero-pill success"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="hero-floating-card top"></div>
+                                <div class="hero-floating-card bottom"></div>
+                            </div>
+                        </section>
+
+                        <section class="sample-section">
+                            <h3>Toast signals</h3>
+
+                            <p>
+                                Test the same message pattern across
+                                success, warning, danger, and info states.
+                                Like smoke signals, but with fewer mountains
+                                and more CSS variables.
+                            </p>
+
+                            <div class="toast-button-grid">
+                                <button type="button" class="toast-demo-button success" data-toast-demo="success">
+                                    Success
+                                </button>
+
+                                <button type="button" class="toast-demo-button warning" data-toast-demo="warning">
+                                    Warning
+                                </button>
+
+                                <button type="button" class="toast-demo-button danger" data-toast-demo="danger">
+                                    Danger
+                                </button>
+
+                                <button type="button" class="toast-demo-button info" data-toast-demo="info">
+                                    Info
+                                </button>
+                            </div>
+                        </section>
+
+                        <section class="preview-article-grid">
+                            <article class="preview-article">
+                                <p class="eyebrow">Color Systems</p>
+                                <h3>Every token earns its keep.</h3>
+                                <p>
+                                    Preview real interface pieces while
+                                    tuning surfaces, borders, focus rings,
+                                    overlays, and state colors.
+                                </p>
+                            </article>
+
+                            <article class="preview-article">
+                                <p class="eyebrow">Component Checks</p>
+                                <h3>Pretty is suspicious. Test it.</h3>
+                                <p>
+                                    Cards, forms, tables, modals, and toast
+                                    messages reveal where a theme shines and
+                                    where it quietly trips over a rake.
+                                </p>
+                            </article>
+                        </section>
+
+                        <blockquote class="preview-quote">
+                            <p>
+                                “A theme should look good when nothing is
+                                happening, and still make sense when
+                                everything is on fire.”
+                            </p>
+                            <cite>Probably someone in a meeting</cite>
+                        </blockquote>
+
+                        <section class="sample-section">
+                            <h3>Modal preview</h3>
+
+                            <p>
+                                Open a harmless simulated audit dialog to
+                                test overlays, modal surfaces, form
+                                controls, and action buttons.
+                            </p>
+
+                            <div class="button-row">
+                                <button type="button" class="secondary-button" id="openPreviewModal">
+                                    Open modal preview
+                                </button>
+                            </div>
+                        </section>
                     </div>
-                </div>
-                <div class="drawer-content">
-                    <details
-                        class="control-card"
-                        data-control-panel="colors"
-                        open
-                    >
-                        <summary>
-                            <span class="control-card-title">Colors</span>
-                        </summary>
-                        <div class="control-card-content">
-                            <div
-                                class="color-group-tabs"
-                                aria-label="Color token groups"
-                                data-active-group="core"
-                            >
-                                <button
-                                    type="button"
-                                    class="active"
-                                    data-color-group-tab="core"
-                                >
-                                    Core
-                                </button>
-                                <button
-                                    type="button"
-                                    data-color-group-tab="states"
-                                >
-                                    States
-                                </button>
-                                <button
-                                    type="button"
-                                    data-color-group-tab="text"
-                                >
-                                    Text
-                                </button>
-                                <button type="button" data-color-group-tab="ui">
-                                    UI
-                                </button>
+
+                    <div class="preview-tab-panel" data-preview-panel="form" hidden>
+                        <section class="sample-section">
+                            <p class="eyebrow">Form preview</p>
+
+                            <div class="preview-form">
+                                <label>
+                                    Display name
+                                    <input type="text" value="Aurora Dashboard" />
+                                </label>
+
+                                <label>
+                                    Theme category
+                                    <select>
+                                        <option>Admin dashboard</option>
+                                        <option>Marketing site</option>
+                                        <option>Documentation</option>
+                                        <option>Experimental UI</option>
+                                    </select>
+                                </label>
+
+                                <label class="preview-form-full">
+                                    Notes
+                                    <textarea rows="4">
+Testing form colors, spacing, radius, focus states, and control contrast.</textarea>
+                                </label>
+
+                                <fieldset class="preview-form-full">
+                                    <legend>Density</legend>
+
+                                    <label class="preview-choice">
+                                        <input type="radio" name="density" checked />
+                                        Comfortable
+                                    </label>
+
+                                    <label class="preview-choice">
+                                        <input type="radio" name="density" />
+                                        Compact
+                                    </label>
+                                </fieldset>
+
+                                <label class="preview-choice preview-form-full">
+                                    <input type="checkbox" checked />
+                                    Include themed focus and validation
+                                    states
+                                </label>
+
+                                <label>
+                                    Disabled field
+                                    <input type="text" value="Read-only sample" disabled />
+                                </label>
+
+                                <label>
+                                    Error state
+                                    <input class="preview-input-error" type="text" value="Needs attention"
+                                        aria-describedby="formErrorSample" />
+                                    <span class="preview-field-error" id="formErrorSample">This sample shows an error
+                                        message.</span>
+                                </label>
                             </div>
 
-                            <div class="color-token-list">
-                                <div class="color-token-list">
-                                    <button
-                                        type="button"
-                                        class="color-token active"
-                                        data-color-token="primary"
-                                        data-color-group="core"
-                                    >
-                                        <span class="color-token-name"
-                                            >Primary</span
-                                        >
-                                        <span class="color-token-swatch"></span>
-                                        <span class="color-token-value"
-                                            >#2563eb</span
-                                        >
-                                    </button>
+                            <div class="button-row">
+                                <button type="button" class="primary-button">
+                                    Save changes
+                                </button>
+                                <button type="button" class="secondary-button">
+                                    Cancel
+                                </button>
+                            </div>
+                        </section>
+                    </div>
 
-                                    <button
-                                        type="button"
-                                        class="color-token"
-                                        data-color-token="secondary"
-                                        data-color-group="core"
-                                    >
-                                        <span class="color-token-name"
-                                            >Secondary</span
-                                        >
-                                        <span class="color-token-swatch"></span>
-                                        <span class="color-token-value"
-                                            >#7c3aed</span
-                                        >
-                                    </button>
+                    <div class="preview-tab-panel" data-preview-panel="table" hidden>
+                        <section class="sample-section">
+                            <p class="eyebrow">Table preview</p>
 
-                                    <button
-                                        type="button"
-                                        class="color-token"
-                                        data-color-token="background"
-                                        data-color-group="core"
-                                    >
-                                        <span class="color-token-name"
-                                            >Background</span
-                                        >
-                                        <span class="color-token-swatch"></span>
-                                        <span class="color-token-value"
-                                            >#f8fafc</span
-                                        >
-                                    </button>
+                            <div class="preview-table-wrapper">
+                                <table class="preview-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Project</th>
+                                            <th>Owner</th>
+                                            <th>Status</th>
+                                            <th class="numeric">Issues</th>
+                                            <th class="numeric">
+                                                Caffeine
+                                            </th>
+                                        </tr>
+                                    </thead>
 
-                                    <button
-                                        type="button"
-                                        class="color-token"
-                                        data-color-token="surface"
-                                        data-color-group="core"
-                                    >
-                                        <span class="color-token-name"
-                                            >Surface</span
-                                        >
-                                        <span class="color-token-swatch"></span>
-                                        <span class="color-token-value"
-                                            >#ffffff</span
-                                        >
-                                    </button>
+                                    <tbody>
+                                        <tr>
+                                            <td>Aurora Dashboard</td>
+                                            <td>Michael</td>
+                                            <td>
+                                                <span class="table-badge success">Stable</span>
+                                            </td>
+                                            <td class="numeric">2</td>
+                                            <td class="numeric">
+                                                ☕☕☕☕
+                                            </td>
+                                        </tr>
 
-                                    <button
-                                        type="button"
-                                        class="color-token"
-                                        data-color-token="success"
-                                        data-color-group="states"
-                                    >
-                                        <span class="color-token-name"
-                                            >Success</span
-                                        >
-                                        <span class="color-token-swatch"></span>
-                                        <span class="color-token-value"
-                                            >#22c55e</span
-                                        >
-                                    </button>
+                                        <tr>
+                                            <td>Project Icarus</td>
+                                            <td>Dave</td>
+                                            <td>
+                                                <span class="table-badge danger">On Fire</span>
+                                            </td>
+                                            <td class="numeric">37</td>
+                                            <td class="numeric">
+                                                ☕☕☕☕☕☕
+                                            </td>
+                                        </tr>
 
-                                    <button
-                                        type="button"
-                                        class="color-token"
-                                        data-color-token="warning"
-                                        data-color-group="states"
-                                    >
-                                        <span class="color-token-name"
-                                            >Warning</span
-                                        >
-                                        <span class="color-token-swatch"></span>
-                                        <span class="color-token-value"
-                                            >#f59e0b</span
-                                        >
-                                    </button>
+                                        <tr class="selected">
+                                            <td>Theme Forge</td>
+                                            <td>You</td>
+                                            <td>
+                                                <span class="table-badge info">Building</span>
+                                            </td>
+                                            <td class="numeric">0</td>
+                                            <td class="numeric">☕☕☕</td>
+                                        </tr>
 
-                                    <button
-                                        type="button"
-                                        class="color-token"
-                                        data-color-token="danger"
-                                        data-color-group="states"
-                                    >
-                                        <span class="color-token-name"
-                                            >Danger</span
-                                        >
-                                        <span class="color-token-swatch"></span>
-                                        <span class="color-token-value"
-                                            >#ef4444</span
-                                        >
-                                    </button>
+                                        <tr>
+                                            <td>Quantum Toaster</td>
+                                            <td>Janet</td>
+                                            <td>
+                                                <span class="table-badge warning">Uncertain</span>
+                                            </td>
+                                            <td class="numeric">12</td>
+                                            <td class="numeric">
+                                                ☕☕☕☕☕
+                                            </td>
+                                        </tr>
 
-                                    <button
-                                        type="button"
-                                        class="color-token"
-                                        data-color-token="info"
-                                        data-color-group="states"
-                                    >
-                                        <span class="color-token-name"
-                                            >Info</span
-                                        >
-                                        <span class="color-token-swatch"></span>
-                                        <span class="color-token-value"
-                                            >#0ea5e9</span
-                                        >
-                                    </button>
+                                        <tr>
+                                            <td>Operation Cat Herding</td>
+                                            <td>Steve</td>
+                                            <td>
+                                                <span class="table-badge danger">Impossible</span>
+                                            </td>
+                                            <td class="numeric">999</td>
+                                            <td class="numeric">∞</td>
+                                        </tr>
+                                    </tbody>
 
-                                    <button
-                                        type="button"
-                                        class="color-token"
-                                        data-color-token="text"
-                                        data-color-group="text"
-                                    >
-                                        <span class="color-token-name"
-                                            >Text</span
-                                        >
-                                        <span class="color-token-swatch"></span>
-                                        <span class="color-token-value"
-                                            >#0f172a</span
-                                        >
-                                    </button>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3">
+                                                Active projects
+                                            </td>
+                                            <td class="numeric">1050</td>
+                                            <td class="numeric">
+                                                13 cups/day
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
 
-                                    <button
-                                        type="button"
-                                        class="color-token"
-                                        data-color-token="mutedText"
-                                        data-color-group="text"
-                                    >
-                                        <span class="color-token-name"
-                                            >Muted Text</span
-                                        >
-                                        <span class="color-token-swatch"></span>
-                                        <span class="color-token-value"
-                                            >#64748b</span
-                                        >
-                                    </button>
+                    <div class="preview-tab-panel" data-preview-panel="cards" hidden>
+                        <section class="sample-section">
+                            <p class="eyebrow">Cards preview</p>
 
-                                    <button
-                                        type="button"
-                                        class="color-token"
-                                        data-color-token="link"
-                                        data-color-group="text"
-                                    >
-                                        <span class="color-token-name"
-                                            >Link</span
-                                        >
-                                        <span class="color-token-swatch"></span>
-                                        <span class="color-token-value"
-                                            >#2563eb</span
-                                        >
-                                    </button>
+                            <div class="preview-cards-grid">
+                                <article class="preview-demo-card">
+                                    <div class="preview-demo-card-header">
+                                        <span class="table-badge success">Online</span>
+                                    </div>
 
-                                    <button
-                                        type="button"
-                                        class="color-token"
-                                        data-color-token="border"
-                                        data-color-group="ui"
-                                    >
-                                        <span class="color-token-name"
-                                            >Border</span
-                                        >
-                                        <span class="color-token-swatch"></span>
-                                        <span class="color-token-value"
-                                            >#e2e8f0</span
-                                        >
-                                    </button>
+                                    <h4>AI Core</h4>
 
-                                    <button
-                                        type="button"
-                                        class="color-token"
-                                        data-color-token="focus"
-                                        data-color-group="ui"
-                                    >
-                                        <span class="color-token-name"
-                                            >Focus</span
-                                        >
-                                        <span class="color-token-swatch"></span>
-                                        <span class="color-token-value"
-                                            >#2563eb</span
-                                        >
-                                    </button>
+                                    <p>
+                                        Successfully resisting the urge to
+                                        become self-aware before lunch.
+                                    </p>
 
-                                    <button
-                                        type="button"
-                                        class="color-token"
-                                        data-color-token="overlay"
-                                        data-color-group="ui"
-                                    >
-                                        <span class="color-token-name"
-                                            >Overlay</span
-                                        >
-                                        <span class="color-token-swatch"></span>
-                                        <span class="color-token-value"
-                                            >hsl(222 47% 11% / 0.55)</span
-                                        >
+                                    <button type="button" class="secondary-button">
+                                        View status
                                     </button>
+                                </article>
 
-                                    <button
-                                        type="button"
-                                        class="color-token"
-                                        data-color-token="shadowTint"
-                                        data-color-group="ui"
-                                    >
-                                        <span class="color-token-name"
-                                            >Shadow Tint</span
-                                        >
-                                        <span class="color-token-swatch"></span>
-                                        <span class="color-token-value"
-                                            >hsl(222 47% 11% / 0.08)</span
-                                        >
-                                    </button>
+                                <article class="preview-demo-card">
+                                    <div class="preview-demo-card-header">
+                                        <span class="table-badge warning">Warning</span>
+                                    </div>
+
+                                    <h4>Quantum Toaster</h4>
+
+                                    <p>
+                                        Toast quality has exceeded
+                                        expectations. Reality stability has
+                                        not.
+                                    </p>
+
+                                    <div class="preview-stat">
+                                        <strong>97%</strong>
+                                        <span>Burn accuracy</span>
+                                    </div>
+                                </article>
+
+                                <article class="preview-demo-card">
+                                    <div class="preview-demo-card-header">
+                                        <span class="table-badge danger">Critical</span>
+                                    </div>
+
+                                    <h4>Project Icarus</h4>
+
+                                    <p>
+                                        Management requested a status
+                                        report. The project requested a
+                                        lawyer.
+                                    </p>
+
+                                    <ul class="preview-card-list">
+                                        <li>37 open issues</li>
+                                        <li>12 meetings scheduled</li>
+                                        <li>0 volunteers</li>
+                                    </ul>
+                                </article>
+
+                                <article class="preview-demo-card feature">
+                                    <p class="eyebrow">Featured</p>
+
+                                    <h4>Theme Forge</h4>
+
+                                    <p>
+                                        Build, test, randomize, evaluate,
+                                        and export themes without
+                                        sacrificing innocent CSS.
+                                    </p>
+
+                                    <div class="button-row">
+                                        <button type="button" class="primary-button">
+                                            Launch
+                                        </button>
+
+                                        <button type="button" class="secondary-button">
+                                            Learn more
+                                        </button>
+                                    </div>
+                                </article>
+
+                                <article class="preview-demo-card framed">
+                                    <header class="preview-card-band">
+                                        <span class="table-badge info">Report</span>
+                                        <strong>Weekly Weirdness</strong>
+                                    </header>
+
+                                    <div>
+                                        <h4>Office Gravity Audit</h4>
+                                        <p>
+                                            Three chairs rolled uphill, one
+                                            pen escaped, and the conference
+                                            room plant has begun issuing
+                                            demands.
+                                        </p>
+                                    </div>
+
+                                    <footer class="preview-card-footer">
+                                        <span>Last checked: 4:20 PM</span>
+                                        <button type="button" class="secondary-button">
+                                            Review
+                                        </button>
+                                    </footer>
+                                </article>
+
+                                <article class="preview-demo-card checklist">
+                                    <h4>Launch checklist</h4>
+
+                                    <ul class="preview-task-list">
+                                        <li>
+                                            <input type="checkbox" checked />
+                                            Name the buttons something
+                                            sensible
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" checked />
+                                            Pretend the first draft was
+                                            intentional
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" />
+                                            Remove console logs before
+                                            anyone notices
+                                        </li>
+                                    </ul>
+
+                                    <p class="sample-alert warning">
+                                        Final approval pending one heroic
+                                        cup of coffee.
+                                    </p>
+                                </article>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="beacon-dialog-layer" id="beaconDialogLayer" hidden>
+                        <dialog class="beacon-dialog" id="beaconDialog">
+                            <header class="beacon-dialog-header">
+                                <div class="beacon-dialog-title">
+                                    <p class="eyebrow">
+                                        Emergency Notification System
+                                    </p>
+                                    <h3>The beacons are lit!</h3>
                                 </div>
 
-                                <div class="color-editor">
-                                    <h3>
-                                        Editing:
-                                        <span id="activeColorName"
-                                            >Primary</span
-                                        >
+                                <button type="button" class="preview-modal-close" data-close-beacon-dialog
+                                    aria-label="Close dialog">
+                                    <svg class="icon icon-x-mark" aria-hidden="true" focusable="false"
+                                        viewBox="0 0 24 24">
+                                        <path d="M6 18 18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </header>
+
+                            <div class="beacon-dialog-body">
+                                <p>
+                                    Gondor calls for aid. Check your Teams
+                                    inbox.
+                                </p>
+
+                                <p class="sample-alert info">
+                                    This is a simulated alert to test dialog
+                                    styles. No actual beacons have been lit,
+                                    and no meetings have been scheduled.
+                                    Contact HR if you see real beacons.
+                                </p>
+                            </div>
+
+                            <footer class="beacon-dialog-footer">
+                                <button type="button" class="secondary-button" data-close-beacon-dialog>
+                                    Let them Fall
+                                </button>
+                                <button type="button" class="primary-button" data-close-beacon-dialog>
+                                    Answer the Call
+                                </button>
+                            </footer>
+                        </dialog>
+                    </div>
+                    <div class="preview-modal-layer" id="previewModalLayer" hidden>
+                        <div class="preview-modal" role="dialog" aria-modal="true" aria-labelledby="previewModalTitle">
+                            <header class="preview-modal-header">
+                                <div>
+                                    <p class="eyebrow">Modal Preview</p>
+                                    <h3 id="previewModalTitle">
+                                        Run theme audit?
                                     </h3>
-
-                                    <input
-                                        type="color"
-                                        id="colorNativePicker"
-                                        value="#2563eb"
-                                    />
-
-                                    <div
-                                        class="segmented-control"
-                                        aria-label="Color format"
-                                        data-active-format="hex"
-                                    >
-                                        <button
-                                            type="button"
-                                            class="active"
-                                            data-color-format="hex"
-                                        >
-                                            HEX
-                                        </button>
-                                        <button
-                                            type="button"
-                                            data-color-format="rgb"
-                                        >
-                                            RGB
-                                        </button>
-                                        <button
-                                            type="button"
-                                            data-color-format="hsl"
-                                        >
-                                            HSL
-                                        </button>
-                                    </div>
-
-                                    <div data-format-panel="hex">
-                                        <label>
-                                            HEX
-                                            <input
-                                                type="text"
-                                                id="hexValue"
-                                                value="#2563eb"
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div data-format-panel="rgb" hidden>
-                                        <label>
-                                            R
-                                            <input
-                                                class="control-range"
-                                                type="range"
-                                                id="rgbR"
-                                                min="0"
-                                                max="255"
-                                                value="37"
-                                                data-rgb-channel="r"
-                                                class="has-tooltip"
-                                                data-tooltip="Red"
-                                                data-tooltip-position="bottom"
-                                            />
-                                            <input
-                                                type="text"
-                                                inputmode="numeric"
-                                                id="rgbRNumber"
-                                                min="0"
-                                                max="255"
-                                                value="37"
-                                                data-rgb-channel="r"
-                                            />
-                                        </label>
-
-                                        <label>
-                                            G
-                                            <input
-                                                class="control-range"
-                                                type="range"
-                                                id="rgbG"
-                                                min="0"
-                                                max="255"
-                                                value="99"
-                                                data-rgb-channel="g"
-                                                class="has-tooltip"
-                                                data-tooltip="Green"
-                                                data-tooltip-position="bottom"
-                                            />
-                                            <input
-                                                type="text"
-                                                inputmode="numeric"
-                                                id="rgbGNumber"
-                                                min="0"
-                                                max="255"
-                                                value="99"
-                                                data-rgb-channel="g"
-                                            />
-                                        </label>
-
-                                        <label>
-                                            B
-                                            <input
-                                                class="control-range"
-                                                type="range"
-                                                id="rgbB"
-                                                min="0"
-                                                max="255"
-                                                value="235"
-                                                data-rgb-channel="b"
-                                                class="has-tooltip"
-                                                data-tooltip="Blue"
-                                                data-tooltip-position="bottom"
-                                            />
-                                            <input
-                                                type="text"
-                                                inputmode="numeric"
-                                                id="rgbBNumber"
-                                                min="0"
-                                                max="255"
-                                                value="235"
-                                                data-rgb-channel="b"
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <div data-format-panel="hsl" hidden>
-                                        <label>
-                                            H
-                                            <input
-                                                class="control-range"
-                                                type="range"
-                                                id="hslH"
-                                                min="0"
-                                                max="359"
-                                                value="217"
-                                                data-hsl-channel="h"
-                                                class="has-tooltip"
-                                                data-tooltip="Hue"
-                                                data-tooltip-position="bottom"
-                                            />
-                                            <input
-                                                type="text"
-                                                inputmode="numeric"
-                                                id="hslHNumber"
-                                                min="0"
-                                                max="359"
-                                                value="217"
-                                                data-hsl-channel="h"
-                                            />
-                                        </label>
-
-                                        <label>
-                                            S
-                                            <input
-                                                class="control-range"
-                                                type="range"
-                                                id="hslS"
-                                                min="0"
-                                                max="100"
-                                                value="91"
-                                                data-hsl-channel="s"
-                                                class="has-tooltip"
-                                                data-tooltip="Saturation"
-                                                data-tooltip-position="bottom"
-                                            />
-                                            <input
-                                                type="text"
-                                                inputmode="numeric"
-                                                id="hslSNumber"
-                                                min="0"
-                                                max="100"
-                                                value="91"
-                                                data-hsl-channel="s"
-                                            />
-                                        </label>
-
-                                        <label>
-                                            L
-                                            <input
-                                                class="control-range"
-                                                type="range"
-                                                id="hslL"
-                                                min="0"
-                                                max="100"
-                                                value="60"
-                                                data-hsl-channel="l"
-                                                class="has-tooltip"
-                                                data-tooltip="Lightness"
-                                                data-tooltip-position="bottom"
-                                            />
-                                            <input
-                                                type="text"
-                                                inputmode="numeric"
-                                                id="hslLNumber"
-                                                min="0"
-                                                max="100"
-                                                value="60"
-                                                data-hsl-channel="l"
-                                            />
-                                        </label>
-                                    </div>
-
-                                    <label class="alpha-control">
-                                        A%
-                                        <input
-                                            class="control-range"
-                                            type="range"
-                                            id="alphaValue"
-                                            min="0"
-                                            max="100"
-                                            step="1"
-                                            value="100"
-                                            class="has-tooltip"
-                                            data-tooltip="Alpha"
-                                            data-tooltip-position="bottom"
-                                        />
-                                        <input
-                                            type="text"
-                                            inputmode="numeric"
-                                            id="alphaNumber"
-                                            min="0"
-                                            max="100"
-                                            step="1"
-                                            value="100"
-                                        />
-                                    </label>
                                 </div>
-                            </div>
-                        </div>
-                    </details>
 
-                    <details
-                        class="control-card"
-                        data-control-panel="typography"
-                    >
-                        <summary>
-                            <span class="control-card-title">Typography</span>
-                        </summary>
+                                <button type="button" class="preview-modal-close" data-close-preview-modal
+                                    aria-label="Close modal">
+                                    <svg class="icon icon-x-mark" aria-hidden="true" focusable="false"
+                                        viewBox="0 0 24 24">
+                                        <path d="M6 18 18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </header>
 
-                        <div
-                            class="control-card-content typography-control-content"
-                        >
-                            <section class="control-section">
-                                <h3 class="control-section-title">Global</h3>
-
-                                <label
-                                    class="control-field control-field-range"
-                                >
-                                    <span class="control-label">Base size</span>
-                                    <input
-                                        class="control-range"
-                                        type="range"
-                                        id="baseFontSize"
-                                        min="8"
-                                        max="24"
-                                        step="1"
-                                        value="16"
-                                        class="control-range"
-                                    />
-                                    <output
-                                        class="control-value"
-                                        for="baseFontSize"
-                                        id="baseFontSizeValue"
-                                        >16px</output
-                                    >
-                                </label>
-
-                                <label class="control-field">
-                                    <span class="control-label">Body font</span>
-                                    <select
-                                        id="bodyFontFamily"
-                                        class="control-input"
-                                    >
-                                        <option value="systemSans">
-                                            System Sans
-                                        </option>
-                                        <option value="serif">Serif</option>
-                                        <option value="mono">Mono</option>
-                                    </select>
-                                </label>
-
-                                <label class="control-field">
-                                    <span class="control-label"
-                                        >Heading font</span
-                                    >
-                                    <select
-                                        id="headingFontFamily"
-                                        class="control-input"
-                                    >
-                                        <option value="inherit">
-                                            Inherit body
-                                        </option>
-                                        <option value="systemSans">
-                                            System Sans
-                                        </option>
-                                        <option value="serif">Serif</option>
-                                        <option value="mono">Mono</option>
-                                    </select>
-                                </label>
-
-                                <label class="control-field">
-                                    <span class="control-label">Mono font</span>
-                                    <select
-                                        id="monoFontFamily"
-                                        class="control-input"
-                                    >
-                                        <option value="mono">Mono</option>
-                                        <option value="systemSans">
-                                            System Sans
-                                        </option>
-                                        <option value="serif">Serif</option>
-                                    </select>
-                                </label>
-                            </section>
-
-                            <section class="control-section">
-                                <h3 class="control-section-title">Elements</h3>
-                                <div
-                                    class="typography-elements-shell"
-                                    data-typography-elements-shell
-                                ></div>
-                            </section>
-                        </div>
-                    </details>
-
-                    <details class="control-card" data-control-panel="shape">
-                        <summary>
-                            <span class="control-card-title">Shape</span>
-                        </summary>
-                        <div class="control-card-content">
-                            <label>
-                                Border Radius
-                                <input
-                                    class="control-range"
-                                    type="range"
-                                    id="radiusControl"
-                                    min="0"
-                                    max="32"
-                                    value="10"
-                                />
-                            </label>
-
-                            <label>
-                                Border Width
-                                <input
-                                    class="control-range"
-                                    type="range"
-                                    id="borderWidthControl"
-                                    min="0"
-                                    max="10"
-                                    value="1"
-                                />
-                            </label>
-
-                            <label>
-                                Overlay Blur
-                                <input
-                                    class="control-range"
-                                    type="range"
-                                    id="overlayBlurControl"
-                                    min="0"
-                                    max="10"
-                                    value="2"
-                                />
-                            </label>
-                        </div>
-                    </details>
-                </div>
-            </aside>
-
-            <div
-                class="drawer-dock-spacer drawer-dock-spacer-left"
-                aria-hidden="true"
-            ></div>
-
-            <section class="preview-area" aria-label="Theme preview">
-                <div
-                    class="preview-custom-toolbar"
-                    id="previewCustomToolbar"
-                    hidden
-                >
-                    <label class="preview-custom-width-field">
-                        <span>Custom width</span>
-                        <input
-                            type="number"
-                            id="previewCustomWidthInput"
-                            min="320"
-                            step="1"
-                            inputmode="numeric"
-                        />
-                        <span>px</span>
-                    </label>
-
-                    <button
-                        type="button"
-                        class="preview-custom-reset has-tooltip"
-                        id="previewCustomResetBtn"
-                        data-tooltip="Restore to 900px"
-                        data-tooltip-position="bottom"
-                        aria-label="Restore custom preview width to desktop width"
-                    >
-                        Reset
-                    </button>
-                </div>
-
-                <nav
-                    class="preview-tabs"
-                    aria-label="Preview tabs"
-                    data-active-preview-tab="page"
-                >
-                    <button
-                        type="button"
-                        class="active"
-                        data-preview-tab="page"
-                    >
-                        Page
-                    </button>
-                    <button type="button" data-preview-tab="form">Form</button>
-                    <button type="button" data-preview-tab="table">
-                        Table
-                    </button>
-                    <button type="button" data-preview-tab="cards">
-                        Cards
-                    </button>
-                </nav>
-
-                <div class="preview-resize-frame" id="previewResizeFrame">
-                    <button
-                        type="button"
-                        class="preview-resize-handle preview-resize-handle-left"
-                        data-preview-resize-handle="left"
-                        aria-label="Resize preview from left edge"
-                    ></button>
-
-                    <section class="preview-panel">
-                        <div
-                            class="preview-tab-panel sample-page"
-                            data-preview-panel="page"
-                        >
-                            <section class="sample-hero">
-                                <p class="eyebrow">Page Preview</p>
-
-                                <h2>Forge themes worthy of dwarven praise.</h2>
-
+                            <div class="preview-modal-body">
                                 <p>
-                                    Shape colors, typography, states, overlays,
-                                    cards, forms, and tables in one living
-                                    preview. No frameworks. No build step. No
-                                    innocent CSS harmed.
+                                    This simulated audit checks how the
+                                    current theme handles common interface
+                                    patterns, including forms, alerts,
+                                    buttons, overlays, and focus states.
                                 </p>
 
-                                <div class="button-row">
-                                    <button
-                                        type="button"
-                                        class="primary-button"
-                                        id="lightTheBeaconsBtn"
-                                    >
-                                        Light the beacons
-                                    </button>
-                                </div>
-
-                                <div
-                                    class="sample-hero-visual"
-                                    aria-hidden="true"
-                                >
-                                    <div class="hero-window">
-                                        <div class="hero-window-bar">
-                                            <span></span>
-                                            <span></span>
-                                            <span></span>
-                                        </div>
-
-                                        <div class="hero-window-body">
-                                            <div class="hero-sidebar">
-                                                <span></span>
-                                                <span></span>
-                                                <span></span>
-                                            </div>
-
-                                            <div class="hero-content-card">
-                                                <div
-                                                    class="hero-line wide"
-                                                ></div>
-                                                <div
-                                                    class="hero-line medium"
-                                                ></div>
-                                                <div class="hero-pill-row">
-                                                    <span
-                                                        class="hero-pill primary"
-                                                    ></span>
-                                                    <span
-                                                        class="hero-pill secondary"
-                                                    ></span>
-                                                    <span
-                                                        class="hero-pill success"
-                                                    ></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="hero-floating-card top"></div>
-                                    <div
-                                        class="hero-floating-card bottom"
-                                    ></div>
-                                </div>
-                            </section>
-
-                            <section class="sample-section">
-                                <h3>Toast signals</h3>
-
-                                <p>
-                                    Test the same message pattern across
-                                    success, warning, danger, and info states.
-                                    Like smoke signals, but with fewer mountains
-                                    and more CSS variables.
-                                </p>
-
-                                <div class="toast-button-grid">
-                                    <button
-                                        type="button"
-                                        class="toast-demo-button success"
-                                        data-toast-demo="success"
-                                    >
-                                        Success
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        class="toast-demo-button warning"
-                                        data-toast-demo="warning"
-                                    >
-                                        Warning
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        class="toast-demo-button danger"
-                                        data-toast-demo="danger"
-                                    >
-                                        Danger
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        class="toast-demo-button info"
-                                        data-toast-demo="info"
-                                    >
-                                        Info
-                                    </button>
-                                </div>
-                            </section>
-
-                            <section class="preview-article-grid">
-                                <article class="preview-article">
-                                    <p class="eyebrow">Color Systems</p>
-                                    <h3>Every token earns its keep.</h3>
-                                    <p>
-                                        Preview real interface pieces while
-                                        tuning surfaces, borders, focus rings,
-                                        overlays, and state colors.
-                                    </p>
-                                </article>
-
-                                <article class="preview-article">
-                                    <p class="eyebrow">Component Checks</p>
-                                    <h3>Pretty is suspicious. Test it.</h3>
-                                    <p>
-                                        Cards, forms, tables, modals, and toast
-                                        messages reveal where a theme shines and
-                                        where it quietly trips over a rake.
-                                    </p>
-                                </article>
-                            </section>
-
-                            <blockquote class="preview-quote">
-                                <p>
-                                    “A theme should look good when nothing is
-                                    happening, and still make sense when
-                                    everything is on fire.”
-                                </p>
-                                <cite>Probably someone in a meeting</cite>
-                            </blockquote>
-
-                            <section class="sample-section">
-                                <h3>Modal preview</h3>
-
-                                <p>
-                                    Open a harmless simulated audit dialog to
-                                    test overlays, modal surfaces, form
-                                    controls, and action buttons.
-                                </p>
-
-                                <div class="button-row">
-                                    <button
-                                        type="button"
-                                        class="secondary-button"
-                                        id="openPreviewModal"
-                                    >
-                                        Open modal preview
-                                    </button>
-                                </div>
-                            </section>
-                        </div>
-
-                        <div
-                            class="preview-tab-panel"
-                            data-preview-panel="form"
-                            hidden
-                        >
-                            <section class="sample-section">
-                                <p class="eyebrow">Form preview</p>
-
-                                <div class="preview-form">
+                                <div class="preview-modal-form">
                                     <label>
-                                        Display name
-                                        <input
-                                            type="text"
-                                            value="Aurora Dashboard"
-                                        />
-                                    </label>
-
-                                    <label>
-                                        Theme category
+                                        Audit type
                                         <select>
-                                            <option>Admin dashboard</option>
-                                            <option>Marketing site</option>
-                                            <option>Documentation</option>
-                                            <option>Experimental UI</option>
+                                            <option>
+                                                Quick visual scan
+                                            </option>
+                                            <option>
+                                                Accessibility pass
+                                            </option>
+                                            <option>
+                                                Component stress test
+                                            </option>
                                         </select>
                                     </label>
 
-                                    <label class="preview-form-full">
+                                    <label>
                                         Notes
-                                        <textarea rows="4">
-Testing form colors, spacing, radius, focus states, and control contrast.</textarea
-                                        >
+                                        <textarea rows="3">
+Check modal contrast, spacing, and focus visibility.</textarea>
                                     </label>
 
-                                    <fieldset class="preview-form-full">
-                                        <legend>Density</legend>
-
-                                        <label class="preview-choice">
-                                            <input
-                                                type="radio"
-                                                name="density"
-                                                checked
-                                            />
-                                            Comfortable
-                                        </label>
-
-                                        <label class="preview-choice">
-                                            <input
-                                                type="radio"
-                                                name="density"
-                                            />
-                                            Compact
-                                        </label>
-                                    </fieldset>
-
-                                    <label
-                                        class="preview-choice preview-form-full"
-                                    >
+                                    <label class="preview-checkbox">
                                         <input type="checkbox" checked />
-                                        Include themed focus and validation
-                                        states
-                                    </label>
-
-                                    <label>
-                                        Disabled field
-                                        <input
-                                            type="text"
-                                            value="Read-only sample"
-                                            disabled
-                                        />
-                                    </label>
-
-                                    <label>
-                                        Error state
-                                        <input
-                                            class="preview-input-error"
-                                            type="text"
-                                            value="Needs attention"
-                                            aria-describedby="formErrorSample"
-                                        />
-                                        <span
-                                            class="preview-field-error"
-                                            id="formErrorSample"
-                                            >This sample shows an error
-                                            message.</span
-                                        >
+                                        Include simulated recommendations
                                     </label>
                                 </div>
 
-                                <div class="button-row">
-                                    <button
-                                        type="button"
-                                        class="primary-button"
-                                    >
-                                        Save changes
-                                    </button>
-                                    <button
-                                        type="button"
-                                        class="secondary-button"
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            </section>
-                        </div>
-
-                        <div
-                            class="preview-tab-panel"
-                            data-preview-panel="table"
-                            hidden
-                        >
-                            <section class="sample-section">
-                                <p class="eyebrow">Table preview</p>
-
-                                <div class="preview-table-wrapper">
-                                    <table class="preview-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Project</th>
-                                                <th>Owner</th>
-                                                <th>Status</th>
-                                                <th class="numeric">Issues</th>
-                                                <th class="numeric">
-                                                    Caffeine
-                                                </th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            <tr>
-                                                <td>Aurora Dashboard</td>
-                                                <td>Michael</td>
-                                                <td>
-                                                    <span
-                                                        class="table-badge success"
-                                                        >Stable</span
-                                                    >
-                                                </td>
-                                                <td class="numeric">2</td>
-                                                <td class="numeric">
-                                                    ☕☕☕☕
-                                                </td>
-                                            </tr>
-
-                                            <tr>
-                                                <td>Project Icarus</td>
-                                                <td>Dave</td>
-                                                <td>
-                                                    <span
-                                                        class="table-badge danger"
-                                                        >On Fire</span
-                                                    >
-                                                </td>
-                                                <td class="numeric">37</td>
-                                                <td class="numeric">
-                                                    ☕☕☕☕☕☕
-                                                </td>
-                                            </tr>
-
-                                            <tr class="selected">
-                                                <td>Theme Forge</td>
-                                                <td>You</td>
-                                                <td>
-                                                    <span
-                                                        class="table-badge info"
-                                                        >Building</span
-                                                    >
-                                                </td>
-                                                <td class="numeric">0</td>
-                                                <td class="numeric">☕☕☕</td>
-                                            </tr>
-
-                                            <tr>
-                                                <td>Quantum Toaster</td>
-                                                <td>Janet</td>
-                                                <td>
-                                                    <span
-                                                        class="table-badge warning"
-                                                        >Uncertain</span
-                                                    >
-                                                </td>
-                                                <td class="numeric">12</td>
-                                                <td class="numeric">
-                                                    ☕☕☕☕☕
-                                                </td>
-                                            </tr>
-
-                                            <tr>
-                                                <td>Operation Cat Herding</td>
-                                                <td>Steve</td>
-                                                <td>
-                                                    <span
-                                                        class="table-badge danger"
-                                                        >Impossible</span
-                                                    >
-                                                </td>
-                                                <td class="numeric">999</td>
-                                                <td class="numeric">∞</td>
-                                            </tr>
-                                        </tbody>
-
-                                        <tfoot>
-                                            <tr>
-                                                <td colspan="3">
-                                                    Active projects
-                                                </td>
-                                                <td class="numeric">1050</td>
-                                                <td class="numeric">
-                                                    13 cups/day
-                                                </td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </section>
-                        </div>
-
-                        <div
-                            class="preview-tab-panel"
-                            data-preview-panel="cards"
-                            hidden
-                        >
-                            <section class="sample-section">
-                                <p class="eyebrow">Cards preview</p>
-
-                                <div class="preview-cards-grid">
-                                    <article class="preview-demo-card">
-                                        <div class="preview-demo-card-header">
-                                            <span class="table-badge success"
-                                                >Online</span
-                                            >
-                                        </div>
-
-                                        <h4>AI Core</h4>
-
-                                        <p>
-                                            Successfully resisting the urge to
-                                            become self-aware before lunch.
-                                        </p>
-
-                                        <button
-                                            type="button"
-                                            class="secondary-button"
-                                        >
-                                            View status
-                                        </button>
-                                    </article>
-
-                                    <article class="preview-demo-card">
-                                        <div class="preview-demo-card-header">
-                                            <span class="table-badge warning"
-                                                >Warning</span
-                                            >
-                                        </div>
-
-                                        <h4>Quantum Toaster</h4>
-
-                                        <p>
-                                            Toast quality has exceeded
-                                            expectations. Reality stability has
-                                            not.
-                                        </p>
-
-                                        <div class="preview-stat">
-                                            <strong>97%</strong>
-                                            <span>Burn accuracy</span>
-                                        </div>
-                                    </article>
-
-                                    <article class="preview-demo-card">
-                                        <div class="preview-demo-card-header">
-                                            <span class="table-badge danger"
-                                                >Critical</span
-                                            >
-                                        </div>
-
-                                        <h4>Project Icarus</h4>
-
-                                        <p>
-                                            Management requested a status
-                                            report. The project requested a
-                                            lawyer.
-                                        </p>
-
-                                        <ul class="preview-card-list">
-                                            <li>37 open issues</li>
-                                            <li>12 meetings scheduled</li>
-                                            <li>0 volunteers</li>
-                                        </ul>
-                                    </article>
-
-                                    <article class="preview-demo-card feature">
-                                        <p class="eyebrow">Featured</p>
-
-                                        <h4>Theme Forge</h4>
-
-                                        <p>
-                                            Build, test, randomize, evaluate,
-                                            and export themes without
-                                            sacrificing innocent CSS.
-                                        </p>
-
-                                        <div class="button-row">
-                                            <button
-                                                type="button"
-                                                class="primary-button"
-                                            >
-                                                Launch
-                                            </button>
-
-                                            <button
-                                                type="button"
-                                                class="secondary-button"
-                                            >
-                                                Learn more
-                                            </button>
-                                        </div>
-                                    </article>
-
-                                    <article class="preview-demo-card framed">
-                                        <header class="preview-card-band">
-                                            <span class="table-badge info"
-                                                >Report</span
-                                            >
-                                            <strong>Weekly Weirdness</strong>
-                                        </header>
-
-                                        <div>
-                                            <h4>Office Gravity Audit</h4>
-                                            <p>
-                                                Three chairs rolled uphill, one
-                                                pen escaped, and the conference
-                                                room plant has begun issuing
-                                                demands.
-                                            </p>
-                                        </div>
-
-                                        <footer class="preview-card-footer">
-                                            <span>Last checked: 4:20 PM</span>
-                                            <button
-                                                type="button"
-                                                class="secondary-button"
-                                            >
-                                                Review
-                                            </button>
-                                        </footer>
-                                    </article>
-
-                                    <article
-                                        class="preview-demo-card checklist"
-                                    >
-                                        <h4>Launch checklist</h4>
-
-                                        <ul class="preview-task-list">
-                                            <li>
-                                                <input
-                                                    type="checkbox"
-                                                    checked
-                                                />
-                                                Name the buttons something
-                                                sensible
-                                            </li>
-                                            <li>
-                                                <input
-                                                    type="checkbox"
-                                                    checked
-                                                />
-                                                Pretend the first draft was
-                                                intentional
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" />
-                                                Remove console logs before
-                                                anyone notices
-                                            </li>
-                                        </ul>
-
-                                        <p class="sample-alert warning">
-                                            Final approval pending one heroic
-                                            cup of coffee.
-                                        </p>
-                                    </article>
-                                </div>
-                            </section>
-                        </div>
-                        <div
-                            class="beacon-dialog-layer"
-                            id="beaconDialogLayer"
-                            hidden
-                        >
-                            <dialog class="beacon-dialog" id="beaconDialog">
-                                <header class="beacon-dialog-header">
-                                    <div class="beacon-dialog-title">
-                                        <p class="eyebrow">
-                                            Emergency Notification System
-                                        </p>
-                                        <h3>The beacons are lit!</h3>
-                                    </div>
-
-                                    <button
-                                        type="button"
-                                        class="preview-modal-close"
-                                        data-close-beacon-dialog
-                                        aria-label="Close dialog"
-                                    >
-                                        <svg
-                                            class="icon icon-x-mark"
-                                            aria-hidden="true"
-                                            focusable="false"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path d="M6 18 18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                </header>
-
-                                <div class="beacon-dialog-body">
-                                    <p>
-                                        Gondor calls for aid. Check your Teams
-                                        inbox.
-                                    </p>
-
-                                    <p class="sample-alert info">
-                                        This is a simulated alert to test dialog
-                                        styles. No actual beacons have been lit,
-                                        and no meetings have been scheduled.
-                                        Contact HR if you see real beacons.
-                                    </p>
-                                </div>
-
-                                <footer class="beacon-dialog-footer">
-                                    <button
-                                        type="button"
-                                        class="secondary-button"
-                                        data-close-beacon-dialog
-                                    >
-                                        Let them Fall
-                                    </button>
-                                    <button
-                                        type="button"
-                                        class="primary-button"
-                                        data-close-beacon-dialog
-                                    >
-                                        Answer the Call
-                                    </button>
-                                </footer>
-                            </dialog>
-                        </div>
-                        <div
-                            class="preview-modal-layer"
-                            id="previewModalLayer"
-                            hidden
-                        >
-                            <div
-                                class="preview-modal"
-                                role="dialog"
-                                aria-modal="true"
-                                aria-labelledby="previewModalTitle"
-                            >
-                                <header class="preview-modal-header">
-                                    <div>
-                                        <p class="eyebrow">Modal Preview</p>
-                                        <h3 id="previewModalTitle">
-                                            Run theme audit?
-                                        </h3>
-                                    </div>
-
-                                    <button
-                                        type="button"
-                                        class="preview-modal-close"
-                                        data-close-preview-modal
-                                        aria-label="Close modal"
-                                    >
-                                        <svg
-                                            class="icon icon-x-mark"
-                                            aria-hidden="true"
-                                            focusable="false"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path d="M6 18 18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                </header>
-
-                                <div class="preview-modal-body">
-                                    <p>
-                                        This simulated audit checks how the
-                                        current theme handles common interface
-                                        patterns, including forms, alerts,
-                                        buttons, overlays, and focus states.
-                                    </p>
-
-                                    <div class="preview-modal-form">
-                                        <label>
-                                            Audit type
-                                            <select>
-                                                <option>
-                                                    Quick visual scan
-                                                </option>
-                                                <option>
-                                                    Accessibility pass
-                                                </option>
-                                                <option>
-                                                    Component stress test
-                                                </option>
-                                            </select>
-                                        </label>
-
-                                        <label>
-                                            Notes
-                                            <textarea rows="3">
-Check modal contrast, spacing, and focus visibility.</textarea
-                                            >
-                                        </label>
-
-                                        <label class="preview-checkbox">
-                                            <input type="checkbox" checked />
-                                            Include simulated recommendations
-                                        </label>
-                                    </div>
-
-                                    <p class="sample-alert info">
-                                        This is only a preview interaction. No
-                                        settings or theme data will be changed.
-                                    </p>
-                                </div>
-
-                                <footer class="preview-modal-footer">
-                                    <button
-                                        type="button"
-                                        class="secondary-button"
-                                        data-close-preview-modal
-                                    >
-                                        Cancel
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        class="primary-button"
-                                        id="runPreviewSimulation"
-                                    >
-                                        Run audit
-                                    </button>
-                                </footer>
+                                <p class="sample-alert info">
+                                    This is only a preview interaction. No
+                                    settings or theme data will be changed.
+                                </p>
                             </div>
+
+                            <footer class="preview-modal-footer">
+                                <button type="button" class="secondary-button" data-close-preview-modal>
+                                    Cancel
+                                </button>
+
+                                <button type="button" class="primary-button" id="runPreviewSimulation">
+                                    Run audit
+                                </button>
+                            </footer>
                         </div>
-                    </section>
-
-                    <div
-                        class="preview-toast-region"
-                        aria-live="polite"
-                        aria-label="Preview notifications"
-                    ></div>
-
-                    <button
-                        type="button"
-                        class="preview-resize-handle preview-resize-handle-right"
-                        data-preview-resize-handle="right"
-                        aria-label="Resize preview from right edge"
-                    ></button>
-                </div>
-            </section>
-        </main>
-
-        <button
-            type="button"
-            style="--tooltip-delay: 200ms"
-            class="restore-workbench-button has-tooltip"
-            id="restoreWorkbenchBtn"
-            data-tooltip="ESC to restore"
-            data-tooltip-position="left"
-            aria-label="Restore workbench. ESC also works."
-            hidden
-        >
-            Restore
-        </button>
-
-        <div class="app-modal-layer" id="appModalLayer" hidden>
-            <div
-                class="app-modal"
-                id="appModal"
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="appModalTitle"
-            >
-                <header class="app-modal-header">
-                    <div>
-                        <p class="app-modal-eyebrow" id="appModalEyebrow"></p>
-                        <h2 id="appModalTitle"></h2>
                     </div>
+                </section>
 
-                    <button
-                        type="button"
-                        class="app-modal-close"
-                        data-app-modal-close
-                        aria-label="Close dialog"
-                    >
-                        <svg
-                            class="icon icon-x-mark"
-                            aria-hidden="true"
-                            focusable="false"
-                            viewBox="0 0 24 24"
-                        >
-                            <path d="M6 18 18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </header>
+                <div class="preview-toast-region" aria-live="polite" aria-label="Preview notifications"></div>
 
-                <div class="app-modal-body" id="appModalBody"></div>
-
-                <footer class="app-modal-footer" id="appModalFooter"></footer>
+                <button type="button" class="preview-resize-handle preview-resize-handle-right"
+                    data-preview-resize-handle="right" aria-label="Resize preview from right edge"></button>
             </div>
+        </section>
+    </main>
+
+    <button type="button" style="--tooltip-delay: 200ms" class="restore-workbench-button has-tooltip"
+        id="restoreWorkbenchBtn" data-tooltip="ESC to restore" data-tooltip-position="left"
+        aria-label="Restore workbench. ESC also works." hidden>
+        Restore
+    </button>
+
+    <div class="app-modal-layer" id="appModalLayer" hidden>
+        <div class="app-modal" id="appModal" role="dialog" aria-modal="true" aria-labelledby="appModalTitle">
+            <header class="app-modal-header">
+                <div>
+                    <p class="app-modal-eyebrow" id="appModalEyebrow"></p>
+                    <h2 id="appModalTitle"></h2>
+                </div>
+
+                <button type="button" class="app-modal-close" data-app-modal-close aria-label="Close dialog">
+                    <svg class="icon icon-x-mark" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                        <path d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </header>
+
+            <div class="app-modal-body" id="appModalBody"></div>
+
+            <footer class="app-modal-footer" id="appModalFooter"></footer>
         </div>
-    </body>
+    </div>
+</body>
+
 </html>

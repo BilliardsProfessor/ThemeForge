@@ -64,9 +64,7 @@ function getResolvedAppAppearance(preference) {
         return preference;
     }
 
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 function applyAppAppearance(preference) {
@@ -78,9 +76,7 @@ function applyAppAppearance(preference) {
     updateAppAppearanceControl(preference);
 }
 
-function updateAppAppearanceControl(
-    preference = getStoredAppAppearancePreference(),
-) {
+function updateAppAppearanceControl(preference = getStoredAppAppearancePreference()) {
     const button = document.querySelector("[data-app-appearance-toggle]");
 
     if (!button) {
@@ -89,10 +85,7 @@ function updateAppAppearanceControl(
 
     const resolvedMode = getResolvedAppAppearance(preference);
     const currentIndex = APP_APPEARANCE_OPTIONS.indexOf(preference);
-    const nextPreference =
-        APP_APPEARANCE_OPTIONS[
-            (currentIndex + 1) % APP_APPEARANCE_OPTIONS.length
-        ];
+    const nextPreference = APP_APPEARANCE_OPTIONS[(currentIndex + 1) % APP_APPEARANCE_OPTIONS.length];
     const label = `Switch app appearance to ${nextPreference}`;
 
     button.dataset.appAppearancePreference = preference;
@@ -102,14 +95,9 @@ function updateAppAppearanceControl(
 }
 
 function cycleAppAppearance() {
-    const currentPreference =
-        document.body.dataset.appModePreference ||
-        getStoredAppAppearancePreference();
+    const currentPreference = document.body.dataset.appModePreference || getStoredAppAppearancePreference();
     const currentIndex = APP_APPEARANCE_OPTIONS.indexOf(currentPreference);
-    const nextPreference =
-        APP_APPEARANCE_OPTIONS[
-            (currentIndex + 1) % APP_APPEARANCE_OPTIONS.length
-        ];
+    const nextPreference = APP_APPEARANCE_OPTIONS[(currentIndex + 1) % APP_APPEARANCE_OPTIONS.length];
 
     localStorage.setItem(APP_APPEARANCE_STORAGE_KEY, nextPreference);
     applyAppAppearance(nextPreference);
@@ -124,25 +112,20 @@ function bindAppAppearanceControl() {
 
     button.addEventListener("click", cycleAppAppearance);
 
-    window
-        .matchMedia("(prefers-color-scheme: dark)")
-        .addEventListener("change", () => {
-            const preference =
-                document.body.dataset.appModePreference ||
-                getStoredAppAppearancePreference();
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+        const preference = document.body.dataset.appModePreference || getStoredAppAppearancePreference();
 
-            if (preference === "system") {
-                applyAppAppearance(preference);
-            }
-        });
+        if (preference === "system") {
+            applyAppAppearance(preference);
+        }
+    });
 }
 
 function openSettingsDialog() {
     const message = document.createElement("p");
     const closeButton = document.createElement("button");
 
-    message.textContent =
-        "Wouldn't it be nice if there were actually settings in here?";
+    message.textContent = "Wouldn't it be nice if there were actually settings in here?";
 
     closeButton.type = "button";
     closeButton.textContent = "Close";
@@ -160,9 +143,7 @@ function openSettingsDialog() {
 }
 
 function bindSettingsControl() {
-    document
-        .querySelector("#settingsBtn")
-        ?.addEventListener("click", openSettingsDialog);
+    document.querySelector("#settingsBtn")?.addEventListener("click", openSettingsDialog);
 }
 
 function updateThemeModeControls() {
@@ -189,8 +170,7 @@ function bindThemeModeControls() {
     }
 
     button.addEventListener("click", () => {
-        const nextMode =
-            ThemeForge.getActiveMode() === "light" ? "dark" : "light";
+        const nextMode = ThemeForge.getActiveMode() === "light" ? "dark" : "light";
 
         setThemeMode(nextMode);
     });
@@ -253,24 +233,22 @@ function renderTypographyControls() {
 }
 
 function updateTypographySummaryRows() {
-    document
-        .querySelectorAll("[data-typography-summary-element]")
-        .forEach((row) => {
-            const elementName = row.dataset.typographySummaryElement;
-            const element = ThemeForge.theme.typography.elements[elementName];
-            const label = getTypographyElementLabel(elementName);
+    document.querySelectorAll("[data-typography-summary-element]").forEach((row) => {
+        const elementName = row.dataset.typographySummaryElement;
+        const element = ThemeForge.theme.typography.elements[elementName];
+        const label = getTypographyElementLabel(elementName);
 
-            if (!element) {
-                return;
-            }
+        if (!element) {
+            return;
+        }
 
-            row.innerHTML = `
+        row.innerHTML = `
             <span>${label}</span>
             <span>${getFormattedTokenValue(element.size)}</span>
             <span>${element.weight}</span>
             <span>${element.lineHeight} / ${element.letterSpacing}</span>
         `;
-        });
+    });
 }
 
 function openTypographyEditor(elementName) {
@@ -341,13 +319,7 @@ function openTypographyEditor(elementName) {
     `;
 
     panel
-        .querySelectorAll(
-            [
-                "[data-typography-field='size']",
-                "[data-typography-field='lineHeight']",
-                "[data-typography-field='letterSpacing']",
-            ].join(", "),
-        )
+        .querySelectorAll(["[data-typography-field='size']", "[data-typography-field='lineHeight']", "[data-typography-field='letterSpacing']"].join(", "))
         .forEach((control) => {
             const fieldOptions = {
                 size: {
@@ -372,19 +344,14 @@ function openTypographyEditor(elementName) {
                 },
             };
 
-            enhanceWorkspaceNumberInput(
-                control,
-                fieldOptions[control.dataset.typographyField],
-            );
+            enhanceWorkspaceNumberInput(control, fieldOptions[control.dataset.typographyField]);
         });
 
     panel.querySelectorAll("[data-typography-field]").forEach((control) => {
         control.addEventListener("input", updateThemeFromControls);
     });
 
-    panel
-        .querySelector("[data-close-typography-editor]")
-        .addEventListener("click", closeTypographyEditor);
+    panel.querySelector("[data-close-typography-editor]").addEventListener("click", closeTypographyEditor);
 }
 
 function closeTypographyEditor() {
@@ -416,11 +383,7 @@ function handleTypographyEditorOutsidePointerDown(event) {
 }
 
 function bindTypographyEditorDismissal() {
-    document.addEventListener(
-        "pointerdown",
-        handleTypographyEditorOutsidePointerDown,
-        true,
-    );
+    document.addEventListener("pointerdown", handleTypographyEditorOutsidePointerDown, true);
 }
 
 function renderSpacingControls() {
@@ -445,14 +408,11 @@ function renderSpacingPanel() {
     panel.dataset.controlPanel = "spacing";
 
     title.className = "control-card-title";
-    title.textContent = "Dimensions";
+    title.textContent = "Spacing";
     summary.append(title);
 
-    content.className = "control-card-content dimensions-control-content";
-    content.append(
-        createFeatureSpacingControls("layout"),
-        createFeatureSpacingControls("components"),
-    );
+    content.className = "control-card-content spacing-control-content";
+    content.append(createFeatureSpacingControls("layout"), createFeatureSpacingControls("components"));
 
     panel.append(summary, content);
     shapePanel?.before(panel);
@@ -462,15 +422,11 @@ function createFeatureSpacingControls(featureName) {
     const section = document.createElement("section");
     const title = document.createElement("h3");
 
-    section.className = "control-section dimensions-feature";
+    section.className = "control-section spacing-feature";
     title.className = "control-section-title";
     title.textContent = FEATURE_CONTROLS[featureName].label;
 
-    section.append(
-        title,
-        createFeatureScaleControls(featureName),
-        createFeatureMappingControls(featureName),
-    );
+    section.append(title, createFeatureScaleControls(featureName), createFeatureMappingControls(featureName));
 
     return section;
 }
@@ -479,7 +435,7 @@ function createFeatureScaleControls(featureName) {
     const group = document.createElement("fieldset");
     const legend = document.createElement("legend");
 
-    group.className = "control-subsection dimensions-scale";
+    group.className = "control-subsection spacing-scale";
     legend.className = "control-subsection-title";
     legend.textContent = "Scale";
     group.append(legend);
@@ -502,7 +458,7 @@ function createFeatureMappingControls(featureName) {
     const group = document.createElement("fieldset");
     const legend = document.createElement("legend");
 
-    group.className = "control-subsection dimensions-mappings";
+    group.className = "control-subsection spacing-mappings";
     legend.className = "control-subsection-title";
     legend.textContent = "Mappings";
     group.append(legend);
@@ -522,13 +478,7 @@ function createFeatureMappingControls(featureName) {
     return group;
 }
 
-function createValueTokenControl({
-    label,
-    featureName,
-    tokenType,
-    tokenName,
-    includeScaleSnap = false,
-}) {
+function createValueTokenControl({ label, featureName, tokenType, tokenName, includeScaleSnap = false }) {
     const wrapper = document.createElement("div");
     const text = document.createElement("span");
     const valueInput = document.createElement("input");
@@ -536,15 +486,15 @@ function createValueTokenControl({
     const nearestScale = document.createElement("select");
     const nearestScaleButton = document.createElement("button");
 
-    wrapper.className = `dimensions-token-control dimensions-token-control-${tokenType}`;
-    text.className = "dimensions-token-label";
+    wrapper.className = `spacing-token-control spacing-token-control-${tokenType}`;
+    text.className = "spacing-token-label";
     text.textContent = label;
 
     valueInput.type = "text";
     valueInput.inputMode = "decimal";
     valueInput.autocomplete = "off";
     valueInput.spellcheck = false;
-    valueInput.className = "dimensions-value-input";
+    valueInput.className = "spacing-value-input";
     valueInput.dataset.themeControl = "token";
     valueInput.dataset.featureName = featureName;
     valueInput.dataset.tokenType = tokenType;
@@ -552,7 +502,7 @@ function createValueTokenControl({
     valueInput.dataset.tokenField = "value";
     valueInput.setAttribute("aria-label", `${label} value`);
 
-    unitSelect.className = "dimensions-unit-select";
+    unitSelect.className = "spacing-unit-select";
     unitSelect.dataset.themeControl = "token";
     unitSelect.dataset.featureName = featureName;
     unitSelect.dataset.tokenType = tokenType;
@@ -571,24 +521,20 @@ function createValueTokenControl({
     wrapper.append(text);
 
     if (includeScaleSnap) {
-        nearestScale.className = "dimensions-scale-snap";
+        nearestScale.className = "spacing-scale-snap";
         nearestScale.dataset.scaleSnap = "true";
         nearestScale.dataset.featureName = featureName;
         nearestScale.dataset.tokenName = tokenName;
         nearestScale.setAttribute("aria-label", `${label} scale`);
         nearestScaleButton.type = "button";
-        nearestScaleButton.className =
-            "dimensions-nearest-scale-button has-tooltip";
+        nearestScaleButton.className = "spacing-nearest-scale-button has-tooltip";
         nearestScaleButton.dataset.nearestScaleSnap = "true";
         nearestScaleButton.dataset.featureName = featureName;
         nearestScaleButton.dataset.tokenName = tokenName;
         nearestScaleButton.dataset.tooltipPosition = "bottom";
         nearestScaleButton.textContent = "↺";
         nearestScaleButton.hidden = true;
-        nearestScaleButton.setAttribute(
-            "aria-label",
-            `${label} snap to nearest scale`,
-        );
+        nearestScaleButton.setAttribute("aria-label", `${label} snap to nearest scale`);
         const customOption = document.createElement("option");
 
         customOption.value = "";
@@ -604,12 +550,7 @@ function createValueTokenControl({
             nearestScale.append(option);
         });
 
-        wrapper.append(
-            nearestScaleButton,
-            valueInput,
-            unitSelect,
-            nearestScale,
-        );
+        wrapper.append(nearestScaleButton, valueInput, unitSelect, nearestScale);
     }
 
     if (!includeScaleSnap) {
@@ -620,10 +561,7 @@ function createValueTokenControl({
 }
 
 function getScaleTokenLabel(tokenKey) {
-    return (
-        FEATURE_SCALE_TOKENS.find((token) => token.key === tokenKey)?.label ||
-        tokenKey
-    );
+    return FEATURE_SCALE_TOKENS.find((token) => token.key === tokenKey)?.label || tokenKey;
 }
 
 function getFeatureLabel(featureName) {
@@ -631,11 +569,7 @@ function getFeatureLabel(featureName) {
 }
 
 function getMappingLabel(featureName, mappingKey) {
-    return (
-        FEATURE_CONTROLS[featureName]?.mappings.find(
-            (mapping) => mapping.key === mappingKey,
-        )?.label || mappingKey
-    );
+    return FEATURE_CONTROLS[featureName]?.mappings.find((mapping) => mapping.key === mappingKey)?.label || mappingKey;
 }
 
 function getTokenLabel(featureName, tokenType, tokenName) {
@@ -668,8 +602,7 @@ function updateBaseFontSizeValue() {
 
 function getTokenFromControl(control, sourceTheme = ThemeForge.theme) {
     const feature = sourceTheme[control.dataset.featureName];
-    const collectionName =
-        control.dataset.tokenType === "scale" ? "scale" : "mappings";
+    const collectionName = control.dataset.tokenType === "scale" ? "scale" : "mappings";
 
     return feature?.[collectionName]?.[control.dataset.tokenName];
 }
@@ -731,10 +664,7 @@ function enhanceWorkspaceNumberInput(input, options = {}) {
         dragState = {
             pointerId: event.pointerId,
             startX: event.clientX,
-            startValue: getControlNumericValue(
-                input,
-                Number(options.value) || 0,
-            ),
+            startValue: getControlNumericValue(input, Number(options.value) || 0),
             isDragging: false,
         };
 
@@ -748,10 +678,7 @@ function enhanceWorkspaceNumberInput(input, options = {}) {
 
         const deltaX = event.clientX - dragState.startX;
 
-        if (
-            !dragState.isDragging &&
-            Math.abs(deltaX) < WORKSPACE_NUMBER_DRAG_THRESHOLD
-        ) {
+        if (!dragState.isDragging && Math.abs(deltaX) < WORKSPACE_NUMBER_DRAG_THRESHOLD) {
             return;
         }
 
@@ -759,9 +686,7 @@ function enhanceWorkspaceNumberInput(input, options = {}) {
         event.preventDefault();
 
         const step = getWorkspaceNumberStep(event, options);
-        const rawValue =
-            dragState.startValue +
-            (deltaX / WORKSPACE_NUMBER_PIXELS_PER_STEP) * step;
+        const rawValue = dragState.startValue + (deltaX / WORKSPACE_NUMBER_PIXELS_PER_STEP) * step;
         const nextValue = clampWorkspaceNumberValue(rawValue, options);
 
         input.value = formatWorkspaceNumberValue(nextValue, options);
@@ -804,10 +729,7 @@ function enhanceDeferredHistoryControl(control) {
     control.addEventListener(
         "input",
         (event) => {
-            if (
-                !getDeferredControlSnapshot(control) ||
-                event.detail?.isDeferredCommit
-            ) {
+            if (!getDeferredControlSnapshot(control) || event.detail?.isDeferredCommit) {
                 return;
             }
 
@@ -835,14 +757,7 @@ function enhanceDeferredHistoryControl(control) {
 
 function bindDeferredHistoryControls() {
     document
-        .querySelectorAll(
-            [
-                "#baseFontSize",
-                "#radiusControl",
-                "#borderWidthControl",
-                "#overlayBlurControl",
-            ].join(", "),
-        )
+        .querySelectorAll(["#baseFontSize", "#radiusControl", "#borderWidthControl", "#overlayBlurControl"].join(", "))
         .forEach(enhanceDeferredHistoryControl);
 }
 
@@ -936,18 +851,13 @@ function updateTokenFromControl(control) {
         return;
     }
 
-    if (
-        control.dataset.tokenField === "unit" &&
-        VALUE_UNIT_OPTIONS.includes(control.value)
-    ) {
+    if (control.dataset.tokenField === "unit" && VALUE_UNIT_OPTIONS.includes(control.value)) {
         token.unit = control.value;
     }
 }
 
 function updateTokensFromControls() {
-    document
-        .querySelectorAll("[data-theme-control='token']")
-        .forEach(updateTokenFromControl);
+    document.querySelectorAll("[data-theme-control='token']").forEach(updateTokenFromControl);
 }
 
 function updateNearestScaleButtons() {
@@ -956,14 +866,9 @@ function updateNearestScaleButtons() {
         const mappingName = select.dataset.tokenName;
         const feature = ThemeForge.theme[featureName];
         const mapping = feature.mappings[mappingName];
-        const exactMatch = ThemeForge.findMatchingScaleToken(
-            feature.scale,
-            mapping,
-        );
+        const exactMatch = ThemeForge.findMatchingScaleToken(feature.scale, mapping);
         const nearest = getNearestScaleToken(feature.scale, mapping);
-        const nearestButton = select
-            .closest(".dimensions-token-control")
-            ?.querySelector("[data-nearest-scale-snap]");
+        const nearestButton = select.closest(".spacing-token-control")?.querySelector("[data-nearest-scale-snap]");
 
         select.value = exactMatch || "";
         select.dataset.scaleToken = exactMatch || "";
@@ -974,15 +879,8 @@ function updateNearestScaleButtons() {
 
         nearestButton.hidden = Boolean(exactMatch);
         nearestButton.dataset.scaleToken = nearest || "";
-        nearestButton.dataset.tooltip = nearest
-            ? `Snap to ${getScaleTokenLabel(nearest)}`
-            : "";
-        nearestButton.setAttribute(
-            "aria-label",
-            nearest
-                ? `Snap to ${getScaleTokenLabel(nearest)}`
-                : "Snap to nearest scale",
-        );
+        nearestButton.dataset.tooltip = nearest ? `Snap to ${getScaleTokenLabel(nearest)}` : "";
+        nearestButton.setAttribute("aria-label", nearest ? `Snap to ${getScaleTokenLabel(nearest)}` : "Snap to nearest scale");
     });
 }
 
@@ -992,14 +890,8 @@ function getNearestScaleToken(scale, mapping) {
     const baseFontSize = ThemeForge.theme.settings.baseFontSize.value;
 
     return Object.entries(scale).reduce((nearest, current) => {
-        const nearestDistance = Math.abs(
-            getComparableTokenValue(nearest[1], baseFontSize) -
-                getComparableTokenValue(mapping, baseFontSize),
-        );
-        const currentDistance = Math.abs(
-            getComparableTokenValue(current[1], baseFontSize) -
-                getComparableTokenValue(mapping, baseFontSize),
-        );
+        const nearestDistance = Math.abs(getComparableTokenValue(nearest[1], baseFontSize) - getComparableTokenValue(mapping, baseFontSize));
+        const currentDistance = Math.abs(getComparableTokenValue(current[1], baseFontSize) - getComparableTokenValue(mapping, baseFontSize));
 
         return currentDistance < nearestDistance ? current : nearest;
     })[0];
@@ -1038,13 +930,7 @@ function snapMappingToScale(select) {
     mapping.value = scaleToken.value;
     mapping.unit = scaleToken.unit;
 
-    ThemeForge.history.updateLatestChangeDetail(
-        getMappingSnapshotDetail(
-            featureName,
-            mappingName,
-            ThemeForge.history.getLatestUndoSnapshot(),
-        ),
-    );
+    ThemeForge.history.updateLatestChangeDetail(getMappingSnapshotDetail(featureName, mappingName, ThemeForge.history.getLatestUndoSnapshot()));
 
     ThemeForge.refreshThemeInterface();
     ThemeForge.history.saveSession();
@@ -1085,41 +971,23 @@ function updateThemeFromControls(event) {
     const control = event.target;
     const label = getControlHistoryLabel(control);
     const isPreviewOnly = event.detail?.isPreviewOnly;
-    const startingSnapshot =
-        event.detail?.historySnapshot || cloneThemeSnapshot(ThemeForge.theme);
+    const startingSnapshot = event.detail?.historySnapshot || cloneThemeSnapshot(ThemeForge.theme);
 
-    ThemeForge.theme.settings.baseFontSize.value = Number(
-        document.querySelector("#baseFontSize").value,
-    );
+    ThemeForge.theme.settings.baseFontSize.value = Number(document.querySelector("#baseFontSize").value);
     ThemeForge.theme.settings.baseFontSize.unit = "px";
     updateBaseFontSizeValue();
     updateTypographyFromControls();
 
-    ThemeForge.theme.shape.radius = Number(
-        document.querySelector("#radiusControl").value,
-    );
-    ThemeForge.theme.shape.borderWidth = Number(
-        document.querySelector("#borderWidthControl").value,
-    );
-    ThemeForge.theme.shape.overlayBlur = Number(
-        document.querySelector("#overlayBlurControl").value,
-    );
+    ThemeForge.theme.shape.radius = Number(document.querySelector("#radiusControl").value);
+    ThemeForge.theme.shape.borderWidth = Number(document.querySelector("#borderWidthControl").value);
+    ThemeForge.theme.shape.overlayBlur = Number(document.querySelector("#overlayBlurControl").value);
 
     updateTokensFromControls();
     updateTypographySummaryRows();
 
-    if (
-        !isPreviewOnly &&
-        !ThemeForge.history.themesMatch(startingSnapshot, ThemeForge.theme)
-    ) {
-        ThemeForge.history.recordContinuousChange(
-            label,
-            null,
-            startingSnapshot,
-        );
-        ThemeForge.history.updateLatestChangeDetail(
-            getControlHistoryDetail(control, startingSnapshot),
-        );
+    if (!isPreviewOnly && !ThemeForge.history.themesMatch(startingSnapshot, ThemeForge.theme)) {
+        ThemeForge.history.recordContinuousChange(label, null, startingSnapshot);
+        ThemeForge.history.updateLatestChangeDetail(getControlHistoryDetail(control, startingSnapshot));
     }
 
     ThemeForge.applyTheme();
@@ -1130,51 +998,31 @@ function updateThemeFromControls(event) {
 function updateTypographyFromControls() {
     const { settings, elements } = ThemeForge.theme.typography;
 
-    settings.bodyFontFamily =
-        document.querySelector("#bodyFontFamily")?.value ||
-        settings.bodyFontFamily;
-    settings.headingFontFamily =
-        document.querySelector("#headingFontFamily")?.value ||
-        settings.headingFontFamily;
-    settings.monoFontFamily =
-        document.querySelector("#monoFontFamily")?.value ||
-        settings.monoFontFamily;
+    settings.bodyFontFamily = document.querySelector("#bodyFontFamily")?.value || settings.bodyFontFamily;
+    settings.headingFontFamily = document.querySelector("#headingFontFamily")?.value || settings.headingFontFamily;
+    settings.monoFontFamily = document.querySelector("#monoFontFamily")?.value || settings.monoFontFamily;
 
     document;
-    document
-        .querySelectorAll("[data-typography-element]")
-        .forEach((container) => {
-            if (container.closest("[hidden], [disabled]")) return;
+    document.querySelectorAll("[data-typography-element]").forEach((container) => {
+        if (container.closest("[hidden], [disabled]")) return;
 
-            const elementName = container.dataset.typographyElement;
-            const element = elements[elementName];
+        const elementName = container.dataset.typographyElement;
+        const element = elements[elementName];
 
-            if (!element) return;
+        if (!element) return;
 
-            const sizeControl = container.querySelector(
-                "[data-typography-field='size']",
-            );
-            const unitControl = container.querySelector(
-                "[data-typography-field='unit']",
-            );
-            const weightControl = container.querySelector(
-                "[data-typography-field='weight']",
-            );
-            const lineHeightControl = container.querySelector(
-                "[data-typography-field='lineHeight']",
-            );
-            const letterSpacingControl = container.querySelector(
-                "[data-typography-field='letterSpacing']",
-            );
+        const sizeControl = container.querySelector("[data-typography-field='size']");
+        const unitControl = container.querySelector("[data-typography-field='unit']");
+        const weightControl = container.querySelector("[data-typography-field='weight']");
+        const lineHeightControl = container.querySelector("[data-typography-field='lineHeight']");
+        const letterSpacingControl = container.querySelector("[data-typography-field='letterSpacing']");
 
-            if (sizeControl) element.size.value = Number(sizeControl.value);
-            if (unitControl) element.size.unit = unitControl.value;
-            if (weightControl) element.weight = Number(weightControl.value);
-            if (lineHeightControl)
-                element.lineHeight = Number(lineHeightControl.value);
-            if (letterSpacingControl)
-                element.letterSpacing = Number(letterSpacingControl.value);
-        });
+        if (sizeControl) element.size.value = Number(sizeControl.value);
+        if (unitControl) element.size.unit = unitControl.value;
+        if (weightControl) element.weight = Number(weightControl.value);
+        if (lineHeightControl) element.lineHeight = Number(lineHeightControl.value);
+        if (letterSpacingControl) element.letterSpacing = Number(letterSpacingControl.value);
+    });
 }
 
 function getControlHistoryLabel(control) {
@@ -1190,18 +1038,10 @@ function getControlHistoryLabel(control) {
     };
 
     if (control.dataset.themeControl === "token") {
-        const label = getTokenLabel(
-            control.dataset.featureName,
-            control.dataset.tokenType,
-            control.dataset.tokenName,
-        );
+        const label = getTokenLabel(control.dataset.featureName, control.dataset.tokenType, control.dataset.tokenName);
 
         if (control.dataset.tokenType === "scale") {
-            const affectedCount = getAffectedMappingCount(
-                control.dataset.featureName,
-                control.dataset.tokenName,
-                ThemeForge.theme,
-            );
+            const affectedCount = getAffectedMappingCount(control.dataset.featureName, control.dataset.tokenName, ThemeForge.theme);
             return `Changed ${label}${affectedCount ? ` (${affectedCount})` : ""}`;
         }
 
@@ -1209,8 +1049,7 @@ function getControlHistoryLabel(control) {
     }
 
     if (control.dataset.typographyField) {
-        const elementName = control.closest("[data-typography-element]")
-            ?.dataset.typographyElement;
+        const elementName = control.closest("[data-typography-element]")?.dataset.typographyElement;
         const fieldName = control.dataset.typographyField;
 
         return `${getTypographyElementLabel(elementName)} ${getTypographyFieldLabel(fieldName)}`;
@@ -1252,9 +1091,7 @@ function getTypographyFieldLabel(fieldName) {
 
 function getControlHistoryDetail(control, snapshot = null) {
     snapshot = snapshot || ThemeForge.history.getLatestUndoSnapshot();
-    const normalizedSnapshot = snapshot
-        ? ThemeForge.normalizeTheme(snapshot)
-        : null;
+    const normalizedSnapshot = snapshot ? ThemeForge.normalizeTheme(snapshot) : null;
 
     if (!normalizedSnapshot) {
         return null;
@@ -1263,12 +1100,8 @@ function getControlHistoryDetail(control, snapshot = null) {
     const details = {
         baseFontSize: {
             label: "Base Font Size",
-            before: getFormattedTokenValue(
-                normalizedSnapshot.settings.baseFontSize,
-            ),
-            after: getFormattedTokenValue(
-                ThemeForge.theme.settings.baseFontSize,
-            ),
+            before: getFormattedTokenValue(normalizedSnapshot.settings.baseFontSize),
+            after: getFormattedTokenValue(ThemeForge.theme.settings.baseFontSize),
         },
         headingScale: {
             label: "Heading Scale",
@@ -1293,9 +1126,7 @@ function getControlHistoryDetail(control, snapshot = null) {
     };
 
     const detail =
-        details[control.id] ||
-        getTokenControlHistoryDetail(control, normalizedSnapshot) ||
-        getTypographyControlHistoryDetail(control, normalizedSnapshot);
+        details[control.id] || getTokenControlHistoryDetail(control, normalizedSnapshot) || getTypographyControlHistoryDetail(control, normalizedSnapshot);
 
     if (!detail) {
         return null;
@@ -1329,8 +1160,7 @@ function getTypographyControlHistoryDetail(control, snapshot) {
         return null;
     }
 
-    const elementName = control.closest("[data-typography-element]")?.dataset
-        .typographyElement;
+    const elementName = control.closest("[data-typography-element]")?.dataset.typographyElement;
     const fieldName = control.dataset.typographyField;
     const beforeElement = snapshot.typography.elements[elementName];
     const afterElement = ThemeForge.theme.typography.elements[elementName];
@@ -1355,9 +1185,7 @@ function getTypographyControlHistoryDetail(control, snapshot) {
 }
 
 function getMappingSnapshotDetail(featureName, mappingName, snapshot) {
-    const normalizedSnapshot = snapshot
-        ? ThemeForge.normalizeTheme(snapshot)
-        : null;
+    const normalizedSnapshot = snapshot ? ThemeForge.normalizeTheme(snapshot) : null;
 
     if (!normalizedSnapshot) {
         return null;
@@ -1366,19 +1194,13 @@ function getMappingSnapshotDetail(featureName, mappingName, snapshot) {
     return {
         type: "value",
         label: getMappingLabel(featureName, mappingName),
-        before: getFormattedTokenValue(
-            normalizedSnapshot[featureName].mappings[mappingName],
-        ),
-        after: getFormattedTokenValue(
-            ThemeForge.theme[featureName].mappings[mappingName],
-        ),
+        before: getFormattedTokenValue(normalizedSnapshot[featureName].mappings[mappingName]),
+        after: getFormattedTokenValue(ThemeForge.theme[featureName].mappings[mappingName]),
     };
 }
 
 function getAffectedMappingCount(featureName, scaleTokenName, snapshot) {
-    const normalizedSnapshot = snapshot
-        ? ThemeForge.normalizeTheme(snapshot)
-        : ThemeForge.theme;
+    const normalizedSnapshot = snapshot ? ThemeForge.normalizeTheme(snapshot) : ThemeForge.theme;
     const feature = normalizedSnapshot[featureName];
     const scaleToken = feature?.scale?.[scaleTokenName];
 
@@ -1386,28 +1208,20 @@ function getAffectedMappingCount(featureName, scaleTokenName, snapshot) {
         return 0;
     }
 
-    return Object.values(feature.mappings).filter(
-        (mapping) =>
-            Number(mapping.value) === Number(scaleToken.value) &&
-            mapping.unit === scaleToken.unit,
-    ).length;
+    return Object.values(feature.mappings).filter((mapping) => Number(mapping.value) === Number(scaleToken.value) && mapping.unit === scaleToken.unit).length;
 }
 
 function syncThemeControlsFromState() {
     ThemeForge.theme = ThemeForge.normalizeTheme(ThemeForge.theme);
 
-    document.querySelector("#baseFontSize").value =
-        ThemeForge.theme.settings.baseFontSize.value;
+    document.querySelector("#baseFontSize").value = ThemeForge.theme.settings.baseFontSize.value;
     updateBaseFontSizeValue();
 
     syncTypographyControlsFromState();
 
-    document.querySelector("#radiusControl").value =
-        ThemeForge.theme.shape.radius;
-    document.querySelector("#borderWidthControl").value =
-        ThemeForge.theme.shape.borderWidth;
-    document.querySelector("#overlayBlurControl").value =
-        ThemeForge.theme.shape.overlayBlur;
+    document.querySelector("#radiusControl").value = ThemeForge.theme.shape.radius;
+    document.querySelector("#borderWidthControl").value = ThemeForge.theme.shape.borderWidth;
+    document.querySelector("#overlayBlurControl").value = ThemeForge.theme.shape.overlayBlur;
 
     syncFeatureControlsFromState();
 }
@@ -1416,8 +1230,7 @@ function syncTypographyControlsFromState() {
     const { settings, elements } = ThemeForge.theme.typography;
 
     document.querySelector("#bodyFontFamily").value = settings.bodyFontFamily;
-    document.querySelector("#headingFontFamily").value =
-        settings.headingFontFamily;
+    document.querySelector("#headingFontFamily").value = settings.headingFontFamily;
     document.querySelector("#monoFontFamily").value = settings.monoFontFamily;
 
     document.querySelectorAll("[data-typography-element]").forEach((row) => {
@@ -1427,32 +1240,25 @@ function syncTypographyControlsFromState() {
 
         if (!element) return;
 
-        row.querySelector("[data-typography-field='size']").value =
-            element.size.value;
-        row.querySelector("[data-typography-field='unit']").value =
-            element.size.unit;
-        row.querySelector("[data-typography-field='weight']").value =
-            element.weight;
-        row.querySelector("[data-typography-field='lineHeight']").value =
-            element.lineHeight;
-        row.querySelector("[data-typography-field='letterSpacing']").value =
-            element.letterSpacing;
+        row.querySelector("[data-typography-field='size']").value = element.size.value;
+        row.querySelector("[data-typography-field='unit']").value = element.size.unit;
+        row.querySelector("[data-typography-field='weight']").value = element.weight;
+        row.querySelector("[data-typography-field='lineHeight']").value = element.lineHeight;
+        row.querySelector("[data-typography-field='letterSpacing']").value = element.letterSpacing;
     });
     updateTypographySummaryRows();
 }
 
 function syncFeatureControlsFromState() {
-    document
-        .querySelectorAll("[data-theme-control='token']")
-        .forEach((control) => {
-            const token = getTokenFromControl(control);
+    document.querySelectorAll("[data-theme-control='token']").forEach((control) => {
+        const token = getTokenFromControl(control);
 
-            if (!token) {
-                return;
-            }
+        if (!token) {
+            return;
+        }
 
-            control.value = token[control.dataset.tokenField];
-        });
+        control.value = token[control.dataset.tokenField];
+    });
 
     updateNearestScaleButtons();
 }
@@ -1486,13 +1292,9 @@ function bindControls() {
         control.addEventListener("input", updateThemeFromControls);
     });
 
-    document
-        .querySelectorAll(
-            "[data-theme-control='token'][data-token-field='value']",
-        )
-        .forEach((control) => {
-            control.addEventListener("keydown", handleTokenValueKeydown);
-        });
+    document.querySelectorAll("[data-theme-control='token'][data-token-field='value']").forEach((control) => {
+        control.addEventListener("keydown", handleTokenValueKeydown);
+    });
 
     document.querySelectorAll("[data-scale-snap]").forEach((select) => {
         select.addEventListener("change", () => {
