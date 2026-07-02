@@ -53,7 +53,7 @@ const TYPOGRAPHY_ELEMENTS = [
     { key: "eyebrow", label: "Eyebrow" },
 ];
 const SHAPE_CORNER_SHAPE_OPTIONS = [
-    { value: "round", label: "Round" },
+    { value: "superellipse(1)", label: "Round" },
     { value: "squircle", label: "Squircle" },
     { value: "bevel", label: "Bevel" },
     { value: "notch", label: "Notch" },
@@ -476,10 +476,6 @@ function createShapeFeatureControls(featureName) {
 
     section.append(title, createShapeScaleControls(featureName));
 
-    if (featureName === "corners" && CSS.supports("corner-shape: squircle")) {
-        section.append(createCornerShapeControl());
-    }
-
     section.append(createShapeMappingControls(featureName));
 
     return section;
@@ -537,6 +533,7 @@ function createShapeTokenControl(featureName, tokenType, tokenName, label) {
         },
     });
     const unitSelect = document.createElement("select");
+    const cornerShapeSelect = document.createElement("select");
 
     wrapper.className = `shape-token-control shape-token-control-${tokenType}`;
     if (tokenType === "mapping") {
@@ -562,34 +559,31 @@ function createShapeTokenControl(featureName, tokenType, tokenName, label) {
         unitSelect.append(option);
     });
 
+    if (featureName === "corners" && tokenType === "mapping" && CSS.supports("corner-shape: squircle")) {
+        cornerShapeSelect.className = "control-input shape-corner-shape-select";
+        cornerShapeSelect.dataset.shapeControl = "token";
+        cornerShapeSelect.dataset.shapeFeature = featureName;
+        cornerShapeSelect.dataset.tokenType = tokenType;
+        cornerShapeSelect.dataset.tokenName = tokenName;
+        cornerShapeSelect.dataset.tokenField = "cornerShape";
+        cornerShapeSelect.setAttribute("aria-label", `${label} corner shape`);
+
+        SHAPE_CORNER_SHAPE_OPTIONS.forEach((optionData) => {
+            const option = document.createElement("option");
+
+            option.value = optionData.value;
+            option.textContent = optionData.label;
+            cornerShapeSelect.append(option);
+        });
+
+        wrapper.append(text, valueInput, unitSelect, cornerShapeSelect);
+
+        return wrapper;
+    }
+
     wrapper.append(text, valueInput, unitSelect);
 
     return wrapper;
-}
-
-function createCornerShapeControl() {
-    const label = document.createElement("label");
-    const text = document.createElement("span");
-    const select = document.createElement("select");
-
-    label.className = "control-field";
-    text.className = "control-label";
-    text.textContent = "Corner shape";
-
-    select.className = "control-input";
-    select.dataset.shapeControl = "cornerShape";
-
-    SHAPE_CORNER_SHAPE_OPTIONS.forEach((optionData) => {
-        const option = document.createElement("option");
-
-        option.value = optionData.value;
-        option.textContent = optionData.label;
-        select.append(option);
-    });
-
-    label.append(text, select);
-
-    return label;
 }
 
 function renderSpacingRailButton() {}
@@ -1267,16 +1261,17 @@ function updateShapeFromControls() {
             return;
         }
 
+        if (control.dataset.tokenField === "cornerShape") {
+            token.cornerShape = control.value;
+            return;
+        }
+
         if (control.dataset.tokenField === "unit" && VALUE_UNIT_OPTIONS.includes(control.value)) {
             token.unit = control.value;
         }
     });
 
     const cornerShapeControl = document.querySelector("[data-shape-control='cornerShape']");
-
-    if (cornerShapeControl) {
-        ThemeForge.theme.shape.corners.settings.cornerShape = cornerShapeControl.value;
-    }
 }
 
 function getShapeTokenFromControl(control, sourceTheme = ThemeForge.theme) {
@@ -1518,10 +1513,6 @@ function syncShapeControlsFromState() {
     });
 
     const cornerShapeControl = document.querySelector("[data-shape-control='cornerShape']");
-
-    if (cornerShapeControl) {
-        cornerShapeControl.value = ThemeForge.theme.shape.corners.settings.cornerShape;
-    }
 }
 
 function syncFeatureControlsFromState() {

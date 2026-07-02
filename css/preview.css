@@ -1064,3 +1064,16 @@
         grid-template-columns: 1fr;
     }
 }
+
+@supports (corner-shape: squircle) {
+    .sample-hero-visual,
+    .hero-window,
+    .hero-content-card,
+    .hero-floating-card,
+    .sample-card,
+    .sample-form,
+    .sample-table,
+    .sample-alert {
+        corner-shape: var(--corner-shape, superellipse(1));
+    }
+}

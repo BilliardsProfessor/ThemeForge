@@ -121,9 +121,6 @@ const ThemeForge = {
 
         shape: {
             corners: {
-                settings: {
-                    cornerShape: "round",
-                },
                 scale: {
                     none: { value: 0, unit: "px" },
                     xs: { value: 2, unit: "px" },
@@ -155,6 +152,11 @@ const ThemeForge = {
                     inputBorderWidth: { value: 1, unit: "px" },
                     dividerWidth: { value: 1, unit: "px" },
                     focusRingWidth: { value: 2, unit: "px" },
+                    cardRadius: { value: 12, unit: "px", cornerShape: "squircle" },
+                    buttonRadius: { value: 8, unit: "px", cornerShape: "superellipse(1)" },
+                    inputRadius: { value: 8, unit: "px", cornerShape: "superellipse(1)" },
+                    badgeRadius: { value: 999, unit: "px", cornerShape: "superellipse(1)" },
+                    dialogRadius: { value: 16, unit: "px", cornerShape: "squircle" },
                 },
             },
 
@@ -265,12 +267,8 @@ const ThemeForge = {
 
         return {
             corners: {
-                settings: {
-                    ...this.cloneValue(defaultShape.corners.settings),
-                    ...(shape.corners?.settings || {}),
-                },
                 scale: this.normalizeValueCollection(shape.corners?.scale || defaultShape.corners.scale),
-                mappings: this.normalizeValueCollection(shape.corners?.mappings || defaultShape.corners.mappings),
+                mappings: this.normalizeCornerMappingCollection(shape.corners?.mappings || defaultShape.corners.mappings),
             },
 
             borders: {
@@ -280,6 +278,24 @@ const ThemeForge = {
 
             overlayBlur: Number(shape.overlayBlur ?? defaultShape.overlayBlur),
         };
+    },
+
+    normalizeCornerMappingCollection(collection) {
+        const defaultMappings = this.theme.shape.corners.mappings;
+
+        return Object.fromEntries(
+            Object.entries(defaultMappings).map(([key, defaultToken]) => {
+                const token = collection[key] || defaultToken;
+
+                return [
+                    key,
+                    {
+                        ...this.normalizeValueToken(token),
+                        cornerShape: token.cornerShape || defaultToken.cornerShape || "superellipse(1)",
+                    },
+                ];
+            }),
+        );
     },
 
     migrateShape(shape = {}) {
@@ -293,7 +309,11 @@ const ThemeForge = {
 
         if (shape.borderWidth !== undefined) {
             Object.keys(migratedShape.borders.mappings).forEach((mappingName) => {
-                migratedShape.borders.mappings[mappingName] = { value: Number(shape.borderWidth), unit: "px" };
+                migratedShape.corners.mappings[mappingName] = {
+                    ...migratedShape.corners.mappings[mappingName],
+                    value: Number(shape.radius),
+                    unit: "px",
+                };
             });
         }
 
@@ -448,7 +468,11 @@ const ThemeForge = {
         });
 
         Object.entries(corners.mappings).forEach(([mappingName, token]) => {
-            root.style.setProperty(`--${ThemeForge.getCssVariableName(mappingName)}`, ThemeForge.getTokenValue(token));
+            const cssName = ThemeForge.getCssVariableName(mappingName);
+            const cornerShapeName = cssName.replace(/-radius$/, "-corner-shape");
+
+            root.style.setProperty(`--${cssName}`, ThemeForge.getTokenValue(token));
+            root.style.setProperty(`--${cornerShapeName}`, token.cornerShape);
         });
 
         Object.entries(borders.scale).forEach(([tokenName, token]) => {
@@ -459,9 +483,7 @@ const ThemeForge = {
             root.style.setProperty(`--${ThemeForge.getCssVariableName(mappingName)}`, ThemeForge.getTokenValue(token));
         });
 
-        root.style.setProperty("--corner-shape", corners.settings.cornerShape);
         root.style.setProperty("--overlay-blur", `${overlayBlur}px`);
-
         root.style.setProperty("--radius", ThemeForge.getTokenValue(corners.mappings.cardRadius));
         root.style.setProperty("--border-width", ThemeForge.getTokenValue(borders.mappings.cardBorderWidth));
     },

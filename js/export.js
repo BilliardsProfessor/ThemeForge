@@ -585,7 +585,6 @@ ThemeForge.export = {
                     : `${variableName}: ${ThemeForge.getTokenValue(token)};`;
             }),
             "",
-            `--corner-shape: ${corners.settings.cornerShape};`,
             `--overlay-blur: ${overlayBlur}px;`,
             "",
             "--radius: var(--card-radius);",
@@ -599,11 +598,15 @@ ThemeForge.export = {
         return [
             ...Object.entries(corners.scale).map(([tokenName, token]) => `$${prefix}radius-${tokenName}: ${ThemeForge.getTokenValue(token)};`),
             "",
-            ...Object.entries(corners.mappings).map(([mappingName, token]) => {
+            ...Object.entries(corners.mappings).flatMap(([mappingName, token]) => {
                 const matchingScaleToken = ThemeForge.findMatchingScaleToken(corners.scale, token);
                 const variableName = `$${prefix}${this.getCssVariableName(mappingName)}`;
+                const cornerShapeName = variableName.replace(/-radius$/, "-corner-shape");
 
-                return matchingScaleToken ? `${variableName}: $${prefix}radius-${matchingScaleToken};` : `${variableName}: ${ThemeForge.getTokenValue(token)};`;
+                return [
+                    matchingScaleToken ? `${variableName}: $${prefix}radius-${matchingScaleToken};` : `${variableName}: ${ThemeForge.getTokenValue(token)};`,
+                    `${cornerShapeName}: ${token.cornerShape};`,
+                ];
             }),
             "",
             ...Object.entries(borders.scale).map(([tokenName, token]) => `$${prefix}border-width-${tokenName}: ${ThemeForge.getTokenValue(token)};`),
@@ -617,7 +620,6 @@ ThemeForge.export = {
                     : `${variableName}: ${ThemeForge.getTokenValue(token)};`;
             }),
             "",
-            `$${prefix}corner-shape: ${corners.settings.cornerShape};`,
             `$${prefix}overlay-blur: ${overlayBlur}px;`,
             "",
             `$${prefix}radius: $${prefix}card-radius;`,
