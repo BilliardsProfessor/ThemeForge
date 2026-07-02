@@ -75,8 +75,12 @@ ThemeForge.history = {
             const session = JSON.parse(savedSession);
 
             ThemeForge.theme = ThemeForge.normalizeTheme(session.theme);
-            this.undoStack = Array.isArray(session.undoStack) ? session.undoStack : [];
-            this.redoStack = Array.isArray(session.redoStack) ? session.redoStack : [];
+            this.undoStack = Array.isArray(session.undoStack)
+                ? session.undoStack
+                : [];
+            this.redoStack = Array.isArray(session.redoStack)
+                ? session.redoStack
+                : [];
         } catch {
             sessionStorage.removeItem(this.storageKey);
         }
@@ -93,16 +97,16 @@ ThemeForge.history = {
         );
     },
 
-    recordChange(label, detail = null) {
-        this.pushUndoState(label, detail);
+    recordChange(label, detail = null, snapshot = null) {
+        this.pushUndoState(label, detail, snapshot);
         this.redoStack = [];
         this.updateControls();
         this.saveSession();
     },
 
-    recordContinuousChange(label, detail = null) {
+    recordContinuousChange(label, detail = null, snapshot = null) {
         if (this.continuousChangeLabel !== label) {
-            this.pushUndoState(label, detail);
+            this.pushUndoState(label, detail, snapshot);
             this.redoStack = [];
             this.continuousChangeLabel = label;
         }
@@ -116,16 +120,33 @@ ThemeForge.history = {
         this.updateControls();
     },
 
-    pushUndoState(label, detail = null) {
+    pushUndoState(label, detail = null, snapshot = null) {
         this.undoStack.push({
             label,
             detail,
-            snapshot: this.cloneTheme(ThemeForge.theme),
+            snapshot: this.cloneTheme(snapshot || ThemeForge.theme),
         });
 
         if (this.undoStack.length > this.maxItems) {
             this.undoStack.shift();
         }
+    },
+
+    discardContinuousChange(label) {
+        const latestItem = this.undoStack[this.undoStack.length - 1];
+
+        if (!latestItem || latestItem.label !== label) {
+            return;
+        }
+
+        this.undoStack.pop();
+        this.clearContinuousChange();
+        this.updateControls();
+        this.saveSession();
+    },
+
+    themesMatch(firstTheme, secondTheme) {
+        return JSON.stringify(firstTheme) === JSON.stringify(secondTheme);
     },
 
     updateLatestChangeDetail(detail) {
@@ -154,7 +175,11 @@ ThemeForge.history = {
 
         let nextTheme = this.cloneTheme(ThemeForge.theme);
 
-        for (let index = 0; index < steps && this.undoStack.length; index += 1) {
+        for (
+            let index = 0;
+            index < steps && this.undoStack.length;
+            index += 1
+        ) {
             const historyItem = this.undoStack.pop();
 
             this.redoStack.push({
@@ -179,7 +204,11 @@ ThemeForge.history = {
 
         let nextTheme = this.cloneTheme(ThemeForge.theme);
 
-        for (let index = 0; index < steps && this.redoStack.length; index += 1) {
+        for (
+            let index = 0;
+            index < steps && this.redoStack.length;
+            index += 1
+        ) {
             const historyItem = this.redoStack.pop();
 
             this.undoStack.push({
@@ -258,7 +287,10 @@ ThemeForge.history = {
             return;
         }
 
-        const menuItem = this.getMenuItemFromPoint(event.clientX, event.clientY);
+        const menuItem = this.getMenuItemFromPoint(
+            event.clientX,
+            event.clientY,
+        );
 
         this.setActiveMenuItem(menuItem);
     },
@@ -273,7 +305,10 @@ ThemeForge.history = {
         if (this.menu.menuOpenedFromHold) {
             if (this.menu.activeItem) {
                 this.activateMenuItem(this.menu.activeItem);
-            } else if (!this.isPointInsideMenu(event.clientX, event.clientY) && !this.isPointInsideButton(event.clientX, event.clientY)) {
+            } else if (
+                !this.isPointInsideMenu(event.clientX, event.clientY) &&
+                !this.isPointInsideButton(event.clientX, event.clientY)
+            ) {
                 this.closeMenu();
             }
 
@@ -297,7 +332,10 @@ ThemeForge.history = {
             return;
         }
 
-        if (this.menu.element.contains(event.target) || event.target === this.menu.activeButton) {
+        if (
+            this.menu.element.contains(event.target) ||
+            event.target === this.menu.activeButton
+        ) {
             return;
         }
 
@@ -337,14 +375,18 @@ ThemeForge.history = {
         const viewportPadding = 8;
 
         const top = buttonRect.bottom + 6;
-        const left = Math.min(Math.max(viewportPadding, buttonRect.left), window.innerWidth - menuRect.width - viewportPadding);
+        const left = Math.min(
+            Math.max(viewportPadding, buttonRect.left),
+            window.innerWidth - menuRect.width - viewportPadding,
+        );
 
         this.menu.element.style.top = `${top}px`;
         this.menu.element.style.left = `${left}px`;
     },
 
     renderMenu(action) {
-        const items = action === "undo" ? this.getUndoItems() : this.getRedoItems();
+        const items =
+            action === "undo" ? this.getUndoItems() : this.getRedoItems();
         const title = action === "undo" ? "Undo" : "Redo";
 
         this.menu.element.textContent = "";
@@ -403,7 +445,9 @@ ThemeForge.history = {
 
         const beforeSwatch = document.createElement("span");
         beforeSwatch.className = "history-menu-swatch";
-        beforeSwatch.style.backgroundColor = this.formatColorDetail(detail.before);
+        beforeSwatch.style.backgroundColor = this.formatColorDetail(
+            detail.before,
+        );
 
         const arrow = document.createElement("span");
         arrow.className = "history-menu-arrow";
@@ -411,15 +455,22 @@ ThemeForge.history = {
 
         const afterSwatch = document.createElement("span");
         afterSwatch.className = "history-menu-swatch";
-        afterSwatch.style.backgroundColor = this.formatColorDetail(detail.after);
+        afterSwatch.style.backgroundColor = this.formatColorDetail(
+            detail.after,
+        );
 
         button.textContent = "";
         button.append(label, beforeSwatch, arrow, afterSwatch);
-        button.setAttribute("aria-label", `${detail.label}: ${this.formatColorDetail(detail.before)} to ${this.formatColorDetail(detail.after)}`);
+        button.setAttribute(
+            "aria-label",
+            `${detail.label}: ${this.formatColorDetail(detail.before)} to ${this.formatColorDetail(detail.after)}`,
+        );
     },
 
     formatColorDetail(color) {
-        return color.a === 1 ? `hsl(${color.h} ${color.s}% ${color.l}%)` : `hsl(${color.h} ${color.s}% ${color.l}% / ${ThemeForge.formatAlpha(color.a)})`;
+        return color.a === 1
+            ? `hsl(${color.h} ${color.s}% ${color.l}%)`
+            : `hsl(${color.h} ${color.s}% ${color.l}% / ${ThemeForge.formatAlpha(color.a)})`;
     },
 
     activateMenuItem(menuItem) {
@@ -466,7 +517,12 @@ ThemeForge.history = {
     isPointInsideMenu(x, y) {
         const menuRect = this.menu.element.getBoundingClientRect();
 
-        return x >= menuRect.left && x <= menuRect.right && y >= menuRect.top && y <= menuRect.bottom;
+        return (
+            x >= menuRect.left &&
+            x <= menuRect.right &&
+            y >= menuRect.top &&
+            y <= menuRect.bottom
+        );
     },
 
     isPointInsideButton(x, y) {
@@ -476,7 +532,12 @@ ThemeForge.history = {
 
         const buttonRect = this.menu.activeButton.getBoundingClientRect();
 
-        return x >= buttonRect.left && x <= buttonRect.right && y >= buttonRect.top && y <= buttonRect.bottom;
+        return (
+            x >= buttonRect.left &&
+            x <= buttonRect.right &&
+            y >= buttonRect.top &&
+            y <= buttonRect.bottom
+        );
     },
 
     closeMenu() {
@@ -515,11 +576,21 @@ ThemeForge.history = {
         undoButton.setAttribute("aria-disabled", String(undoDisabled));
         redoButton.setAttribute("aria-disabled", String(redoDisabled));
 
-        undoButton.dataset.tooltip = undoDisabled ? "No undo available" : "Undo";
-        redoButton.dataset.tooltip = redoDisabled ? "No redo available" : "Redo";
+        undoButton.dataset.tooltip = undoDisabled
+            ? "No undo available"
+            : "Undo";
+        redoButton.dataset.tooltip = redoDisabled
+            ? "No redo available"
+            : "Redo";
 
-        undoButton.setAttribute("aria-label", undoDisabled ? "No undo available" : "Undo");
-        redoButton.setAttribute("aria-label", redoDisabled ? "No redo available" : "Redo");
+        undoButton.setAttribute(
+            "aria-label",
+            undoDisabled ? "No undo available" : "Undo",
+        );
+        redoButton.setAttribute(
+            "aria-label",
+            redoDisabled ? "No redo available" : "Redo",
+        );
 
         if (undoDisabled && this.menu.action === "undo") {
             this.closeMenu();

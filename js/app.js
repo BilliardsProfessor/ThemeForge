@@ -726,9 +726,7 @@ function enhanceWorkspaceNumberInput(input, options = {}) {
             return;
         }
 
-        input.workspaceNumberDragSnapshot = cloneThemeSnapshot(
-            ThemeForge.theme,
-        );
+        beginDeferredControlChange(input);
 
         dragState = {
             pointerId: event.pointerId,
@@ -767,7 +765,7 @@ function enhanceWorkspaceNumberInput(input, options = {}) {
         const nextValue = clampWorkspaceNumberValue(rawValue, options);
 
         input.value = formatWorkspaceNumberValue(nextValue, options);
-        dispatchWorkspaceNumberInput(input, { isPreviewOnly: true });
+        previewDeferredControlChange(input);
     });
 
     input.addEventListener("pointerup", (event) => {
@@ -780,20 +778,107 @@ function enhanceWorkspaceNumberInput(input, options = {}) {
         dragState = null;
 
         if (shouldCommitChange) {
-            dispatchWorkspaceNumberInput(input);
+            commitDeferredControlChange(input);
         }
-
-        delete input.workspaceNumberDragSnapshot;
     });
 
     input.addEventListener("pointercancel", () => {
-        delete input.workspaceNumberDragSnapshot;
+        cancelDeferredControlChange(input);
         dragState = null;
     });
 }
 
-function dispatchWorkspaceNumberInput(input, detail = {}) {
-    input.dispatchEvent(new CustomEvent("input", { bubbles: true, detail }));
+function enhanceDeferredHistoryControl(control) {
+    control.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0) {
+            return;
+        }
+
+        beginDeferredControlChange(control);
+
+        if (control.setPointerCapture) {
+            control.setPointerCapture(event.pointerId);
+        }
+    });
+
+    control.addEventListener(
+        "input",
+        (event) => {
+            if (
+                !getDeferredControlSnapshot(control) ||
+                event.detail?.isDeferredCommit
+            ) {
+                return;
+            }
+
+            event.stopImmediatePropagation();
+
+            updateThemeFromControls({
+                target: control,
+                detail: {
+                    isPreviewOnly: true,
+                    historySnapshot: getDeferredControlSnapshot(control),
+                },
+            });
+        },
+        true,
+    );
+
+    control.addEventListener("pointerup", () => {
+        commitDeferredControlChange(control);
+    });
+
+    control.addEventListener("pointercancel", () => {
+        cancelDeferredControlChange(control);
+    });
+}
+
+function bindDeferredHistoryControls() {
+    document
+        .querySelectorAll(
+            [
+                "#baseFontSize",
+                "#radiusControl",
+                "#borderWidthControl",
+                "#overlayBlurControl",
+            ].join(", "),
+        )
+        .forEach(enhanceDeferredHistoryControl);
+}
+
+function dispatchControlInput(control, detail = {}) {
+    control.dispatchEvent(new CustomEvent("input", { bubbles: true, detail }));
+}
+
+function beginDeferredControlChange(control) {
+    control.deferredHistorySnapshot = cloneThemeSnapshot(ThemeForge.theme);
+}
+
+function getDeferredControlSnapshot(control) {
+    return control.deferredHistorySnapshot;
+}
+
+function cancelDeferredControlChange(control) {
+    delete control.deferredHistorySnapshot;
+}
+
+function previewDeferredControlChange(control) {
+    dispatchControlInput(control, {
+        isPreviewOnly: true,
+        historySnapshot: getDeferredControlSnapshot(control),
+    });
+}
+
+function commitDeferredControlChange(control) {
+    const historySnapshot = getDeferredControlSnapshot(control);
+
+    if (!historySnapshot) {
+        return;
+    }
+
+    dispatchControlInput(control, { historySnapshot, isDeferredCommit: true });
+
+    cancelDeferredControlChange(control);
 }
 
 function getWorkspaceNumberStep(event, options) {
@@ -997,12 +1082,11 @@ function handleTokenValueKeydown(event) {
 }
 
 function updateThemeFromControls(event) {
-    const label = getControlHistoryLabel(event.target);
+    const control = event.target;
+    const label = getControlHistoryLabel(control);
     const isPreviewOnly = event.detail?.isPreviewOnly;
-
-    if (!isPreviewOnly) {
-        ThemeForge.history.recordContinuousChange(label);
-    }
+    const startingSnapshot =
+        event.detail?.historySnapshot || cloneThemeSnapshot(ThemeForge.theme);
 
     ThemeForge.theme.settings.baseFontSize.value = Number(
         document.querySelector("#baseFontSize").value,
@@ -1024,9 +1108,17 @@ function updateThemeFromControls(event) {
     updateTokensFromControls();
     updateTypographySummaryRows();
 
-    if (!isPreviewOnly) {
+    if (
+        !isPreviewOnly &&
+        !ThemeForge.history.themesMatch(startingSnapshot, ThemeForge.theme)
+    ) {
+        ThemeForge.history.recordContinuousChange(
+            label,
+            null,
+            startingSnapshot,
+        );
         ThemeForge.history.updateLatestChangeDetail(
-            getControlHistoryDetail(event.target),
+            getControlHistoryDetail(control, startingSnapshot),
         );
     }
 
@@ -1158,10 +1250,8 @@ function getTypographyFieldLabel(fieldName) {
     return labels[fieldName] || "setting";
 }
 
-function getControlHistoryDetail(control) {
-    const snapshot =
-        control.workspaceNumberDragSnapshot ||
-        ThemeForge.history.getLatestUndoSnapshot();
+function getControlHistoryDetail(control, snapshot = null) {
+    snapshot = snapshot || ThemeForge.history.getLatestUndoSnapshot();
     const normalizedSnapshot = snapshot
         ? ThemeForge.normalizeTheme(snapshot)
         : null;
@@ -1422,6 +1512,7 @@ document.addEventListener("DOMContentLoaded", () => {
     bindTypographyEditorDismissal();
     renderSpacingControls();
     bindControls();
+    bindDeferredHistoryControls();
     bindThemeModeControls();
     bindAppAppearanceControl();
     bindSettingsControl();

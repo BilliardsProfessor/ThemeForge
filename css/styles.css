@@ -1469,9 +1469,9 @@ body.drawer-is-initializing .control-card-content {
     border: var(--border-width) solid var(--color-border);
     border-radius: calc(var(--radius) * 1.2);
     font-size: var(--font-size-base);
-    box-shadow:
+    /* box-shadow:
         0 24px 60px rgb(15 23 42 / 0.14),
-        0 0 0 1px rgb(255 255 255 / 0.65);
+        0 0 0 1px rgb(255 255 255 / 0.65); */
     transition: width var(--preview-width-transition);
 }
 
