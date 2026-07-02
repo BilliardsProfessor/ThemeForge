@@ -504,6 +504,13 @@ function createValueTokenControl({ label, featureName, tokenType, tokenName, inc
     valueInput.dataset.tokenName = tokenName;
     valueInput.dataset.tokenField = "value";
     valueInput.setAttribute("aria-label", `${label} value`);
+    enhanceWorkspaceNumberInput(valueInput, {
+        min: 0,
+        step: 1,
+        fineStep: 1,
+        coarseStep: 4,
+        decimals: 0,
+    });
 
     unitSelect.className = "spacing-unit-select";
     unitSelect.dataset.themeControl = "token";
@@ -535,7 +542,7 @@ function createValueTokenControl({ label, featureName, tokenType, tokenName, inc
         nearestScaleButton.dataset.featureName = featureName;
         nearestScaleButton.dataset.tokenName = tokenName;
         nearestScaleButton.dataset.tooltipPosition = "bottom";
-        nearestScaleButton.textContent = "↺";
+        nearestScaleButton.textContent = "→◎";
         nearestScaleButton.hidden = true;
         nearestScaleButton.setAttribute("aria-label", `${label} snap to nearest scale`);
         const customOption = document.createElement("option");
@@ -884,6 +891,19 @@ function updateNearestScaleButtons() {
         nearestButton.dataset.scaleToken = nearest || "";
         nearestButton.dataset.tooltip = nearest ? `Snap to ${getScaleTokenLabel(nearest)}` : "";
         nearestButton.setAttribute("aria-label", nearest ? `Snap to ${getScaleTokenLabel(nearest)}` : "Snap to nearest scale");
+        nearestButton.innerHTML = nearest
+            ? `
+        <svg class="icon icon-arrow-right" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path d="M2 8h9M8 5l3 3-3 3" />
+        </svg>
+        <span>${getScaleTokenLabel(nearest)}</span>
+    `
+            : `
+        <svg class="icon icon-arrow-right" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path d="M2 8h9M8 5l3 3-3 3" />
+        </svg>
+        <span>◎</span>
+    `;
     });
 }
 
