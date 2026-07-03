@@ -507,15 +507,16 @@ function createShapeMappingControls(featureName) {
     section.append(title);
 
     SHAPE_CONTROLS[featureName].mappings.forEach((mapping) => {
-        section.append(createShapeTokenControl(featureName, "mapping", mapping.key, mapping.label));
+        section.append(createShapeTokenControl(featureName, "mapping", mapping.key, mapping.label, true));
     });
 
     return section;
 }
 
-function createShapeTokenControl(featureName, tokenType, tokenName, label) {
+function createShapeTokenControl(featureName, tokenType, tokenName, label, includeScaleSnap = false) {
     const wrapper = document.createElement("label");
     const text = document.createElement("span");
+    const normalizedFeatureName = `shape.${featureName}`;
     const valueInput = createWorkspaceNumberInput({
         className: "control-input shape-value-input",
         ariaLabel: `${label} value`,
@@ -525,17 +526,21 @@ function createShapeTokenControl(featureName, tokenType, tokenName, label) {
         coarseStep: 4,
         decimals: 0,
         dataset: {
-            shapeControl: "token",
-            shapeFeature: featureName,
+            themeControl: "token",
+            featureName: normalizedFeatureName,
             tokenType,
             tokenName,
             tokenField: "value",
         },
     });
     const unitSelect = document.createElement("select");
+    const nearestScale = document.createElement("select");
+    const nearestScaleButton = document.createElement("button");
     const cornerShapeSelect = document.createElement("select");
 
     wrapper.className = `shape-token-control shape-token-control-${tokenType}`;
+    wrapper.dataset.tokenControl = "true";
+
     if (tokenType === "mapping") {
         wrapper.classList.add("control-row");
     }
@@ -544,8 +549,8 @@ function createShapeTokenControl(featureName, tokenType, tokenName, label) {
     text.textContent = label;
 
     unitSelect.className = "control-input shape-unit-select";
-    unitSelect.dataset.shapeControl = "token";
-    unitSelect.dataset.shapeFeature = featureName;
+    unitSelect.dataset.themeControl = "token";
+    unitSelect.dataset.featureName = normalizedFeatureName;
     unitSelect.dataset.tokenType = tokenType;
     unitSelect.dataset.tokenName = tokenName;
     unitSelect.dataset.tokenField = "unit";
@@ -559,10 +564,46 @@ function createShapeTokenControl(featureName, tokenType, tokenName, label) {
         unitSelect.append(option);
     });
 
+    wrapper.append(text);
+
+    if (includeScaleSnap) {
+        nearestScale.className = "shape-scale-snap";
+        nearestScale.dataset.scaleSnap = "true";
+        nearestScale.dataset.featureName = normalizedFeatureName;
+        nearestScale.dataset.tokenName = tokenName;
+        nearestScale.setAttribute("aria-label", `${label} scale`);
+
+        nearestScaleButton.type = "button";
+        nearestScaleButton.className = "spacing-nearest-scale-button has-tooltip";
+        nearestScaleButton.dataset.nearestScaleSnap = "true";
+        nearestScaleButton.dataset.featureName = normalizedFeatureName;
+        nearestScaleButton.dataset.tokenName = tokenName;
+        nearestScaleButton.dataset.tooltipPosition = "bottom";
+        nearestScaleButton.hidden = true;
+        nearestScaleButton.setAttribute("aria-label", `${label} snap to nearest scale`);
+
+        const customOption = document.createElement("option");
+        customOption.value = "";
+        customOption.textContent = "···";
+        nearestScale.append(customOption);
+
+        SHAPE_CONTROLS[featureName].scale.forEach((token) => {
+            const option = document.createElement("option");
+
+            option.value = token.key;
+            option.textContent = token.label;
+            nearestScale.append(option);
+        });
+
+        wrapper.append(nearestScaleButton);
+    }
+
+    wrapper.append(valueInput, unitSelect);
+
     if (featureName === "corners" && tokenType === "mapping" && CSS.supports("corner-shape: squircle")) {
         cornerShapeSelect.className = "control-input shape-corner-shape-select";
-        cornerShapeSelect.dataset.shapeControl = "token";
-        cornerShapeSelect.dataset.shapeFeature = featureName;
+        cornerShapeSelect.dataset.themeControl = "token";
+        cornerShapeSelect.dataset.featureName = normalizedFeatureName;
         cornerShapeSelect.dataset.tokenType = tokenType;
         cornerShapeSelect.dataset.tokenName = tokenName;
         cornerShapeSelect.dataset.tokenField = "cornerShape";
@@ -576,12 +617,12 @@ function createShapeTokenControl(featureName, tokenType, tokenName, label) {
             cornerShapeSelect.append(option);
         });
 
-        wrapper.append(text, valueInput, unitSelect, cornerShapeSelect);
-
-        return wrapper;
+        wrapper.append(cornerShapeSelect);
     }
 
-    wrapper.append(text, valueInput, unitSelect);
+    if (includeScaleSnap) {
+        wrapper.append(nearestScale);
+    }
 
     return wrapper;
 }
@@ -682,6 +723,7 @@ function createValueTokenControl({ label, featureName, tokenType, tokenName, inc
     const nearestScaleButton = document.createElement("button");
 
     wrapper.className = `spacing-token-control spacing-token-control-${tokenType}`;
+    wrapper.dataset.tokenControl = "true";
     if (tokenType === "mapping") {
         wrapper.classList.add("control-row");
     }
@@ -765,21 +807,29 @@ function createValueTokenControl({ label, featureName, tokenType, tokenName, inc
     return wrapper;
 }
 
-function getScaleTokenLabel(tokenKey) {
-    return FEATURE_SCALE_TOKENS.find((token) => token.key === tokenKey)?.label || tokenKey;
+function getFeatureControlConfig(featureName) {
+    if (featureName.startsWith("shape.")) {
+        return SHAPE_CONTROLS[featureName.split(".")[1]];
+    }
+
+    return FEATURE_CONTROLS[featureName];
 }
 
 function getFeatureLabel(featureName) {
-    return FEATURE_CONTROLS[featureName]?.label || featureName;
+    return getFeatureControlConfig(featureName)?.label || featureName;
+}
+
+function getScaleTokenLabel(featureName, tokenKey) {
+    return getFeatureControlConfig(featureName)?.scale?.find((token) => token.key === tokenKey)?.label || tokenKey;
 }
 
 function getMappingLabel(featureName, mappingKey) {
-    return FEATURE_CONTROLS[featureName]?.mappings.find((mapping) => mapping.key === mappingKey)?.label || mappingKey;
+    return getFeatureControlConfig(featureName)?.mappings.find((mapping) => mapping.key === mappingKey)?.label || mappingKey;
 }
 
 function getTokenLabel(featureName, tokenType, tokenName) {
     if (tokenType === "scale") {
-        return `${getFeatureLabel(featureName)} ${getScaleTokenLabel(tokenName)}`;
+        return `${getFeatureLabel(featureName)} ${getScaleTokenLabel(featureName, tokenName)}`;
     }
 
     return getMappingLabel(featureName, tokenName);
@@ -805,11 +855,18 @@ function updateBaseFontSizeValue() {
     output.textContent = `${input.value}px`;
 }
 
-function getTokenFromControl(control, sourceTheme = ThemeForge.theme) {
-    const feature = sourceTheme[control.dataset.featureName];
-    const collectionName = control.dataset.tokenType === "scale" ? "scale" : "mappings";
+function getTokenCollection(sourceTheme, featureName, tokenType) {
+    const collectionName = tokenType === "scale" ? "scale" : "mappings";
 
-    return feature?.[collectionName]?.[control.dataset.tokenName];
+    if (featureName.startsWith("shape.")) {
+        return sourceTheme.shape?.[featureName.split(".")[1]]?.[collectionName];
+    }
+
+    return sourceTheme[featureName]?.[collectionName];
+}
+
+function getTokenFromControl(control, sourceTheme = ThemeForge.theme) {
+    return getTokenCollection(sourceTheme, control.dataset.featureName, control.dataset.tokenType)?.[control.dataset.tokenName];
 }
 
 function cleanNumericText(value) {
@@ -1054,6 +1111,11 @@ function updateTokenFromControl(control) {
         return;
     }
 
+    if (control.dataset.tokenField === "cornerShape") {
+        token.cornerShape = control.value;
+        return;
+    }
+
     if (control.dataset.tokenField === "unit" && VALUE_UNIT_OPTIONS.includes(control.value)) {
         token.unit = control.value;
     }
@@ -1067,7 +1129,7 @@ function updateNearestScaleButtons() {
     document.querySelectorAll("[data-scale-snap]").forEach((select) => {
         const featureName = select.dataset.featureName;
         const mappingName = select.dataset.tokenName;
-        const feature = ThemeForge.theme[featureName];
+        const feature = featureName.startsWith("shape.") ? ThemeForge.theme.shape[featureName.split(".")[1]] : ThemeForge.theme[featureName];
         const mapping = feature.mappings[mappingName];
         const exactMatch = ThemeForge.findMatchingScaleToken(feature.scale, mapping);
         const nearest = getNearestScaleToken(feature.scale, mapping);
@@ -1082,14 +1144,14 @@ function updateNearestScaleButtons() {
 
         nearestButton.hidden = Boolean(exactMatch);
         nearestButton.dataset.scaleToken = nearest || "";
-        nearestButton.dataset.tooltip = nearest ? `Snap to ${getScaleTokenLabel(nearest)}` : "";
-        nearestButton.setAttribute("aria-label", nearest ? `Snap to ${getScaleTokenLabel(nearest)}` : "Snap to nearest scale");
+        nearestButton.dataset.tooltip = nearest ? `Snap to ${getScaleTokenLabel(featureName, nearest)}` : "";
+        nearestButton.setAttribute("aria-label", nearest ? `Snap to ${getScaleTokenLabel(featureName, nearest)}` : "Snap to nearest scale");
         nearestButton.innerHTML = nearest
             ? `
         <svg class="icon icon-arrow-right" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
             <path d="M2 8h9M8 5l3 3-3 3" />
         </svg>
-        <span>${getScaleTokenLabel(nearest)}</span>
+        <span>${getScaleTokenLabel(featureName, nearest)}</span>
     `
             : `
         <svg class="icon icon-arrow-right" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
@@ -1131,7 +1193,7 @@ function snapMappingToScale(select) {
         return;
     }
 
-    const feature = ThemeForge.theme[featureName];
+    const feature = featureName.startsWith("shape.") ? ThemeForge.theme.shape[featureName.split(".")[1]] : ThemeForge.theme[featureName];
     const scaleToken = feature.scale[scaleTokenName];
     const mapping = feature.mappings[mappingName];
 
@@ -1140,7 +1202,7 @@ function snapMappingToScale(select) {
     }
 
     ThemeForge.history.recordChange(
-        `Set ${getMappingLabel(featureName, mappingName).toLowerCase()} to ${getFeatureLabel(featureName)} ${getScaleTokenLabel(scaleTokenName)}`,
+        `Set ${getMappingLabel(featureName, mappingName).toLowerCase()} to ${getFeatureLabel(featureName)} ${getScaleTokenLabel(featureName, scaleTokenName)}`,
     );
 
     mapping.value = scaleToken.value;
@@ -1193,7 +1255,6 @@ function updateThemeFromControls(event) {
     ThemeForge.theme.settings.baseFontSize.unit = "px";
     updateBaseFontSizeValue();
     updateTypographyFromControls();
-    updateShapeFromControls();
     updateTokensFromControls();
     updateTypographySummaryRows();
 
@@ -1235,50 +1296,6 @@ function updateTypographyFromControls() {
         if (lineHeightControl) element.lineHeight = Number(lineHeightControl.value);
         if (letterSpacingControl) element.letterSpacing = Number(letterSpacingControl.value);
     });
-}
-
-function updateShapeFromControls() {
-    document.querySelectorAll("[data-shape-control='token']").forEach((control) => {
-        const token = getShapeTokenFromControl(control);
-
-        if (!token) {
-            return;
-        }
-
-        if (control.dataset.tokenField === "value") {
-            const cleanedValue = cleanNumericText(control.value);
-
-            if (control.value !== cleanedValue) {
-                control.value = cleanedValue;
-            }
-
-            const value = Number(cleanedValue);
-
-            if (Number.isFinite(value)) {
-                token.value = value;
-            }
-
-            return;
-        }
-
-        if (control.dataset.tokenField === "cornerShape") {
-            token.cornerShape = control.value;
-            return;
-        }
-
-        if (control.dataset.tokenField === "unit" && VALUE_UNIT_OPTIONS.includes(control.value)) {
-            token.unit = control.value;
-        }
-    });
-
-    const cornerShapeControl = document.querySelector("[data-shape-control='cornerShape']");
-}
-
-function getShapeTokenFromControl(control, sourceTheme = ThemeForge.theme) {
-    const feature = sourceTheme.shape?.[control.dataset.shapeFeature];
-    const collectionName = control.dataset.tokenType === "scale" ? "scale" : "mappings";
-
-    return feature?.[collectionName]?.[control.dataset.tokenName];
 }
 
 function getControlHistoryLabel(control) {
@@ -1364,16 +1381,6 @@ function getControlHistoryDetail(control, snapshot = null) {
             before: `${Math.round(normalizedSnapshot.typography.settings.headingScale * 100)}%`,
             after: `${Math.round(ThemeForge.theme.typography.settings.headingScale * 100)}%`,
         },
-        radiusControl: {
-            label: "Border Radius",
-            before: `${normalizedSnapshot.shape.radius}px`,
-            after: `${ThemeForge.theme.shape.radius}px`,
-        },
-        borderWidthControl: {
-            label: "Border Width",
-            before: `${normalizedSnapshot.shape.borderWidth}px`,
-            after: `${ThemeForge.theme.shape.borderWidth}px`,
-        },
         overlayBlurControl: {
             label: "Overlay Blur",
             before: `${normalizedSnapshot.shape.overlayBlur}px`,
@@ -1399,10 +1406,21 @@ function getTokenControlHistoryDetail(control, snapshot) {
     const featureName = control.dataset.featureName;
     const tokenType = control.dataset.tokenType;
     const tokenName = control.dataset.tokenName;
-    const collectionName = tokenType === "scale" ? "scale" : "mappings";
-    const beforeToken = snapshot[featureName][collectionName][tokenName];
-    const afterToken = ThemeForge.theme[featureName][collectionName][tokenName];
+    const beforeToken = getTokenCollection(snapshot, featureName, tokenType)?.[tokenName];
+    const afterToken = getTokenCollection(ThemeForge.theme, featureName, tokenType)?.[tokenName];
     const label = getTokenLabel(featureName, tokenType, tokenName);
+
+    if (!beforeToken || !afterToken) {
+        return null;
+    }
+
+    if (control.dataset.tokenField === "cornerShape") {
+        return {
+            label: `${label} corner shape`,
+            before: beforeToken.cornerShape,
+            after: afterToken.cornerShape,
+        };
+    }
 
     return {
         label,
@@ -1474,7 +1492,6 @@ function syncThemeControlsFromState() {
     updateBaseFontSizeValue();
 
     syncTypographyControlsFromState();
-    syncShapeControlsFromState();
     syncFeatureControlsFromState();
 }
 
@@ -1499,20 +1516,6 @@ function syncTypographyControlsFromState() {
         row.querySelector("[data-typography-field='letterSpacing']").value = element.letterSpacing;
     });
     updateTypographySummaryRows();
-}
-
-function syncShapeControlsFromState() {
-    document.querySelectorAll("[data-shape-control='token']").forEach((control) => {
-        const token = getShapeTokenFromControl(control);
-
-        if (!token) {
-            return;
-        }
-
-        control.value = token[control.dataset.tokenField];
-    });
-
-    const cornerShapeControl = document.querySelector("[data-shape-control='cornerShape']");
 }
 
 function syncFeatureControlsFromState() {
@@ -1541,15 +1544,7 @@ ThemeForge.refreshThemeInterface = function refreshThemeInterface() {
 
 function bindControls() {
     const controls = document.querySelectorAll(
-        [
-            "#baseFontSize",
-            "#bodyFontFamily",
-            "#headingFontFamily",
-            "#monoFontFamily",
-            "[data-theme-control='token']",
-            "[data-typography-field]",
-            "[data-shape-control]",
-        ].join(", "),
+        ["#baseFontSize", "#bodyFontFamily", "#headingFontFamily", "#monoFontFamily", "[data-theme-control='token']", "[data-typography-field]"].join(", "),
     );
 
     controls.forEach((control) => {
