@@ -1288,7 +1288,7 @@ body.drawer-is-initializing .control-card-content {
 
 .control-row:hover,
 .control-row:focus-within {
-    background: color-mix(in srgb, var(--control-primary), transparent 88%);
+    background: color-mix(in srgb, var(--color-primary), transparent 88%);
 }
 
 .workspace-number-input {
@@ -1945,11 +1945,11 @@ a {
 
 .editor-list-row:hover,
 .editor-list-row:focus-visible {
-    background: color-mix(in srgb, var(--control-primary), transparent 88%);
+    background: color-mix(in srgb, var(--color-primary), transparent 88%);
 }
 
 .editor-list-row:focus-visible {
-    outline: 3px solid color-mix(in srgb, var(--control-primary), transparent 70%);
+    outline: 3px solid color-mix(in srgb, var(--color-primary), transparent 70%);
     outline-offset: 2px;
 }
 
@@ -2250,10 +2250,10 @@ a {
 [data-control-panel="shape"] {
     --shape-value-width: 2rem;
     --shape-unit-width: 2.5rem;
-    --shape-snap-width: 2.75rem;
-    --shape-corner-width: 5.75rem;
+    --shape-snap-width: 2.25rem;
+    --shape-corner-width: 4.75rem;
     --shape-control-height: 1.75rem;
-    --shape-nearest-width: 2.5rem;
+    --shape-nearest-width: 4.25rem;
 }
 
 [data-control-panel="shape"] .control-card-content {
@@ -2270,9 +2270,16 @@ a {
 
 .shape-scale {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(2.5rem, 1fr));
     gap: 0.3rem;
     align-items: end;
+}
+
+.shape-feature:first-child .shape-scale {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.shape-feature:last-child .shape-scale {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .shape-scale .control-subsection-title,
@@ -2304,12 +2311,21 @@ a {
         var(--shape-nearest-width)
         var(--shape-value-width)
         var(--shape-unit-width)
-        var(--shape-corner-width)
-        var(--shape-snap-width);
+        var(--shape-corner-width);
     align-items: center;
     gap: 0.3rem;
     margin-inline: -0.35rem;
     padding: 0.32rem 0.35rem;
+}
+
+.shape-token-control-mapping:has(.shape-corner-shape-select) {
+    grid-template-columns:
+        1fr
+        var(--shape-nearest-width)
+        var(--shape-value-width)
+        var(--shape-unit-width)
+        var(--shape-corner-width)
+        var(--shape-snap-width);
 }
 
 .shape-token-label {

@@ -1133,7 +1133,7 @@ function updateNearestScaleButtons() {
         const mapping = feature.mappings[mappingName];
         const exactMatch = ThemeForge.findMatchingScaleToken(feature.scale, mapping);
         const nearest = getNearestScaleToken(feature.scale, mapping);
-        const nearestButton = select.closest(".spacing-token-control")?.querySelector("[data-nearest-scale-snap]");
+        const nearestButton = select.closest("[data-token-control]")?.querySelector("[data-nearest-scale-snap]");
 
         select.value = exactMatch || "";
         select.dataset.scaleToken = exactMatch || "";
@@ -1468,8 +1468,8 @@ function getMappingSnapshotDetail(featureName, mappingName, snapshot) {
     return {
         type: "value",
         label: getMappingLabel(featureName, mappingName),
-        before: getFormattedTokenValue(normalizedSnapshot[featureName].mappings[mappingName]),
-        after: getFormattedTokenValue(ThemeForge.theme[featureName].mappings[mappingName]),
+        before: getFormattedTokenValue(getTokenCollection(normalizedSnapshot, featureName, "mapping")?.[mappingName]),
+        after: getFormattedTokenValue(getTokenCollection(ThemeForge.theme, featureName, "mapping")?.[mappingName]),
     };
 }
 
