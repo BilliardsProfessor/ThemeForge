@@ -2244,3 +2244,190 @@ a {
     color: var(--color-text);
     border-color: var(--color-warning);
 }
+
+/* Shape drawer panel */
+
+[data-control-panel="shape"] {
+    --shape-value-width: 2rem;
+    --shape-unit-width: 2.5rem;
+    --shape-snap-width: 2.75rem;
+    --shape-corner-width: 5.75rem;
+    --shape-control-height: 1.75rem;
+    --shape-nearest-width: 2.5rem;
+}
+
+[data-control-panel="shape"] .control-card-content {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.shape-feature {
+    display: grid;
+    gap: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: var(--border-width) solid var(--control-border);
+}
+
+.shape-scale {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(2.5rem, 1fr));
+    gap: 0.3rem;
+    align-items: end;
+}
+
+.shape-scale .control-subsection-title,
+.shape-mappings .control-subsection-title {
+    grid-column: 1 / -1;
+}
+
+.shape-mappings {
+    display: grid;
+    gap: 0.15rem;
+}
+
+.shape-token-control {
+    display: grid;
+    min-width: 0;
+    margin: 0;
+    color: var(--control-muted);
+    font-size: 0.76rem;
+}
+
+.shape-token-control-scale {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.22rem;
+}
+
+.shape-token-control-mapping {
+    grid-template-columns:
+        1fr
+        var(--shape-nearest-width)
+        var(--shape-value-width)
+        var(--shape-unit-width)
+        var(--shape-corner-width)
+        var(--shape-snap-width);
+    align-items: center;
+    gap: 0.3rem;
+    margin-inline: -0.35rem;
+    padding: 0.32rem 0.35rem;
+}
+
+.shape-token-label {
+    min-width: 0;
+    color: var(--control-muted);
+    line-height: 1.1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.shape-token-control-scale .shape-token-label {
+    color: var(--control-text);
+    font-size: 0.68rem;
+    letter-spacing: 0.055em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.shape-nearest-scale-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    width: 100%;
+    height: var(--shape-control-height);
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--color-warning);
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.shape-nearest-scale-button .icon {
+    width: 0.8rem;
+    height: 0.8rem;
+    stroke-width: 2;
+}
+
+.shape-nearest-scale-button[hidden] {
+    display: inline-flex;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.shape-nearest-scale-button:hover,
+.shape-nearest-scale-button:focus-visible {
+    color: var(--color-primary);
+}
+
+.shape-nearest-scale-button:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--color-primary), transparent 70%);
+    outline-offset: 2px;
+    border-radius: 0.35rem;
+}
+
+.shape-value-input,
+.shape-unit-select,
+.shape-corner-shape-select,
+.shape-scale-snap {
+    width: 100%;
+    height: var(--shape-control-height);
+    border: var(--border-width) solid var(--control-border);
+    border-radius: 0.48rem;
+    background: var(--control-surface);
+    color: var(--control-text);
+    font: inherit;
+    font-size: 0.76rem;
+    font-weight: 500;
+    line-height: 1;
+    text-align: center;
+}
+
+.shape-value-input {
+    padding: 0.2rem 0.25rem;
+}
+
+.shape-unit-select,
+.shape-corner-shape-select,
+.shape-scale-snap {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 0.2rem 0.25rem;
+    cursor: pointer;
+}
+
+.shape-unit-select::-ms-expand,
+.shape-corner-shape-select::-ms-expand,
+.shape-scale-snap::-ms-expand {
+    display: none;
+}
+
+.shape-value-input:focus-visible,
+.shape-unit-select:focus-visible,
+.shape-corner-shape-select:focus-visible,
+.shape-scale-snap:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--color-primary), transparent 70%);
+    outline-offset: 2px;
+    border-color: var(--color-primary);
+}
+
+.shape-scale-snap:hover {
+    border-color: var(--color-primary);
+}
+
+.shape-scale-snap option,
+.shape-unit-select option,
+.shape-corner-shape-select option {
+    background: var(--control-surface);
+    color: var(--control-text);
+}
+
+.shape-scale-snap[data-scale-token=""] {
+    color: var(--color-text);
+    border-color: var(--color-warning);
+}

@@ -574,7 +574,7 @@ function createShapeTokenControl(featureName, tokenType, tokenName, label, inclu
         nearestScale.setAttribute("aria-label", `${label} scale`);
 
         nearestScaleButton.type = "button";
-        nearestScaleButton.className = "spacing-nearest-scale-button has-tooltip";
+        nearestScaleButton.className = "shape-nearest-scale-button has-tooltip";
         nearestScaleButton.dataset.nearestScaleSnap = "true";
         nearestScaleButton.dataset.featureName = normalizedFeatureName;
         nearestScaleButton.dataset.tokenName = tokenName;
