@@ -132,7 +132,7 @@
     grid-column: 2;
     grid-row: 1 / span 4;
     min-height: 18rem;
-    border-radius: calc(var(--radius) * 1.6);
+    border-radius: calc(var(--card-radius) * 1.6);
     background:
         radial-gradient(circle at 20% 20%, color-mix(in srgb, var(--color-primary), transparent 65%), transparent 35%),
         radial-gradient(circle at 80% 30%, color-mix(in srgb, var(--color-secondary), transparent 70%), transparent 34%),
@@ -144,7 +144,7 @@
     position: absolute;
     inset: 2.25rem 2rem;
     border: var(--border-width) solid var(--color-border);
-    border-radius: var(--radius);
+    border-radius: var(--card-radius);
     background: var(--color-surface);
     box-shadow: var(--shadow-soft);
 }
@@ -159,7 +159,7 @@
 .hero-window-bar span {
     width: 0.65rem;
     height: 0.65rem;
-    border-radius: 999px;
+    border-radius: var(--badge-radius);
     background: var(--color-border);
 }
 
@@ -178,7 +178,7 @@
 
 .hero-sidebar span,
 .hero-line {
-    border-radius: 999px;
+    border-radius: var(--badge-radius);
     background: color-mix(in srgb, var(--color-muted-text), transparent 78%);
 }
 
@@ -191,7 +191,7 @@
     gap: 0.85rem;
     padding: 1rem;
     border: var(--border-width) solid var(--color-border);
-    border-radius: var(--radius);
+    border-radius: var(--card-radius);
     background: color-mix(in srgb, var(--color-background), var(--color-surface) 70%);
 }
 
@@ -216,7 +216,7 @@
 .hero-pill {
     width: 3rem;
     height: 1.25rem;
-    border-radius: 999px;
+    border-radius: var(--badge-radius);
 }
 
 .hero-pill.primary {
@@ -236,7 +236,7 @@
     width: 5.5rem;
     height: 4rem;
     border: var(--border-width) solid var(--color-border);
-    border-radius: var(--radius);
+    border-radius: var(--card-radius);
     background: color-mix(in srgb, var(--color-surface), transparent 8%);
     box-shadow: var(--shadow-soft);
 }
@@ -304,7 +304,7 @@
     flex-direction: column;
     overflow: hidden;
     border: var(--border-width) solid var(--card-state-color);
-    border-radius: var(--radius);
+    border-radius: var(--card-radius);
     background: var(--color-surface);
     box-shadow: var(--shadow-soft);
 }
@@ -350,6 +350,10 @@
     line-height: normal;
 }
 
+.status-badge {
+    border-radius: var(--badge-radius);
+}
+
 .status-badge.success {
     background: color-mix(in srgb, var(--color-success), transparent 84%);
     color: var(--color-success);
@@ -388,7 +392,7 @@
     width: 100%;
     padding: var(--input-padding-y) var(--input-padding-x);
     border: var(--border-width) solid var(--color-border);
-    border-radius: var(--radius);
+    border-radius: var(--input-radius);
     background: var(--color-surface);
     color: var(--color-text);
 }
@@ -415,7 +419,7 @@
     margin-top: auto;
     padding: 0.3rem 0.7rem;
     border: 0;
-    border-radius: var(--radius);
+    border-radius: var(--button-radius);
     color: white;
     font-weight: 750;
 }
@@ -518,7 +522,7 @@
     place-items: center;
     padding: var(--page-padding);
     background: var(--color-overlay);
-    border-radius: var(--radius);
+    border-radius: var(--dialog-radius);
     backdrop-filter: blur(var(--overlay-blur));
     -webkit-backdrop-filter: blur(var(--overlay-blur));
 }
@@ -531,7 +535,7 @@
     width: min(34rem, 100%);
     overflow: hidden;
     border: var(--border-width) solid var(--color-border);
-    border-radius: var(--radius);
+    border-radius: var(--dialog-radius);
     background: var(--color-surface);
     color: var(--color-text);
     box-shadow: var(--shadow-soft);
@@ -567,7 +571,7 @@
     height: 2.25rem;
     padding: 0;
     border: var(--border-width) solid var(--color-border);
-    border-radius: 999px;
+    border-radius: var(--button-radius);
     background: var(--color-surface);
     color: var(--color-text);
     line-height: 0;
@@ -580,8 +584,9 @@
     pointer-events: none;
 }
 
-.preview-modal-close,
+.beacon-dialog-close .preview-modal-close,
 .beacon-dialog-close {
+    border-radius: var(--button-radius);
     border-color: color-mix(in srgb, var(--color-danger), transparent 50%);
     background: color-mix(in srgb, var(--color-danger), transparent 88%);
     color: var(--color-danger);
@@ -627,7 +632,7 @@
     width: 100%;
     padding: var(--input-padding-y) var(--input-padding-x);
     border: var(--border-width) solid var(--color-border);
-    border-radius: var(--radius);
+    border-radius: var(--input-radius);
     background: var(--color-surface);
     color: var(--color-text);
     font: inherit;
@@ -687,7 +692,7 @@
     width: 100%;
     padding: var(--input-padding-y) var(--input-padding-x);
     border: var(--border-width) solid var(--color-border);
-    border-radius: var(--radius);
+    border-radius: var(--input-radius);
     background: var(--color-surface);
     color: var(--color-text);
     font: inherit;
@@ -733,7 +738,7 @@
 .preview-table-wrapper {
     overflow-x: auto;
     border: var(--border-width) solid var(--color-border);
-    border-radius: var(--radius);
+    border-radius: var(--card-radius);
     background: var(--color-surface);
 }
 
@@ -1001,7 +1006,7 @@
     width: min(32rem, 100%);
     padding: 0;
     border: var(--border-width) solid var(--color-border);
-    border-radius: var(--radius);
+    border-radius: var(--card-radius);
     background: var(--color-surface);
     color: var(--color-text);
     box-shadow: var(--shadow-soft);
@@ -1071,9 +1076,37 @@
     .hero-content-card,
     .hero-floating-card,
     .sample-card,
-    .sample-form,
-    .sample-table,
-    .sample-alert {
-        corner-shape: var(--corner-shape, superellipse(1));
+    .preview-table-wrapper {
+        corner-shape: var(--card-corner-shape, superellipse(1));
+    }
+
+    .toast-demo-button,
+    .preview-modal-close,
+    .beacon-dialog-close {
+        corner-shape: var(--button-corner-shape, superellipse(1));
+    }
+
+    .sample-form-row input,
+    .sample-form-row select,
+    .preview-modal-form input,
+    .preview-modal-form select,
+    .preview-modal-form textarea,
+    .preview-form input,
+    .preview-form select,
+    .preview-form textarea {
+        corner-shape: var(--input-corner-shape, superellipse(1));
+    }
+
+    .hero-pill,
+    .hero-window-bar span,
+    .hero-sidebar span,
+    .hero-line,
+    .status-badge {
+        corner-shape: var(--badge-corner-shape, superellipse(1));
+    }
+
+    .preview-modal,
+    .preview-modal-layer {
+        corner-shape: var(--dialog-corner-shape, superellipse(1));
     }
 }
