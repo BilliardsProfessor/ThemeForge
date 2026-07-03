@@ -131,11 +131,11 @@ const ThemeForge = {
                     pill: { value: 999, unit: "px" },
                 },
                 mappings: {
-                    cardRadius: { value: 12, unit: "px" },
-                    buttonRadius: { value: 8, unit: "px" },
-                    inputRadius: { value: 8, unit: "px" },
-                    badgeRadius: { value: 999, unit: "px" },
-                    dialogRadius: { value: 16, unit: "px" },
+                    cardRadius: { value: 12, unit: "px", cornerShape: "squircle" },
+                    buttonRadius: { value: 8, unit: "px", cornerShape: "superellipse(1)" },
+                    inputRadius: { value: 8, unit: "px", cornerShape: "superellipse(1)" },
+                    badgeRadius: { value: 999, unit: "px", cornerShape: "superellipse(1)" },
+                    dialogRadius: { value: 16, unit: "px", cornerShape: "squircle" },
                 },
             },
 
@@ -152,11 +152,6 @@ const ThemeForge = {
                     inputBorderWidth: { value: 1, unit: "px" },
                     dividerWidth: { value: 1, unit: "px" },
                     focusRingWidth: { value: 2, unit: "px" },
-                    cardRadius: { value: 12, unit: "px", cornerShape: "squircle" },
-                    buttonRadius: { value: 8, unit: "px", cornerShape: "superellipse(1)" },
-                    inputRadius: { value: 8, unit: "px", cornerShape: "superellipse(1)" },
-                    badgeRadius: { value: 999, unit: "px", cornerShape: "superellipse(1)" },
-                    dialogRadius: { value: 16, unit: "px", cornerShape: "squircle" },
                 },
             },
 
@@ -309,9 +304,8 @@ const ThemeForge = {
 
         if (shape.borderWidth !== undefined) {
             Object.keys(migratedShape.borders.mappings).forEach((mappingName) => {
-                migratedShape.corners.mappings[mappingName] = {
-                    ...migratedShape.corners.mappings[mappingName],
-                    value: Number(shape.radius),
+                migratedShape.borders.mappings[mappingName] = {
+                    value: Number(shape.borderWidth),
                     unit: "px",
                 };
             });
