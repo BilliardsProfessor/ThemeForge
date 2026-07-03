@@ -112,10 +112,12 @@
 }
 
 /* Shape roles */
+.preview-area {
+    --hero-card-radius: calc(var(--card-radius) * 0.5);
+    --hero-badge-radius: calc(var(--badge-radius) * 0.375);
+}
+
 .sample-hero-visual,
-.hero-window,
-.hero-content-card,
-.hero-floating-card,
 .sample-card,
 .preview-table-wrapper,
 .sample-alert,
@@ -128,8 +130,15 @@
     border-radius: var(--card-radius);
 }
 
+.hero-window,
+.hero-content-card,
+.hero-floating-card {
+    border-radius: var(--hero-card-radius);
+}
+
 .toast-demo-button,
 .preview-modal-close,
+.preview-button,
 .beacon-dialog-close {
     border-radius: var(--button-radius);
 }
@@ -145,13 +154,16 @@
     border-radius: var(--input-radius);
 }
 
-.hero-pill,
-.hero-window-bar span,
-.hero-sidebar span,
-.hero-line,
 .status-badge,
 .table-badge {
     border-radius: var(--badge-radius);
+}
+
+.hero-pill,
+.hero-window-bar span,
+.hero-sidebar span,
+.hero-line {
+    border-radius: var(--hero-badge-radius);
 }
 
 .preview-modal,
@@ -179,6 +191,7 @@
 
     .toast-demo-button,
     .preview-modal-close,
+    .preview-button,
     .beacon-dialog-close {
         corner-shape: var(--button-corner-shape);
     }
@@ -539,6 +552,41 @@
 
 .preview-panel {
     position: relative;
+}
+
+.preview-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4em;
+    width: fit-content;
+    padding: var(--button-padding-y) var(--button-padding-x);
+    border: var(--button-border-width) solid transparent;
+    font: inherit;
+    font-weight: 750;
+    line-height: 1.2;
+    text-decoration: none;
+}
+
+.preview-button-primary {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: white;
+}
+
+.preview-button-secondary {
+    border-color: var(--color-secondary);
+    background: var(--color-secondary);
+    color: white;
+}
+
+.preview-button-primary:hover {
+    background: color-mix(in srgb, var(--color-primary), black 10%);
+}
+
+.preview-button-secondary:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
 }
 
 .preview-toast-region {

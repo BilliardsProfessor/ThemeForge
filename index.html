@@ -587,7 +587,8 @@
                             </p>
 
                             <div class="button-row">
-                                <button type="button" class="primary-button" id="lightTheBeaconsBtn">
+                                <button type="button" class="preview-button preview-button-primary"
+                                    id="lightTheBeaconsBtn">
                                     Light the beacons
                                 </button>
                             </div>
@@ -683,22 +684,6 @@
                             </p>
                             <cite>Probably someone in a meeting</cite>
                         </blockquote>
-
-                        <section class="sample-section">
-                            <h3>Modal preview</h3>
-
-                            <p>
-                                Open a harmless simulated audit dialog to
-                                test overlays, modal surfaces, form
-                                controls, and action buttons.
-                            </p>
-
-                            <div class="button-row">
-                                <button type="button" class="secondary-button" id="openPreviewModal">
-                                    Open modal preview
-                                </button>
-                            </div>
-                        </section>
                     </div>
 
                     <div class="preview-tab-panel" data-preview-panel="form" hidden>
@@ -1034,86 +1019,16 @@ Testing form colors, spacing, radius, focus states, and control contrast.</texta
                             </div>
 
                             <footer class="beacon-dialog-footer">
-                                <button type="button" class="secondary-button" data-close-beacon-dialog>
+                                <button type="button" class="preview-button preview-button-secondary"
+                                    data-close-beacon-dialog>
                                     Let them Fall
                                 </button>
-                                <button type="button" class="primary-button" data-close-beacon-dialog>
+                                <button type="button" class="preview-button preview-button-primary"
+                                    data-close-beacon-dialog>
                                     Answer the Call
                                 </button>
                             </footer>
                         </dialog>
-                    </div>
-                    <div class="preview-modal-layer" id="previewModalLayer" hidden>
-                        <div class="preview-modal" role="dialog" aria-modal="true" aria-labelledby="previewModalTitle">
-                            <header class="preview-modal-header">
-                                <div>
-                                    <p class="eyebrow">Modal Preview</p>
-                                    <h3 id="previewModalTitle">
-                                        Run theme audit?
-                                    </h3>
-                                </div>
-
-                                <button type="button" class="preview-modal-close" data-close-preview-modal
-                                    aria-label="Close modal">
-                                    <svg class="icon icon-x-mark" aria-hidden="true" focusable="false"
-                                        viewBox="0 0 24 24">
-                                        <path d="M6 18 18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </header>
-
-                            <div class="preview-modal-body">
-                                <p>
-                                    This simulated audit checks how the
-                                    current theme handles common interface
-                                    patterns, including forms, alerts,
-                                    buttons, overlays, and focus states.
-                                </p>
-
-                                <div class="preview-modal-form">
-                                    <label>
-                                        Audit type
-                                        <select>
-                                            <option>
-                                                Quick visual scan
-                                            </option>
-                                            <option>
-                                                Accessibility pass
-                                            </option>
-                                            <option>
-                                                Component stress test
-                                            </option>
-                                        </select>
-                                    </label>
-
-                                    <label>
-                                        Notes
-                                        <textarea rows="3">
-Check modal contrast, spacing, and focus visibility.</textarea>
-                                    </label>
-
-                                    <label class="preview-checkbox">
-                                        <input type="checkbox" checked />
-                                        Include simulated recommendations
-                                    </label>
-                                </div>
-
-                                <p class="sample-alert info">
-                                    This is only a preview interaction. No
-                                    settings or theme data will be changed.
-                                </p>
-                            </div>
-
-                            <footer class="preview-modal-footer">
-                                <button type="button" class="secondary-button" data-close-preview-modal>
-                                    Cancel
-                                </button>
-
-                                <button type="button" class="primary-button" id="runPreviewSimulation">
-                                    Run audit
-                                </button>
-                            </footer>
-                        </div>
                     </div>
                 </section>
 
