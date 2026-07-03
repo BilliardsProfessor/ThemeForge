@@ -588,7 +588,7 @@
 
                             <div class="button-row">
                                 <button type="button" class="preview-button preview-button-primary"
-                                    id="lightTheBeaconsBtn">
+                                    id="openPreviewDialogBtn">
                                     Light the beacons
                                 </button>
                             </div>
@@ -985,17 +985,17 @@ Testing form colors, spacing, radius, focus states, and control contrast.</texta
                             </div>
                         </section>
                     </div>
-                    <div class="beacon-dialog-layer" id="beaconDialogLayer" hidden>
-                        <dialog class="beacon-dialog" id="beaconDialog">
-                            <header class="beacon-dialog-header">
-                                <div class="beacon-dialog-title">
+                    <div class="preview-dialog-layer" id="previewDialogLayer" hidden>
+                        <dialog class="preview-dialog" id="previewDialog">
+                            <header class="preview-dialog-header">
+                                <div class="preview-dialog-title">
                                     <p class="eyebrow">
                                         Emergency Notification System
                                     </p>
                                     <h3>The beacons are lit!</h3>
                                 </div>
 
-                                <button type="button" class="preview-modal-close" data-close-beacon-dialog
+                                <button type="button" class="preview-modal-close" data-close-preview-dialog
                                     aria-label="Close dialog">
                                     <svg class="icon icon-x-mark" aria-hidden="true" focusable="false"
                                         viewBox="0 0 24 24">
@@ -1004,7 +1004,7 @@ Testing form colors, spacing, radius, focus states, and control contrast.</texta
                                 </button>
                             </header>
 
-                            <div class="beacon-dialog-body">
+                            <div class="preview-dialog-body">
                                 <p>
                                     Gondor calls for aid. Check your Teams
                                     inbox.
@@ -1018,13 +1018,13 @@ Testing form colors, spacing, radius, focus states, and control contrast.</texta
                                 </p>
                             </div>
 
-                            <footer class="beacon-dialog-footer">
+                            <footer class="preview-dialog-footer">
                                 <button type="button" class="preview-button preview-button-secondary"
-                                    data-close-beacon-dialog>
+                                    data-close-preview-dialog>
                                     Let them Fall
                                 </button>
                                 <button type="button" class="preview-button preview-button-primary"
-                                    data-close-beacon-dialog>
+                                    data-close-preview-dialog>
                                     Answer the Call
                                 </button>
                             </footer>
