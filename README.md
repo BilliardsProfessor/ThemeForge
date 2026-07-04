@@ -1,100 +1,134 @@
 # Theme Forge
 
-Theme Forge is a browser-based theme playground for experimenting with color palettes, typography, spacing, borders, and other design system variables in real time.
+Theme Forge is a browser-based **design-system workshop** for creating, experimenting with, evaluating, previewing, and exporting modern UI themes.
 
-The goal is simple: provide a visual environment for creating, testing, randomizing, and exporting complete UI themes without requiring any frameworks, build tools, or dependencies.
+Rather than simply generating a color palette, Theme Forge encourages exploration by allowing designers and developers to see the impact of design decisions in real time. Colors, typography, spacing, shape, effects, and accessibility all work together to form a cohesive design system.
 
-## Current Features
+The goal is ambitious, but simple: provide a visual environment for building better themes without requiring frameworks, build tools, or external dependencies.
 
-- Live theme preview
-- Color token management
-  - Primary
-  - Secondary
-  - Background
-  - Surface
-  - Text
+## Try It
 
-- Multiple color editing modes
-  - HEX
-  - RGB
-  - HSL
+Theme Forge is available online at:
 
-- Typography controls
-- Border radius controls
-- Border width controls
-- Responsive preview area
-- Theme state architecture for future expansion
+**https://michaelkglass.com/themeforge**
 
-## Planned Features
+The hosted version is updated periodically as new features stabilize. It is very much a work in progress, so expect rough edges, unfinished features, and the occasional spectacular design experiment.
 
-### Color System
+Use at your own risk.
 
-- Additional color tokens
-- Lockable colors
-- Color palette generation
-- Accessibility-aware randomization
-- OKLCH support
+The management accepts no responsibility for burnt fingers, accidental retina damage, unexpectedly attractive color palettes, or the sudden urge to refactor your entire design system.
 
-### Accessibility
+---
 
-- WCAG contrast analysis
-- Accessibility scoring
-- Detailed compliance reporting
-- Suggested fixes
-- Auto-fix options
+## Who Is It For?
 
-### Export Options
+Theme Forge is designed for:
 
-- CSS export
-- SCSS export
-- Theme JSON export/import
-- Starter project export
-  - HTML
-  - CSS
-  - JavaScript
-  - Theme configuration
+- Front-end developers
+- UI/UX designers
+- Design system authors
+- Anyone who enjoys experimenting with visual design
 
-### Preview Modes
+Whether you're creating a production design system or simply exploring ideas, Theme Forge provides a safe environment to experiment without touching your application code.
 
-- Article view
-- Form view
-- Table view
-- Card view
-- Navigation view
-- Dashboard view
-- Mobile preview
-- Tablet preview
+---
 
-### Theme Management
+# Features
 
-- Theme import/export
-- Theme presets
-- Randomization profiles
-- Undo/redo history
+Theme Forge includes (or is planned to include) the following capabilities. Some features are currently under development.
 
-## Technology
+## Design System
 
-Theme Forge is intentionally built using:
+- Comprehensive color system
+- Typography scales and role mappings
+- Spacing scales and role mappings
+- Shape scales and role mappings
+- Effects (shadows, motion, blur)
+- Theme randomization
+- Theme persistence
+- Theme import and export
+- Undo / Redo history
+
+## Live Preview
+
+- Responsive preview
+- Design-system showcase
+- Component previews
+- Navigation previews
+- Dialog previews
+- Motion demonstrations
+- Device resizing
+
+## Accessibility
+
+- Contrast analysis
+- Weighted accessibility scoring
+- Color vision simulation
+- Readability analysis
+- Accessibility recommendations
+
+## Export
+
+- CSS Custom Properties
+- JSON
+- W3C Design Tokens
+- Additional export formats
+
+See **docs/ROADMAP.md** for the current development roadmap and implementation status.
+
+---
+
+# Technology
+
+Theme Forge is intentionally built using native web technologies.
 
 - HTML
 - CSS
 - JavaScript
 
-No frameworks, build tools, or external dependencies are required.
+No frameworks.
 
-## Running Locally
+No build tools.
 
-Open the project in Visual Studio Code and launch with Live Server:
+No transpilers.
+
+No external dependencies.
+
+The goal is to keep the project easy to understand, easy to maintain, and educational for developers interested in modern design systems.
+
+---
+
+# Running Locally
+
+Clone the repository and open the project with your preferred local web server.
+
+For Visual Studio Code:
 
 ```text
 Right-click index.html
 → Open with Live Server
 ```
 
-Or serve the files using any local web server.
+Any static web server will work.
 
-## Status
+---
 
-Theme Forge is currently an active side project and is under development.
+# Project Philosophy
+
+Theme Forge is built around a few simple principles:
+
+- Keep the architecture understandable.
+- Prefer native browser APIs.
+- Build reusable design-system concepts instead of one-off features.
+- Make experimentation fast and enjoyable.
+- Treat accessibility as a first-class feature rather than an afterthought.
+
+The application is intended to be both a practical tool and a learning resource for developers interested in modern UI design.
+
+---
+
+# Status
+
+Theme Forge is an active side project and remains under continuous development.
 
 Expect rapid changes, unfinished features, questionable color decisions, and the occasional outbreak of clown vomit mode.
