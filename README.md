@@ -137,7 +137,7 @@ The source code is provided for viewing, learning, personal evaluation, and priv
 
 Themes, design tokens, CSS, JSON, and other assets generated through normal use of Theme Forge belong to the user who created them. The author of Theme Forge claims no ownership over generated output.
 
-See the [LICENSE](LICENSE) file for complete terms.
+See the [LICENSE](LICENSE.md) file for complete terms.
 
 ---
 
