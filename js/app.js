@@ -102,6 +102,13 @@ const SHAPE_CONTROLS = {
     },
 };
 
+const TOKEN_FEATURE_CONTROLS = {
+    layout: FEATURE_CONTROLS.layout,
+    components: FEATURE_CONTROLS.components,
+    "shape.corners": SHAPE_CONTROLS.corners,
+    "shape.borders": SHAPE_CONTROLS.borders,
+};
+
 function getStoredAppAppearancePreference() {
     const preference = localStorage.getItem(APP_APPEARANCE_STORAGE_KEY);
 
@@ -808,11 +815,7 @@ function createValueTokenControl({ label, featureName, tokenType, tokenName, inc
 }
 
 function getFeatureControlConfig(featureName) {
-    if (featureName.startsWith("shape.")) {
-        return SHAPE_CONTROLS[featureName.split(".")[1]];
-    }
-
-    return FEATURE_CONTROLS[featureName];
+    return TOKEN_FEATURE_CONTROLS[featureName];
 }
 
 function getFeatureLabel(featureName) {
@@ -839,6 +842,10 @@ function getFormattedTokenValue(token) {
     return `${Number(token.value)}${token.unit}`;
 }
 
+function getFeatureState(sourceTheme, featureName) {
+    return featureName.split(".").reduce((feature, key) => feature?.[key], sourceTheme);
+}
+
 function cloneThemeSnapshot(theme) {
     return JSON.parse(JSON.stringify(theme));
 }
@@ -858,11 +865,7 @@ function updateBaseFontSizeValue() {
 function getTokenCollection(sourceTheme, featureName, tokenType) {
     const collectionName = tokenType === "scale" ? "scale" : "mappings";
 
-    if (featureName.startsWith("shape.")) {
-        return sourceTheme.shape?.[featureName.split(".")[1]]?.[collectionName];
-    }
-
-    return sourceTheme[featureName]?.[collectionName];
+    return getFeatureState(sourceTheme, featureName)?.[collectionName];
 }
 
 function getTokenFromControl(control, sourceTheme = ThemeForge.theme) {
@@ -1129,10 +1132,10 @@ function updateNearestScaleButtons() {
     document.querySelectorAll("[data-scale-snap]").forEach((select) => {
         const featureName = select.dataset.featureName;
         const mappingName = select.dataset.tokenName;
-        const feature = featureName.startsWith("shape.") ? ThemeForge.theme.shape[featureName.split(".")[1]] : ThemeForge.theme[featureName];
-        const mapping = feature.mappings[mappingName];
-        const exactMatch = ThemeForge.findMatchingScaleToken(feature.scale, mapping);
-        const nearest = getNearestScaleToken(feature.scale, mapping);
+        const feature = getFeatureState(ThemeForge.theme, featureName);
+        const mapping = feature?.mappings?.[mappingName];
+        const exactMatch = feature ? ThemeForge.findMatchingScaleToken(feature.scale, mapping) : null;
+        const nearest = feature ? getNearestScaleToken(feature.scale, mapping) : null;
         const nearestButton = select.closest("[data-token-control]")?.querySelector("[data-nearest-scale-snap]");
 
         select.value = exactMatch || "";
@@ -1189,13 +1192,14 @@ function snapMappingToScale(select) {
     const featureName = select.dataset.featureName;
     const mappingName = select.dataset.tokenName;
     const scaleTokenName = select.value || select.dataset.scaleToken;
+
     if (!scaleTokenName) {
         return;
     }
 
-    const feature = featureName.startsWith("shape.") ? ThemeForge.theme.shape[featureName.split(".")[1]] : ThemeForge.theme[featureName];
-    const scaleToken = feature.scale[scaleTokenName];
-    const mapping = feature.mappings[mappingName];
+    const feature = getFeatureState(ThemeForge.theme, featureName);
+    const scaleToken = feature?.scale?.[scaleTokenName];
+    const mapping = feature?.mappings?.[mappingName];
 
     if (!scaleToken || !mapping) {
         return;
@@ -1475,7 +1479,7 @@ function getMappingSnapshotDetail(featureName, mappingName, snapshot) {
 
 function getAffectedMappingCount(featureName, scaleTokenName, snapshot) {
     const normalizedSnapshot = snapshot ? ThemeForge.normalizeTheme(snapshot) : ThemeForge.theme;
-    const feature = normalizedSnapshot[featureName];
+    const feature = getFeatureState(normalizedSnapshot, featureName);
     const scaleToken = feature?.scale?.[scaleTokenName];
 
     if (!scaleToken) {
