@@ -74,7 +74,7 @@ Theme Forge includes (or is planned to include) the following capabilities. Some
 - W3C Design Tokens
 - Additional export formats
 
-See **docs/ROADMAP.md** for the current development roadmap and implementation status.
+See **[Theme Forge Roadmap](docs/ROADMAP.md)** for the current development roadmap and implementation status.
 
 ---
 
