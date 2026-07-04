@@ -106,7 +106,7 @@ For Visual Studio Code:
 
 ```text
 Right-click index.html
-→ Open with Live Server
+-> Open with Live Server
 ```
 
 Any static web server will work.
@@ -124,6 +124,20 @@ Theme Forge is built around a few simple principles:
 - Treat accessibility as a first-class feature rather than an afterthought.
 
 The application is intended to be both a practical tool and a learning resource for developers interested in modern UI design.
+
+---
+
+# License
+
+Theme Forge is proprietary software.
+
+Copyright (c) 2026 Michael K. Glass. All rights reserved.
+
+The source code is provided for viewing, learning, personal evaluation, and private experimentation only. You may not publish, redistribute, sublicense, sell, or incorporate Theme Forge or substantial portions of its source code into another project, product, or service without prior written permission.
+
+Themes, design tokens, CSS, JSON, and other assets generated through normal use of Theme Forge belong to the user who created them. The author of Theme Forge claims no ownership over generated output.
+
+See the [LICENSE](LICENSE) file for complete terms.
 
 ---
 
