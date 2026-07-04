@@ -1,5 +1,11 @@
-Theme Forge License
-==================
+Theme Forge Source Availability License
+=======================================
+
+Theme Forge is proprietary software made publicly available to encourage learning, experimentation, and collaboration.
+
+This license permits viewing, studying, and privately experimenting with the source code while protecting Theme Forge itself from unauthorized redistribution or commercial use.
+
+Themes and other assets generated through normal use of Theme Forge remain the property of their creators.
 
 Copyright (c) 2026 Michael K. Glass.
 All rights reserved.
@@ -10,7 +16,7 @@ Theme Forge, including its source code, documentation, assets, and related intel
 
 2. Permission
 -------------
-Permission is granted to:
+Subject to the terms of this license, you may:
 
 - View the source code.
 - Clone the repository.
@@ -51,4 +57,7 @@ Use Theme Forge at your own risk.
 
 6. Contact
 ----------
-Licensing inquiries and permission requests should be directed to the copyright holder.
+Questions regarding licensing, redistribution, commercial use, or permission requests may be directed to:
+
+Michael K. Glass
+mglass@billiardsprofessor.com
