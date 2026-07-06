@@ -113,11 +113,28 @@
 
 /* Shape roles */
 .preview-area {
-    --hero-card-radius: calc(var(--card-radius) * 0.5);
+    --surface-radius: calc(var(--card-radius) * 1.5);
+    --surface-corner-shape: var(--card-corner-shape);
+
+    --hero-surface-radius: calc(var(--card-radius) * 0.5);
+    --hero-card-radius: calc(var(--card-radius) * 0.375);
     --hero-badge-radius: calc(var(--badge-radius) * 0.375);
+
+    --hero-surface-corner-shape: var(--card-corner-shape);
+    --hero-card-corner-shape: var(--card-corner-shape);
+    --hero-badge-corner-shape: var(--badge-corner-shape);
 }
 
-.sample-hero-visual,
+.sample-hero-visual {
+    border-radius: var(--hero-surface-radius);
+}
+
+.hero-window,
+.hero-content-card,
+.hero-floating-card {
+    border-radius: var(--hero-card-radius);
+}
+
 .sample-card,
 .preview-table-wrapper,
 .sample-alert,
@@ -125,15 +142,18 @@
 .preview-form fieldset,
 .preview-demo-card,
 .preview-article,
-.preview-quote,
-.preview-dialog {
+.preview-quote {
     border-radius: var(--card-radius);
 }
 
-.hero-window,
-.hero-content-card,
-.hero-floating-card {
-    border-radius: var(--hero-card-radius);
+.preview-modal,
+.preview-dialog {
+    border-radius: var(--dialog-radius);
+}
+
+.preview-modal-layer,
+.preview-dialog-layer {
+    border-radius: var(--surface-radius);
 }
 
 .toast-demo-button,
@@ -166,17 +186,17 @@
     border-radius: var(--hero-badge-radius);
 }
 
-.preview-modal,
-.preview-modal-layer,
-.preview-dialog-layer {
-    border-radius: var(--dialog-radius);
-}
-
 @supports (corner-shape: squircle) {
-    .sample-hero-visual,
+    .sample-hero-visual {
+        corner-shape: var(--hero-surface-corner-shape);
+    }
+
     .hero-window,
     .hero-content-card,
-    .hero-floating-card,
+    .hero-floating-card {
+        corner-shape: var(--hero-card-corner-shape);
+    }
+
     .sample-card,
     .preview-table-wrapper,
     .sample-alert,
@@ -184,9 +204,18 @@
     .preview-form fieldset,
     .preview-demo-card,
     .preview-article,
-    .preview-quote,
-    .preview-dialog {
+    .preview-quote {
         corner-shape: var(--card-corner-shape);
+    }
+
+    .preview-modal,
+    .preview-dialog {
+        corner-shape: var(--dialog-corner-shape);
+    }
+
+    .preview-modal-layer,
+    .preview-dialog-layer {
+        corner-shape: var(--surface-corner-shape);
     }
 
     .toast-demo-button,
@@ -207,19 +236,16 @@
         corner-shape: var(--input-corner-shape);
     }
 
-    .hero-pill,
-    .hero-window-bar span,
-    .hero-sidebar span,
-    .hero-line,
     .status-badge,
     .table-badge {
         corner-shape: var(--badge-corner-shape);
     }
 
-    .preview-modal,
-    .preview-modal-layer,
-    .preview-dialog-layer {
-        corner-shape: var(--dialog-corner-shape);
+    .hero-pill,
+    .hero-window-bar span,
+    .hero-sidebar span,
+    .hero-line {
+        corner-shape: var(--hero-badge-corner-shape);
     }
 }
 
@@ -246,7 +272,6 @@
     grid-column: 2;
     grid-row: 1 / span 4;
     min-height: 18rem;
-    /* border-radius: calc(var(--card-radius) * 1.6); */
     background:
         radial-gradient(circle at 20% 20%, color-mix(in srgb, var(--color-primary), transparent 65%), transparent 35%),
         radial-gradient(circle at 80% 30%, color-mix(in srgb, var(--color-secondary), transparent 70%), transparent 34%),
