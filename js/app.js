@@ -53,7 +53,7 @@ const TYPOGRAPHY_ELEMENTS = [
     { key: "eyebrow", label: "Eyebrow" },
 ];
 const SHAPE_CORNER_SHAPE_OPTIONS = [
-    { value: "superellipse(1)", label: "Round" },
+    { value: "round", label: "Round" },
     { value: "squircle", label: "Squircle" },
     { value: "bevel", label: "Bevel" },
     { value: "notch", label: "Notch" },
@@ -833,10 +833,20 @@ function getMappingLabel(featureName, mappingKey) {
 
 function getTokenLabel(featureName, tokenType, tokenName) {
     if (tokenType === "scale") {
-        return `${getFeatureLabel(featureName)} ${getScaleTokenLabel(featureName, tokenName)}`;
+        return `${getFeatureLabel(featureName)} scale: ${getScaleTokenLabel(featureName, tokenName)}`;
     }
 
-    return getMappingLabel(featureName, tokenName);
+    const mappingLabel = getMappingLabel(featureName, tokenName);
+
+    if (featureName === "shape.corners") {
+        return `${mappingLabel} radius`;
+    }
+
+    if (featureName === "shape.borders") {
+        return `${mappingLabel} border width`;
+    }
+
+    return mappingLabel;
 }
 
 function getFormattedTokenValue(token) {

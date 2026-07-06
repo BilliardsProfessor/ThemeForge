@@ -131,12 +131,12 @@ const ThemeForge = {
                     pill: { value: 999, unit: "px" },
                 },
                 mappings: {
-                    surfaceRadius: { value: 18, unit: "px", cornerShape: "superellipse(1)" },
-                    cardRadius: { value: 12, unit: "px", cornerShape: "superellipse(1)" },
+                    surfaceRadius: { value: 18, unit: "px", cornerShape: "round" },
+                    cardRadius: { value: 12, unit: "px", cornerShape: "round" },
                     buttonRadius: { value: 8, unit: "px", cornerShape: "squircle" },
-                    inputRadius: { value: 8, unit: "px", cornerShape: "superellipse(1)" },
-                    badgeRadius: { value: 999, unit: "px", cornerShape: "superellipse(1)" },
-                    dialogRadius: { value: 16, unit: "px", cornerShape: "superellipse(1)" },
+                    inputRadius: { value: 8, unit: "px", cornerShape: "round" },
+                    badgeRadius: { value: 999, unit: "px", cornerShape: "round" },
+                    dialogRadius: { value: 16, unit: "px", cornerShape: "round" },
                 },
             },
 
@@ -287,11 +287,19 @@ const ThemeForge = {
                     key,
                     {
                         ...this.normalizeValueToken(token),
-                        cornerShape: token.cornerShape || defaultToken.cornerShape || "superellipse(1)",
+                        cornerShape: this.normalizeCornerShapeValue(token.cornerShape || defaultToken.cornerShape),
                     },
                 ];
             }),
         );
+    },
+
+    normalizeCornerShapeValue(value) {
+        if (value === "superellipse(1)") {
+            return "round";
+        }
+
+        return value || "round";
     },
 
     migrateShape(shape = {}) {

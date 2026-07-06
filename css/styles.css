@@ -414,13 +414,12 @@ body[data-app-mode="dark"] .preview-size-field select option {
 }
 
 .header-actions .history-menu-item {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
+    display: grid;
+    gap: 0.18rem;
     width: 100%;
     border: 0;
     border-radius: 0;
-    padding: 0.42rem 0.55rem;
+    padding: 0.5rem 0.6rem;
     overflow: hidden;
     background: var(--color-surface);
     color: var(--color-text);
@@ -434,9 +433,20 @@ body[data-app-mode="dark"] .preview-size-field select option {
 
 .history-menu-item-label {
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    font-weight: 600;
+}
+
+.history-menu-item-detail {
+    min-width: 0;
+    padding-inline-start: 0.75rem;
+    color: var(--color-muted);
+    font-size: 0.78rem;
+}
+
+.history-menu-color-detail {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
 }
 
 .history-menu-swatch {

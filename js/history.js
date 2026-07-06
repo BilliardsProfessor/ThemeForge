@@ -396,7 +396,7 @@ ThemeForge.history = {
 
     renderMenuItemContent(button, item) {
         if (!item.detail) {
-            button.textContent = item.label;
+            this.renderTextHistoryItem(button, item.label, "");
             return;
         }
 
@@ -406,33 +406,71 @@ ThemeForge.history = {
         }
 
         if (item.detail.type === "value") {
-            button.textContent = `${item.detail.label}: ${item.detail.before} → ${item.detail.after}`;
+            this.renderTextHistoryItem(
+                button,
+                item.detail.label,
+                `${this.formatHistoryValue(item.detail.before)} → ${this.formatHistoryValue(item.detail.after)}`,
+            );
             return;
         }
 
-        button.textContent = item.label;
+        this.renderTextHistoryItem(button, item.label, "");
+    },
+
+    renderTextHistoryItem(button, labelText, detailText) {
+        const label = document.createElement("span");
+        const detail = document.createElement("span");
+
+        label.className = "history-menu-item-label";
+        label.textContent = labelText;
+
+        detail.className = "history-menu-item-detail";
+        detail.textContent = detailText;
+
+        button.textContent = "";
+        button.append(label, detail);
     },
 
     renderColorHistoryItem(button, detail) {
         const label = document.createElement("span");
-        label.className = "history-menu-item-label";
-        label.textContent = `${detail.label}:`;
-
+        const value = document.createElement("span");
         const beforeSwatch = document.createElement("span");
+        const arrow = document.createElement("span");
+        const afterSwatch = document.createElement("span");
+
+        label.className = "history-menu-item-label";
+        label.textContent = detail.label;
+
+        value.className = "history-menu-item-detail history-menu-color-detail";
+
         beforeSwatch.className = "history-menu-swatch";
         beforeSwatch.style.backgroundColor = this.formatColorDetail(detail.before);
 
-        const arrow = document.createElement("span");
         arrow.className = "history-menu-arrow";
         arrow.textContent = "→";
 
-        const afterSwatch = document.createElement("span");
         afterSwatch.className = "history-menu-swatch";
         afterSwatch.style.backgroundColor = this.formatColorDetail(detail.after);
 
+        value.append(beforeSwatch, arrow, afterSwatch);
+
         button.textContent = "";
-        button.append(label, beforeSwatch, arrow, afterSwatch);
+        button.append(label, value);
         button.setAttribute("aria-label", `${detail.label}: ${this.formatColorDetail(detail.before)} to ${this.formatColorDetail(detail.after)}`);
+    },
+
+    formatHistoryValue(value) {
+        if (value === "superellipse(1)") {
+            return "Round";
+        }
+
+        if (typeof value === "string") {
+            const option = window.SHAPE_CORNER_SHAPE_OPTIONS?.find((cornerShape) => cornerShape.value === value);
+
+            return option?.label || value;
+        }
+
+        return value;
     },
 
     formatColorDetail(color) {
