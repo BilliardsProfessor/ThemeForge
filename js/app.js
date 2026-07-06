@@ -1167,11 +1167,15 @@ function updateNearestScaleButtons() {
 }
 
 function getNearestScaleToken(scale, mapping) {
-    if (!mapping) return null;
+    if (!scale || !mapping) return null;
+
+    const entries = Object.entries(scale);
+
+    if (!entries.length) return null;
 
     const baseFontSize = ThemeForge.theme.settings.baseFontSize.value;
 
-    return Object.entries(scale).reduce((nearest, current) => {
+    return entries.reduce((nearest, current) => {
         const nearestDistance = Math.abs(getComparableTokenValue(nearest[1], baseFontSize) - getComparableTokenValue(mapping, baseFontSize));
         const currentDistance = Math.abs(getComparableTokenValue(current[1], baseFontSize) - getComparableTokenValue(mapping, baseFontSize));
 
