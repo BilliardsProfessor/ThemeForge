@@ -195,6 +195,16 @@
                         d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"></path>
                 </svg>
             </button>
+
+            <button type="button" class="drawer-rail-button has-tooltip" data-drawer-panel="shadows"
+                data-tooltip="Shadows" data-tooltip-position="right" aria-controls="leftDrawer"
+                aria-label="Open shadow controls">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shadows"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-8 7a.5.5 0 0 1 0-1h3.5q.048 0 .093.009A7 7 0 0 0 12.9 13H8a.5.5 0 0 1 0-1h5.745q.331-.474.581-1H8a.5.5 0 0 1 0-1h6.71a7 7 0 0 0 .22-1H8a.5.5 0 0 1 0-1h7q0-.51-.07-1H8a.5.5 0 0 1 0-1h6.71a7 7 0 0 0-.384-1H8a.5.5 0 0 1 0-1h5.745a7 7 0 0 0-.846-1H8a.5.5 0 0 1 0-1h3.608A7 7 0 1 0 8 15" />
+                </svg>
+            </button>
         </nav>
 
         <aside class="left-drawer drawer drawer-left" id="leftDrawer" aria-label="Left drawer">
@@ -533,6 +543,47 @@
                             <input class="control-range" type="range" id="overlayBlurControl" min="0" max="10"
                                 value="2" />
                         </label>
+                    </div>
+                </details>
+
+                <details class="control-card" data-control-panel="shadows">
+                    <summary>
+                        <span class="control-card-title">Shadows</span>
+                    </summary>
+
+                    <div class="control-card-content">
+                        <section class="control-section">
+                            <h3 class="control-section-title">Recipes</h3>
+                            <p class="control-help-text">
+                                Shadow recipes define reusable elevation styles. Editing controls will land in the next
+                                pass.
+                            </p>
+
+                            <ul class="token-summary-list">
+                                <li>Subtle</li>
+                                <li>Soft</li>
+                                <li>Raised</li>
+                                <li>Floating</li>
+                                <li>Dramatic</li>
+                                <li>Inset</li>
+                            </ul>
+                        </section>
+
+                        <section class="control-section">
+                            <h3 class="control-section-title">Mappings</h3>
+                            <p class="control-help-text">
+                                Shadow mappings assign recipes to preview roles.
+                            </p>
+
+                            <ul class="token-summary-list">
+                                <li>Surface shadow</li>
+                                <li>Card shadow</li>
+                                <li>Button shadow</li>
+                                <li>Dialog shadow</li>
+                                <li>Popover shadow</li>
+                                <li>Toast shadow</li>
+                            </ul>
+                        </section>
                     </div>
                 </details>
             </div>

@@ -528,10 +528,9 @@ ThemeForge.export = {
         return [
             ...this.getColorVariableDeclarations(format, mode),
             "",
-            "--shadow-soft: 0 12px 30px var(--color-shadow-tint);",
+            ...this.getShadowCssDeclarations(mode),
             "",
             `--font-size-base: ${ThemeForge.getTokenValue(settings.baseFontSize)};`,
-            `--heading-scale: ${typography.settings.headingScale};`,
             "",
             ...this.getFeatureCssDeclarations("layout"),
             "",
@@ -548,16 +547,49 @@ ThemeForge.export = {
         return [
             ...this.getScssColorVariableDeclarations(format, mode, variablePrefix),
             "",
-            `$${variablePrefix}shadow-soft: 0 12px 30px $${variablePrefix}color-shadow-tint;`,
+            ...this.getShadowScssDeclarations(mode, variablePrefix),
             "",
             `$${variablePrefix}font-size-base: ${ThemeForge.getTokenValue(settings.baseFontSize)};`,
-            `$${variablePrefix}heading-scale: ${typography.settings.headingScale};`,
             "",
             ...this.getFeatureScssDeclarations("layout", variablePrefix),
             "",
             ...this.getFeatureScssDeclarations("components", variablePrefix),
             "",
             ...this.getShapeScssDeclarations(variablePrefix),
+        ];
+    },
+
+    getShadowCssDeclarations(mode = ThemeForge.getActiveMode()) {
+        const { recipes, mappings } = ThemeForge.theme.shadows;
+        const colors = ThemeForge.theme.modes[mode].colors;
+
+        return [
+            ...Object.entries(recipes).map(([recipeName, recipe]) => {
+                return `--shadow-recipe-${this.getCssVariableName(recipeName)}: ${ThemeForge.getShadowValue(recipe, colors)};`;
+            }),
+            "",
+            ...Object.entries(mappings).map(([mappingName, shadow]) => {
+                return `--${this.getCssVariableName(mappingName)}: ${ThemeForge.getShadowValue(shadow, colors)};`;
+            }),
+            "",
+            "--shadow-soft: var(--card-shadow);",
+        ];
+    },
+
+    getShadowScssDeclarations(mode = ThemeForge.getActiveMode(), prefix = "") {
+        const { recipes, mappings } = ThemeForge.theme.shadows;
+        const colors = ThemeForge.theme.modes[mode].colors;
+
+        return [
+            ...Object.entries(recipes).map(([recipeName, recipe]) => {
+                return `$${prefix}shadow-recipe-${this.getCssVariableName(recipeName)}: ${ThemeForge.getShadowValue(recipe, colors)};`;
+            }),
+            "",
+            ...Object.entries(mappings).map(([mappingName, shadow]) => {
+                return `$${prefix}${this.getCssVariableName(mappingName)}: ${ThemeForge.getShadowValue(shadow, colors)};`;
+            }),
+            "",
+            `$${prefix}shadow-soft: $${prefix}card-shadow;`,
         ];
     },
 

@@ -1301,6 +1301,22 @@ body.drawer-is-initializing .control-card-content {
     background: color-mix(in srgb, var(--color-primary), transparent 88%);
 }
 
+.control-help-text {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.token-summary-list {
+    display: grid;
+    gap: 0.35rem;
+    margin: 0;
+    padding-inline-start: 1.1rem;
+    color: var(--color-text);
+    font-size: 0.9rem;
+}
+
 .workspace-number-input {
     cursor: ew-resize;
 }

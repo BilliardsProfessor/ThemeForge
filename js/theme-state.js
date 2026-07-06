@@ -158,6 +158,24 @@ const ThemeForge = {
 
             overlayBlur: 2,
         },
+        shadows: {
+            recipes: {
+                subtle: { x: 0, y: 4, blur: 12, spread: 0, opacity: 12, color: "shadowTint", inset: false },
+                soft: { x: 0, y: 8, blur: 24, spread: 0, opacity: 18, color: "shadowTint", inset: false },
+                raised: { x: 0, y: 12, blur: 32, spread: -4, opacity: 22, color: "shadowTint", inset: false },
+                floating: { x: 0, y: 18, blur: 48, spread: -8, opacity: 28, color: "shadowTint", inset: false },
+                dramatic: { x: 0, y: 24, blur: 64, spread: -12, opacity: 36, color: "shadowTint", inset: false },
+                inset: { x: 0, y: 2, blur: 8, spread: 0, opacity: 18, color: "shadowTint", inset: true },
+            },
+            mappings: {
+                surfaceShadow: { recipe: "soft", x: 0, y: 8, blur: 24, spread: 0, opacity: 18, color: "shadowTint", inset: false },
+                cardShadow: { recipe: "soft", x: 0, y: 8, blur: 24, spread: 0, opacity: 18, color: "shadowTint", inset: false },
+                buttonShadow: { recipe: "subtle", x: 0, y: 4, blur: 12, spread: 0, opacity: 12, color: "shadowTint", inset: false },
+                dialogShadow: { recipe: "floating", x: 0, y: 18, blur: 48, spread: -8, opacity: 28, color: "shadowTint", inset: false },
+                popoverShadow: { recipe: "raised", x: 0, y: 12, blur: 32, spread: -4, opacity: 22, color: "shadowTint", inset: false },
+                toastShadow: { recipe: "raised", x: 0, y: 12, blur: 32, spread: -4, opacity: 22, color: "shadowTint", inset: false },
+            },
+        },
     },
 
     cloneValue(value) {
@@ -199,6 +217,7 @@ const ThemeForge = {
 
         normalizedTheme.typography = this.normalizeTypography(normalizedTheme.typography);
         normalizedTheme.shape = this.normalizeShape(normalizedTheme.shape);
+        normalizedTheme.shadows = this.normalizeShadows(normalizedTheme.shadows);
 
         this.normalizeFeature(normalizedTheme, "layout");
         this.normalizeFeature(normalizedTheme, "components");
@@ -273,6 +292,36 @@ const ThemeForge = {
             },
 
             overlayBlur: Number(shape.overlayBlur ?? defaultShape.overlayBlur),
+        };
+    },
+
+    normalizeShadows(shadows = {}) {
+        const defaultShadows = this.theme.shadows;
+
+        return {
+            recipes: this.normalizeShadowCollection(shadows.recipes || defaultShadows.recipes, defaultShadows.recipes),
+            mappings: this.normalizeShadowCollection(shadows.mappings || defaultShadows.mappings, defaultShadows.mappings),
+        };
+    },
+
+    normalizeShadowCollection(collection = {}, defaultCollection = {}) {
+        return Object.fromEntries(
+            Object.entries(defaultCollection).map(([key, defaultShadow]) => {
+                return [key, this.normalizeShadowRecipe(collection[key] || defaultShadow, defaultShadow)];
+            }),
+        );
+    },
+
+    normalizeShadowRecipe(shadow = {}, defaultShadow = {}) {
+        return {
+            recipe: shadow.recipe || defaultShadow.recipe || "custom",
+            x: Number(shadow.x ?? defaultShadow.x ?? 0),
+            y: Number(shadow.y ?? defaultShadow.y ?? 0),
+            blur: Number(shadow.blur ?? defaultShadow.blur ?? 0),
+            spread: Number(shadow.spread ?? defaultShadow.spread ?? 0),
+            opacity: Number(shadow.opacity ?? defaultShadow.opacity ?? 0),
+            color: shadow.color || defaultShadow.color || "shadowTint",
+            inset: Boolean(shadow.inset ?? defaultShadow.inset ?? false),
         };
     },
 
@@ -416,6 +465,18 @@ const ThemeForge = {
         return `${Number(token.value)}${token.unit}`;
     },
 
+    getShadowValue(shadow, colors = ThemeForge.getActiveColors()) {
+        const opacity = Math.max(0, Math.min(100, Number(shadow.opacity))) / 100;
+        const colorToken = colors[shadow.color] || colors.shadowTint;
+        const shadowColor = {
+            ...colorToken,
+            a: opacity,
+        };
+        const inset = shadow.inset ? "inset " : "";
+
+        return `${inset}${shadow.x}px ${shadow.y}px ${shadow.blur}px ${shadow.spread}px ${ThemeForge.getColorValue(shadowColor)}`;
+    },
+
     getFontFamilyValue(fontFamilyKey) {
         const fontFamilies = {
             inherit: "inherit",
@@ -495,6 +556,21 @@ const ThemeForge = {
         root.style.setProperty("--border-width", ThemeForge.getTokenValue(borders.mappings.cardBorderWidth));
     },
 
+    applyShadowVariables(root) {
+        const { recipes, mappings } = ThemeForge.theme.shadows;
+        const colors = ThemeForge.getActiveColors();
+
+        Object.entries(recipes).forEach(([recipeName, recipe]) => {
+            root.style.setProperty(`--shadow-recipe-${ThemeForge.getCssVariableName(recipeName)}`, ThemeForge.getShadowValue(recipe, colors));
+        });
+
+        Object.entries(mappings).forEach(([mappingName, shadow]) => {
+            root.style.setProperty(`--${ThemeForge.getCssVariableName(mappingName)}`, ThemeForge.getShadowValue(shadow, colors));
+        });
+
+        root.style.setProperty("--shadow-soft", "var(--card-shadow)");
+    },
+
     applyTheme() {
         ThemeForge.theme = ThemeForge.normalizeTheme(ThemeForge.theme);
 
@@ -519,13 +595,12 @@ const ThemeForge = {
         root.style.setProperty("--color-border", ThemeForge.getColorValue(colors.border));
         root.style.setProperty("--color-focus", ThemeForge.getColorValue(colors.focus));
         root.style.setProperty("--color-overlay", ThemeForge.getColorValue(colors.overlay));
-        root.style.setProperty("--shadow-soft", `0 12px 30px ${ThemeForge.getColorValue(colors.shadowTint)}`);
 
         root.style.setProperty("--font-size-base", ThemeForge.getTokenValue(settings.baseFontSize));
         ThemeForge.applyTypographyVariables(root);
 
         ThemeForge.applyShapeVariables(root);
-
+        ThemeForge.applyShadowVariables(root);
         ThemeForge.applyFeatureVariables(root, "layout");
         ThemeForge.applyFeatureVariables(root, "components");
     },
