@@ -10,8 +10,7 @@ ThemeForge.colorEditor = {
 
     init() {
         ThemeForge.ui = ThemeForge.ui || {};
-        ThemeForge.ui.preferredColorFormat =
-            localStorage.getItem("themeForge.preferredColorFormat") || "hsl";
+        ThemeForge.ui.preferredColorFormat = localStorage.getItem("themeForge.preferredColorFormat") || "hsl";
 
         this.bindTokenButtons();
         this.bindGroupTabs();
@@ -27,11 +26,9 @@ ThemeForge.colorEditor = {
                 this.updateAllTabIndicators();
             });
 
-            document
-                .querySelectorAll(".segmented-control, .color-group-tabs")
-                .forEach((tabList) => {
-                    tabObserver.observe(tabList);
-                });
+            document.querySelectorAll(".segmented-control, .color-group-tabs").forEach((tabList) => {
+                tabObserver.observe(tabList);
+            });
         }
     },
 
@@ -44,7 +41,7 @@ ThemeForge.colorEditor = {
     },
 
     getColorHistoryLabel(detail) {
-        return `Changed ${this.getActiveColorLabel()} ${detail}`;
+        return `${this.getActiveColorLabel()} color ${detail}`;
     },
 
     getColorHistoryDetail(snapshot = null) {
@@ -56,10 +53,8 @@ ThemeForge.colorEditor = {
 
         return {
             type: "color",
-            label: this.getActiveColorLabel(),
-            before: ThemeForge.history.cloneTheme(
-                snapshot.modes[snapshot.activeMode].colors[this.activeColorKey],
-            ),
+            label: `${this.getActiveColorLabel()} color`,
+            before: ThemeForge.history.cloneTheme(snapshot.modes[snapshot.activeMode].colors[this.activeColorKey]),
             after: ThemeForge.history.cloneTheme(this.getActiveColor()),
         };
     },
@@ -115,10 +110,7 @@ ThemeForge.colorEditor = {
 
         if (input.id === "alphaValue" || input.id === "alphaNumber") {
             const alphaPercent = Number(input.value);
-            const clampedAlphaPercent = Math.max(
-                0,
-                Math.min(100, alphaPercent),
-            );
+            const clampedAlphaPercent = Math.max(0, Math.min(100, alphaPercent));
 
             if (Number.isNaN(clampedAlphaPercent)) return false;
 
@@ -131,26 +123,15 @@ ThemeForge.colorEditor = {
     },
 
     updateColorFromControl(input, detailLabel, options = {}) {
-        const historySnapshot =
-            options.historySnapshot ||
-            ThemeForge.history.cloneTheme(ThemeForge.theme);
+        const historySnapshot = options.historySnapshot || ThemeForge.history.cloneTheme(ThemeForge.theme);
 
         if (!this.applyColorControlValue(input)) {
             return;
         }
 
-        if (
-            !options.isPreviewOnly &&
-            !ThemeForge.history.themesMatch(historySnapshot, ThemeForge.theme)
-        ) {
-            ThemeForge.history.recordContinuousChange(
-                this.getColorHistoryLabel(detailLabel),
-                null,
-                historySnapshot,
-            );
-            ThemeForge.history.updateLatestChangeDetail(
-                this.getColorHistoryDetail(historySnapshot),
-            );
+        if (!options.isPreviewOnly && !ThemeForge.history.themesMatch(historySnapshot, ThemeForge.theme)) {
+            ThemeForge.history.recordContinuousChange(this.getColorHistoryLabel(detailLabel), null, historySnapshot);
+            ThemeForge.history.updateLatestChangeDetail(this.getColorHistoryDetail(historySnapshot));
         }
 
         ThemeForge.applyTheme();
@@ -213,58 +194,41 @@ ThemeForge.colorEditor = {
         document.querySelectorAll("[data-color-token]").forEach((button) => {
             button.addEventListener("click", () => {
                 this.activeColorKey = button.dataset.colorToken;
-                this.activeColorKeysByGroup[this.activeColorGroup] =
-                    this.activeColorKey;
+                this.activeColorKeysByGroup[this.activeColorGroup] = this.activeColorKey;
                 this.render();
             });
         });
     },
 
     bindGroupTabs() {
-        document
-            .querySelectorAll("[data-color-group-tab]")
-            .forEach((button) => {
-                button.addEventListener("click", () => {
-                    this.activeColorGroup = button.dataset.colorGroupTab;
+        document.querySelectorAll("[data-color-group-tab]").forEach((button) => {
+            button.addEventListener("click", () => {
+                this.activeColorGroup = button.dataset.colorGroupTab;
 
-                    const rememberedColorKey =
-                        this.activeColorKeysByGroup[this.activeColorGroup];
-                    const rememberedToken = document.querySelector(
-                        `[data-color-token="${rememberedColorKey}"][data-color-group="${this.activeColorGroup}"]`,
-                    );
-                    const firstTokenInGroup = document.querySelector(
-                        `[data-color-token][data-color-group="${this.activeColorGroup}"]`,
-                    );
+                const rememberedColorKey = this.activeColorKeysByGroup[this.activeColorGroup];
+                const rememberedToken = document.querySelector(`[data-color-token="${rememberedColorKey}"][data-color-group="${this.activeColorGroup}"]`);
+                const firstTokenInGroup = document.querySelector(`[data-color-token][data-color-group="${this.activeColorGroup}"]`);
 
-                    this.activeColorKey = rememberedToken
-                        ? rememberedToken.dataset.colorToken
-                        : firstTokenInGroup.dataset.colorToken;
+                this.activeColorKey = rememberedToken ? rememberedToken.dataset.colorToken : firstTokenInGroup.dataset.colorToken;
 
-                    this.render();
-                });
+                this.render();
             });
+        });
     },
 
     bindEditorControls() {
-        document
-            .querySelector("#colorNativePicker")
-            .addEventListener("input", (event) => {
-                this.updateColorFromControl(event.target, "color");
-            });
+        document.querySelector("#colorNativePicker").addEventListener("input", (event) => {
+            this.updateColorFromControl(event.target, "color");
+        });
 
-        document
-            .querySelector("#hexValue")
-            .addEventListener("input", (event) => {
-                this.updateColorFromControl(event.target, "HEX value");
-            });
+        document.querySelector("#hexValue").addEventListener("input", (event) => {
+            this.updateColorFromControl(event.target, "HEX value");
+        });
 
         document.querySelectorAll("[data-color-format]").forEach((button) => {
             button.addEventListener("click", () => {
                 ThemeForge.ui.preferredColorFormat = button.dataset.colorFormat;
-                localStorage.setItem(
-                    "themeForge.preferredColorFormat",
-                    ThemeForge.ui.preferredColorFormat,
-                );
+                localStorage.setItem("themeForge.preferredColorFormat", ThemeForge.ui.preferredColorFormat);
                 this.render();
             });
         });
@@ -289,17 +253,15 @@ ThemeForge.colorEditor = {
             }
         });
 
-        document
-            .querySelectorAll("#alphaValue, #alphaNumber")
-            .forEach((input) => {
-                input.addEventListener("input", () => {
-                    this.updateColorFromControl(input, "alpha");
-                });
-
-                if (input.type === "range") {
-                    this.enhanceDeferredColorSlider(input, "alpha");
-                }
+        document.querySelectorAll("#alphaValue, #alphaNumber").forEach((input) => {
+            input.addEventListener("input", () => {
+                this.updateColorFromControl(input, "alpha");
             });
+
+            if (input.type === "range") {
+                this.enhanceDeferredColorSlider(input, "alpha");
+            }
+        });
     },
 
     updateTabIndicator(tabList) {
@@ -313,19 +275,14 @@ ThemeForge.colorEditor = {
         const activeButtonRect = activeButton.getBoundingClientRect();
         const offset = activeButtonRect.left - tabListRect.left;
 
-        tabList.style.setProperty(
-            "--active-tab-width",
-            `${activeButtonRect.width}px`,
-        );
+        tabList.style.setProperty("--active-tab-width", `${activeButtonRect.width}px`);
         tabList.style.setProperty("--active-tab-offset", `${offset}px`);
     },
 
     updateAllTabIndicators() {
-        document
-            .querySelectorAll(".segmented-control, .color-group-tabs")
-            .forEach((tabList) => {
-                this.updateTabIndicator(tabList);
-            });
+        document.querySelectorAll(".segmented-control, .color-group-tabs").forEach((tabList) => {
+            this.updateTabIndicator(tabList);
+        });
     },
 
     render() {
@@ -334,9 +291,7 @@ ThemeForge.colorEditor = {
         const hex = rgbToHex(rgb);
         const format = ThemeForge.ui.preferredColorFormat;
 
-        document.querySelector("#activeColorName").textContent = this.getLabel(
-            this.activeColorKey,
-        );
+        document.querySelector("#activeColorName").textContent = this.getLabel(this.activeColorKey);
         document.querySelector("#colorNativePicker").value = hex;
         document.querySelector("#hexValue").value = hex;
 
@@ -358,31 +313,21 @@ ThemeForge.colorEditor = {
 
         document.querySelector("#alphaValue").value = alphaPercent;
         document.querySelector("#alphaNumber").value = alphaPercent;
-        document.querySelector(".segmented-control").dataset.activeFormat =
-            format;
+        document.querySelector(".segmented-control").dataset.activeFormat = format;
 
         document.querySelectorAll("[data-color-format]").forEach((button) => {
-            button.classList.toggle(
-                "active",
-                button.dataset.colorFormat === format,
-            );
+            button.classList.toggle("active", button.dataset.colorFormat === format);
         });
 
         document.querySelectorAll("[data-format-panel]").forEach((panel) => {
             panel.hidden = panel.dataset.formatPanel !== format;
         });
 
-        document.querySelector(".color-group-tabs").dataset.activeGroup =
-            this.activeColorGroup;
+        document.querySelector(".color-group-tabs").dataset.activeGroup = this.activeColorGroup;
 
-        document
-            .querySelectorAll("[data-color-group-tab]")
-            .forEach((button) => {
-                button.classList.toggle(
-                    "active",
-                    button.dataset.colorGroupTab === this.activeColorGroup,
-                );
-            });
+        document.querySelectorAll("[data-color-group-tab]").forEach((button) => {
+            button.classList.toggle("active", button.dataset.colorGroupTab === this.activeColorGroup);
+        });
 
         document.querySelectorAll("[data-color-token]").forEach((button) => {
             button.hidden = button.dataset.colorGroup !== this.activeColorGroup;
@@ -401,8 +346,6 @@ ThemeForge.colorEditor = {
     },
 
     getLabel(key) {
-        return key
-            .replace(/([A-Z])/g, " $1")
-            .replace(/^./, (letter) => letter.toUpperCase());
+        return key.replace(/([A-Z])/g, " $1").replace(/^./, (letter) => letter.toUpperCase());
     },
 };

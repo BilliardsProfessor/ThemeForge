@@ -1381,6 +1381,17 @@ function getTypographyFieldLabel(fieldName) {
     return labels[fieldName] || "setting";
 }
 
+function getFontFamilyLabel(fontFamilyKey) {
+    const labels = {
+        inherit: "Inherit Body",
+        systemSans: "System Sans",
+        serif: "Serif",
+        mono: "Mono",
+    };
+
+    return labels[fontFamilyKey] || fontFamilyKey;
+}
+
 function getControlHistoryDetail(control, snapshot = null) {
     snapshot = snapshot || ThemeForge.history.getLatestSnapshot();
     const normalizedSnapshot = snapshot ? ThemeForge.normalizeTheme(snapshot) : null;
@@ -1404,6 +1415,21 @@ function getControlHistoryDetail(control, snapshot = null) {
             label: "Overlay Blur",
             before: `${normalizedSnapshot.shape.overlayBlur}px`,
             after: `${ThemeForge.theme.shape.overlayBlur}px`,
+        },
+        bodyFontFamily: {
+            label: "Body Font",
+            before: getFontFamilyLabel(normalizedSnapshot.typography.settings.bodyFontFamily),
+            after: getFontFamilyLabel(ThemeForge.theme.typography.settings.bodyFontFamily),
+        },
+        headingFontFamily: {
+            label: "Heading Font",
+            before: getFontFamilyLabel(normalizedSnapshot.typography.settings.headingFontFamily),
+            after: getFontFamilyLabel(ThemeForge.theme.typography.settings.headingFontFamily),
+        },
+        monoFontFamily: {
+            label: "Monospace Font",
+            before: getFontFamilyLabel(normalizedSnapshot.typography.settings.monoFontFamily),
+            after: getFontFamilyLabel(ThemeForge.theme.typography.settings.monoFontFamily),
         },
     };
 
@@ -1435,7 +1461,7 @@ function getTokenControlHistoryDetail(control, snapshot) {
 
     if (control.dataset.tokenField === "cornerShape") {
         return {
-            label: `${label} corner shape`,
+            label: `${getMappingLabel(featureName, tokenName)} corner shape`,
             before: beforeToken.cornerShape,
             after: afterToken.cornerShape,
         };
@@ -1486,7 +1512,7 @@ function getMappingSnapshotDetail(featureName, mappingName, snapshot) {
 
     return {
         type: "value",
-        label: getMappingLabel(featureName, mappingName),
+        label: getTokenLabel(featureName, "mapping", mappingName),
         before: getFormattedTokenValue(getTokenCollection(normalizedSnapshot, featureName, "mapping")?.[mappingName]),
         after: getFormattedTokenValue(getTokenCollection(ThemeForge.theme, featureName, "mapping")?.[mappingName]),
     };

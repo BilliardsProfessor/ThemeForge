@@ -460,17 +460,17 @@ ThemeForge.history = {
     },
 
     formatHistoryValue(value) {
-        if (value === "superellipse(1)") {
-            return "Round";
-        }
+        const labels = {
+            round: "Round",
+            "superellipse(1)": "Round",
+            squircle: "Squircle",
+            bevel: "Bevel",
+            notch: "Notch",
+            scoop: "Scoop",
+            square: "Square",
+        };
 
-        if (typeof value === "string") {
-            const option = window.SHAPE_CORNER_SHAPE_OPTIONS?.find((cornerShape) => cornerShape.value === value);
-
-            return option?.label || value;
-        }
-
-        return value;
+        return labels[value] || value;
     },
 
     formatColorDetail(color) {
