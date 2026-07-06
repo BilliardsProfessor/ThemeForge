@@ -75,6 +75,7 @@ const SHAPE_CONTROLS = {
             { key: "pill", label: "Pill" },
         ],
         mappings: [
+            { key: "surfaceRadius", label: "Surface" },
             { key: "cardRadius", label: "Card" },
             { key: "buttonRadius", label: "Button" },
             { key: "inputRadius", label: "Input" },

@@ -113,9 +113,6 @@
 
 /* Shape roles */
 .preview-area {
-    --surface-radius: calc(var(--card-radius) * 1.5);
-    --surface-corner-shape: var(--card-corner-shape);
-
     --hero-surface-radius: calc(var(--card-radius) * 0.5);
     --hero-card-radius: calc(var(--card-radius) * 0.375);
     --hero-badge-radius: calc(var(--badge-radius) * 0.375);

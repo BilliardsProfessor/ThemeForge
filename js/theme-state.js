@@ -131,11 +131,12 @@ const ThemeForge = {
                     pill: { value: 999, unit: "px" },
                 },
                 mappings: {
-                    cardRadius: { value: 12, unit: "px", cornerShape: "squircle" },
-                    buttonRadius: { value: 8, unit: "px", cornerShape: "superellipse(1)" },
+                    surfaceRadius: { value: 18, unit: "px", cornerShape: "superellipse(1)" },
+                    cardRadius: { value: 12, unit: "px", cornerShape: "superellipse(1)" },
+                    buttonRadius: { value: 8, unit: "px", cornerShape: "squircle" },
                     inputRadius: { value: 8, unit: "px", cornerShape: "superellipse(1)" },
                     badgeRadius: { value: 999, unit: "px", cornerShape: "superellipse(1)" },
-                    dialogRadius: { value: 16, unit: "px", cornerShape: "squircle" },
+                    dialogRadius: { value: 16, unit: "px", cornerShape: "superellipse(1)" },
                 },
             },
 

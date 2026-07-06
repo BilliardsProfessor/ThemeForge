@@ -567,11 +567,15 @@ ThemeForge.export = {
         return [
             ...Object.entries(corners.scale).map(([tokenName, token]) => `--radius-${tokenName}: ${ThemeForge.getTokenValue(token)};`),
             "",
-            ...Object.entries(corners.mappings).map(([mappingName, token]) => {
+            ...Object.entries(corners.mappings).flatMap(([mappingName, token]) => {
                 const matchingScaleToken = ThemeForge.findMatchingScaleToken(corners.scale, token);
                 const variableName = `--${this.getCssVariableName(mappingName)}`;
+                const cornerShapeName = variableName.replace(/-radius$/, "-corner-shape");
 
-                return matchingScaleToken ? `${variableName}: var(--radius-${matchingScaleToken});` : `${variableName}: ${ThemeForge.getTokenValue(token)};`;
+                return [
+                    matchingScaleToken ? `${variableName}: var(--radius-${matchingScaleToken});` : `${variableName}: ${ThemeForge.getTokenValue(token)};`,
+                    `${cornerShapeName}: ${token.cornerShape};`,
+                ];
             }),
             "",
             ...Object.entries(borders.scale).map(([tokenName, token]) => `--border-width-${tokenName}: ${ThemeForge.getTokenValue(token)};`),
