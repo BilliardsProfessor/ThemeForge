@@ -440,6 +440,10 @@ const ThemeForge = {
     },
 
     findMatchingScaleToken(scale, mapping) {
+        if (!scale || !mapping) {
+            return null;
+        }
+
         return Object.entries(scale).find(([, token]) => Number(token.value) === Number(mapping.value) && token.unit === mapping.unit)?.[0] || null;
     },
 
