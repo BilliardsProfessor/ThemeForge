@@ -1292,7 +1292,9 @@ function updateThemeFromControls(event) {
     updateBaseFontSizeValue();
     updateTypographyFromControls();
     updateTokensFromControls();
-    updateShadowsFromControls();
+    if (control.dataset.themeControl === "shadow") {
+        updateShadowFromControl(control);
+    }
     updateTypographySummaryRows();
 
     if (!isPreviewOnly && !ThemeForge.history.themesMatch(startingSnapshot, ThemeForge.theme)) {
@@ -1303,6 +1305,8 @@ function updateThemeFromControls(event) {
     ThemeForge.applyTheme();
     ThemeForge.accessibility.updateScoreBadge();
     updateNearestScaleButtons();
+    syncShadowControlsFromState();
+    updateShadowSummaryRows();
 }
 
 function updateTypographyFromControls() {
@@ -1610,7 +1614,7 @@ ThemeForge.refreshThemeInterface = function refreshThemeInterface() {
 
 function renderShadowControls() {
     renderShadowRecipeList();
-    renderShadowMappingControls();
+    renderShadowMappingList();
 }
 
 function renderShadowRecipeList() {
@@ -1624,101 +1628,187 @@ function renderShadowRecipeList() {
         const item = document.createElement("div");
 
         item.className = "shadow-summary-item";
-        item.textContent = `${getShadowRecipeLabel(recipeName)}: ${ThemeForge.getShadowValue(recipe)}`;
+        item.innerHTML = `
+            <strong>${getShadowRecipeLabel(recipeName)}</strong>
+            <span>${ThemeForge.getShadowValue(recipe)}</span>
+        `;
 
         container.append(item);
     });
 }
 
-function renderShadowMappingControls() {
+function renderShadowMappingList() {
     const container = document.querySelector("[data-shadow-mappings]");
 
     if (!container) return;
 
-    container.textContent = "";
+    const shell = document.createElement("div");
+    const editor = document.createElement("div");
+    const list = document.createElement("div");
+
+    shell.className = "editor-shell shadow-editor-shell";
+    editor.className = "editor-panel";
+    editor.dataset.shadowEditorPanel = "true";
+    editor.hidden = true;
+
+    list.className = "editor-list";
+    list.dataset.shadowSummaryList = "true";
 
     SHADOW_MAPPING_CONTROLS.forEach((mapping) => {
-        container.append(createShadowMappingControl(mapping));
+        const row = document.createElement("button");
+
+        row.type = "button";
+        row.className = "editor-list-row shadow-summary-row";
+        row.dataset.shadowSummaryMapping = mapping.key;
+        row.addEventListener("click", () => openShadowEditor(mapping.key));
+
+        list.append(row);
+    });
+
+    shell.append(editor, list);
+    container.replaceChildren(shell);
+
+    updateShadowSummaryRows();
+}
+
+function updateShadowSummaryRows() {
+    document.querySelectorAll("[data-shadow-summary-mapping]").forEach((row) => {
+        const mappingName = row.dataset.shadowSummaryMapping;
+        const shadow = ThemeForge.theme.shadows.mappings[mappingName];
+
+        if (!shadow) return;
+
+        row.innerHTML = `
+            <span>${getShadowMappingLabel(mappingName)}</span>
+            <span>${getShadowRecipeLabel(shadow.recipe)}</span>
+            <span>${ThemeForge.getShadowValue(shadow)}</span>
+        `;
     });
 }
 
-function createShadowMappingControl(mapping) {
-    const section = document.createElement("section");
-    const title = document.createElement("h4");
-    const recipeSelect = document.createElement("select");
-    const fields = document.createElement("div");
-    const insetLabel = document.createElement("label");
-    const insetInput = document.createElement("input");
-    const insetText = document.createElement("span");
+function openShadowEditor(mappingName) {
+    const panel = document.querySelector("[data-shadow-editor-panel]");
+    const shadow = ThemeForge.theme.shadows.mappings[mappingName];
 
-    section.className = "shadow-mapping-control control-row";
-    title.className = "control-subsection-title";
-    title.textContent = mapping.label;
+    if (!panel || !shadow) return;
 
-    recipeSelect.className = "control-input";
-    recipeSelect.dataset.themeControl = "shadow";
-    recipeSelect.dataset.shadowMapping = mapping.key;
-    recipeSelect.dataset.shadowField = "recipe";
-    recipeSelect.setAttribute("aria-label", `${mapping.label} recipe`);
+    panel.hidden = false;
 
-    Object.keys(ThemeForge.theme.shadows.recipes).forEach((recipeName) => {
-        const option = document.createElement("option");
-
-        option.value = recipeName;
-        option.textContent = getShadowRecipeLabel(recipeName);
-        recipeSelect.append(option);
+    requestAnimationFrame(() => {
+        panel.classList.add("is-visible");
     });
 
-    const customOption = document.createElement("option");
-    customOption.value = "custom";
-    customOption.textContent = "Custom";
-    recipeSelect.append(customOption);
+    panel.closest(".editor-shell")?.classList.add("is-editing");
+    panel.dataset.shadowMapping = mappingName;
 
-    fields.className = "shadow-field-grid";
+    panel.innerHTML = `
+        <header class="editor-panel-header">
+            <h3>${getShadowMappingLabel(mappingName)}</h3>
+            <button
+                type="button"
+                class="editor-panel-close"
+                data-close-shadow-editor
+                aria-label="Close shadow editor"
+            >
+                <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                    <path d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5" />
+                    <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+            </button>
+        </header>
 
-    SHADOW_FIELDS.forEach((field) => {
-        fields.append(createShadowFieldControl(mapping.key, mapping.label, field));
+        <div class="editor-panel-content shadow-editor-content">
+            <label>
+                Recipe
+                <select data-theme-control="shadow" data-shadow-mapping="${mappingName}" data-shadow-field="recipe">
+                    ${Object.keys(ThemeForge.theme.shadows.recipes)
+                        .map(
+                            (recipeName) =>
+                                `<option value="${recipeName}" ${recipeName === shadow.recipe ? "selected" : ""}>${getShadowRecipeLabel(recipeName)}</option>`,
+                        )
+                        .join("")}
+                    <option value="custom" ${shadow.recipe === "custom" ? "selected" : ""}>Custom</option>
+                </select>
+            </label>
+
+            ${SHADOW_FIELDS.map((field) => {
+                return `
+                    <label>
+                        ${field.label}
+                        <input
+                            type="text"
+                            inputmode="decimal"
+                            value="${shadow[field.key]}"
+                            data-theme-control="shadow"
+                            data-shadow-mapping="${mappingName}"
+                            data-shadow-field="${field.key}"
+                            aria-label="${getShadowMappingLabel(mappingName)} ${field.label}"
+                        />
+                    </label>
+                `;
+            }).join("")}
+
+            <label class="shadow-inset-control">
+                <input
+                    type="checkbox"
+                    ${shadow.inset ? "checked" : ""}
+                    data-theme-control="shadow"
+                    data-shadow-mapping="${mappingName}"
+                    data-shadow-field="inset"
+                />
+                <span>Inset</span>
+            </label>
+        </div>
+    `;
+
+    panel.querySelectorAll("[data-theme-control='shadow'][data-shadow-field]:not(select):not([type='checkbox'])").forEach((control) => {
+        const field = SHADOW_FIELDS.find((shadowField) => shadowField.key === control.dataset.shadowField);
+
+        enhanceWorkspaceNumberInput(control, {
+            min: field?.min,
+            max: field?.max,
+            step: 1,
+            fineStep: 1,
+            coarseStep: 4,
+            decimals: 0,
+        });
     });
 
-    insetLabel.className = "shadow-inset-control";
-    insetInput.type = "checkbox";
-    insetInput.dataset.themeControl = "shadow";
-    insetInput.dataset.shadowMapping = mapping.key;
-    insetInput.dataset.shadowField = "inset";
+    panel.querySelectorAll("[data-theme-control='shadow']").forEach((control) => {
+        control.addEventListener("input", updateThemeFromControls);
+    });
 
-    insetText.textContent = "Inset";
-    insetLabel.append(insetInput, insetText);
-
-    section.append(title, recipeSelect, fields, insetLabel);
-
-    return section;
+    panel.querySelector("[data-close-shadow-editor]").addEventListener("click", closeShadowEditor);
 }
 
-function createShadowFieldControl(mappingKey, mappingLabel, field) {
-    const label = document.createElement("label");
-    const text = document.createElement("span");
-    const input = createWorkspaceNumberInput({
-        className: "control-input shadow-value-input",
-        ariaLabel: `${mappingLabel} ${field.label}`,
-        min: field.min,
-        max: field.max,
-        step: 1,
-        fineStep: 1,
-        coarseStep: 4,
-        decimals: 0,
-        dataset: {
-            themeControl: "shadow",
-            shadowMapping: mappingKey,
-            shadowField: field.key,
-        },
-    });
+function closeShadowEditor() {
+    const panel = document.querySelector("[data-shadow-editor-panel]");
 
-    label.className = "shadow-field-control";
-    text.textContent = field.label;
+    if (!panel || panel.hidden) return;
 
-    label.append(text, input);
+    panel.classList.remove("is-visible");
+    panel.closest(".editor-shell")?.classList.remove("is-editing");
 
-    return label;
+    window.setTimeout(() => {
+        if (!panel.classList.contains("is-visible")) {
+            panel.hidden = true;
+            delete panel.dataset.shadowMapping;
+        }
+    }, 250);
+}
+
+function handleShadowEditorOutsidePointerDown(event) {
+    const panel = document.querySelector("[data-shadow-editor-panel]");
+
+    if (!panel || panel.hidden || panel.contains(event.target)) {
+        return;
+    }
+
+    closeShadowEditor();
+}
+
+function bindShadowEditorDismissal() {
+    document.addEventListener("pointerdown", handleShadowEditorOutsidePointerDown, true);
 }
 
 function getShadowRecipeLabel(recipeName) {
@@ -1774,10 +1864,6 @@ function updateShadowFromControl(control) {
     shadow.recipe = "custom";
 }
 
-function updateShadowsFromControls() {
-    document.querySelectorAll("[data-theme-control='shadow']").forEach(updateShadowFromControl);
-}
-
 function syncShadowControlsFromState() {
     document.querySelectorAll("[data-theme-control='shadow']").forEach((control) => {
         const shadow = getShadowFromControl(control);
@@ -1822,15 +1908,7 @@ function formatShadowHistoryValue(fieldName, value) {
 
 function bindControls() {
     const controls = document.querySelectorAll(
-        [
-            "#baseFontSize",
-            "#bodyFontFamily",
-            "#headingFontFamily",
-            "#monoFontFamily",
-            "[data-theme-control='token']",
-            "[data-theme-control='shadow']",
-            "[data-typography-field]",
-        ].join(", "),
+        ["#baseFontSize", "#bodyFontFamily", "#headingFontFamily", "#monoFontFamily", "[data-theme-control='token']", "[data-typography-field]"].join(", "),
     );
 
     controls.forEach((control) => {
@@ -1857,6 +1935,7 @@ function bindControls() {
 document.addEventListener("DOMContentLoaded", () => {
     renderTypographyControls();
     bindTypographyEditorDismissal();
+    bindShadowEditorDismissal();
     renderSpacingControls();
     renderShapeControls();
     renderShadowControls();

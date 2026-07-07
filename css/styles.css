@@ -2481,6 +2481,8 @@ a {
 }
 
 .shadow-summary-item {
+    display: grid;
+    gap: 0.2rem;
     padding: 0.55rem 0.65rem;
     border-radius: 0.45rem;
     background: color-mix(in srgb, var(--control-surface), var(--control-border) 28%);
@@ -2489,23 +2491,30 @@ a {
     line-height: 1.35;
 }
 
-.shadow-mapping-control {
-    display: grid;
-    gap: 0.65rem;
-    padding: 0.65rem;
-}
-
-.shadow-field-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.5rem;
-}
-
-.shadow-field-control {
-    display: grid;
-    gap: 0.25rem;
+.shadow-summary-item span,
+.shadow-summary-row span:last-child {
     color: var(--color-muted);
-    font-size: 0.78rem;
+    font-size: 0.76rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.shadow-summary-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.shadow-summary-row span:last-child {
+    grid-column: 1 / -1;
+}
+
+.shadow-editor-content {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.shadow-editor-content label:first-child,
+.shadow-inset-control {
+    grid-column: 1 / -1;
 }
 
 .shadow-inset-control {
@@ -2514,8 +2523,4 @@ a {
     gap: 0.4rem;
     color: var(--color-text);
     font-size: 0.85rem;
-}
-
-.shadow-value-input {
-    min-width: 0;
 }
