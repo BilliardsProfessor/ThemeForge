@@ -560,7 +560,7 @@ ThemeForge.export = {
     },
 
     getShadowCssDeclarations(mode = ThemeForge.getActiveMode()) {
-        const { recipes, mappings } = ThemeForge.theme.shadows;
+        const { recipes, mappings } = ThemeForge.getShadowsForMode(mode);
         const colors = ThemeForge.theme.modes[mode].colors;
 
         return [
@@ -577,7 +577,7 @@ ThemeForge.export = {
     },
 
     getShadowScssDeclarations(mode = ThemeForge.getActiveMode(), prefix = "") {
-        const { recipes, mappings } = ThemeForge.theme.shadows;
+        const { recipes, mappings } = ThemeForge.getShadowsForMode(mode);
         const colors = ThemeForge.theme.modes[mode].colors;
 
         return [

@@ -159,21 +159,43 @@ const ThemeForge = {
             overlayBlur: 2,
         },
         shadows: {
-            recipes: {
-                subtle: { x: 0, y: 4, blur: 12, spread: 0, opacity: 12, color: "shadowTint", inset: false },
-                soft: { x: 0, y: 8, blur: 24, spread: 0, opacity: 18, color: "shadowTint", inset: false },
-                raised: { x: 0, y: 12, blur: 32, spread: -4, opacity: 22, color: "shadowTint", inset: false },
-                floating: { x: 0, y: 18, blur: 48, spread: -8, opacity: 28, color: "shadowTint", inset: false },
-                dramatic: { x: 0, y: 24, blur: 64, spread: -12, opacity: 36, color: "shadowTint", inset: false },
-                inset: { x: 0, y: 2, blur: 8, spread: 0, opacity: 18, color: "shadowTint", inset: true },
-            },
-            mappings: {
-                surfaceShadow: { recipe: "soft", x: 0, y: 8, blur: 24, spread: 0, opacity: 18, color: "shadowTint", inset: false },
-                cardShadow: { recipe: "soft", x: 0, y: 8, blur: 24, spread: 0, opacity: 18, color: "shadowTint", inset: false },
-                buttonShadow: { recipe: "subtle", x: 0, y: 4, blur: 12, spread: 0, opacity: 12, color: "shadowTint", inset: false },
-                dialogShadow: { recipe: "floating", x: 0, y: 18, blur: 48, spread: -8, opacity: 28, color: "shadowTint", inset: false },
-                popoverShadow: { recipe: "raised", x: 0, y: 12, blur: 32, spread: -4, opacity: 22, color: "shadowTint", inset: false },
-                toastShadow: { recipe: "raised", x: 0, y: 12, blur: 32, spread: -4, opacity: 22, color: "shadowTint", inset: false },
+            modes: {
+                light: {
+                    recipes: {
+                        subtle: { x: 0, y: 4, blur: 12, spread: 0, opacity: 12, color: "shadowTint", inset: false },
+                        soft: { x: 0, y: 8, blur: 24, spread: 0, opacity: 18, color: "shadowTint", inset: false },
+                        raised: { x: 0, y: 12, blur: 32, spread: -4, opacity: 22, color: "shadowTint", inset: false },
+                        floating: { x: 0, y: 18, blur: 48, spread: -8, opacity: 28, color: "shadowTint", inset: false },
+                        dramatic: { x: 0, y: 24, blur: 64, spread: -12, opacity: 36, color: "shadowTint", inset: false },
+                        inset: { x: 0, y: 2, blur: 8, spread: 0, opacity: 18, color: "shadowTint", inset: true },
+                    },
+                    mappings: {
+                        surfaceShadow: { recipe: "soft", x: 0, y: 8, blur: 24, spread: 0, opacity: 18, color: "shadowTint", inset: false },
+                        cardShadow: { recipe: "soft", x: 0, y: 8, blur: 24, spread: 0, opacity: 18, color: "shadowTint", inset: false },
+                        buttonShadow: { recipe: "subtle", x: 0, y: 4, blur: 12, spread: 0, opacity: 12, color: "shadowTint", inset: false },
+                        dialogShadow: { recipe: "floating", x: 0, y: 18, blur: 48, spread: -8, opacity: 28, color: "shadowTint", inset: false },
+                        popoverShadow: { recipe: "raised", x: 0, y: 12, blur: 32, spread: -4, opacity: 22, color: "shadowTint", inset: false },
+                        toastShadow: { recipe: "raised", x: 0, y: 12, blur: 32, spread: -4, opacity: 22, color: "shadowTint", inset: false },
+                    },
+                },
+                dark: {
+                    recipes: {
+                        subtle: { x: 0, y: 4, blur: 12, spread: 0, opacity: 12, color: "shadowTint", inset: false },
+                        soft: { x: 0, y: 8, blur: 24, spread: 0, opacity: 18, color: "shadowTint", inset: false },
+                        raised: { x: 0, y: 12, blur: 32, spread: -4, opacity: 22, color: "shadowTint", inset: false },
+                        floating: { x: 0, y: 18, blur: 48, spread: -8, opacity: 28, color: "shadowTint", inset: false },
+                        dramatic: { x: 0, y: 24, blur: 64, spread: -12, opacity: 36, color: "shadowTint", inset: false },
+                        inset: { x: 0, y: 2, blur: 8, spread: 0, opacity: 18, color: "shadowTint", inset: true },
+                    },
+                    mappings: {
+                        surfaceShadow: { recipe: "soft", x: 0, y: 8, blur: 24, spread: 0, opacity: 18, color: "shadowTint", inset: false },
+                        cardShadow: { recipe: "soft", x: 0, y: 8, blur: 24, spread: 0, opacity: 18, color: "shadowTint", inset: false },
+                        buttonShadow: { recipe: "subtle", x: 0, y: 4, blur: 12, spread: 0, opacity: 12, color: "shadowTint", inset: false },
+                        dialogShadow: { recipe: "floating", x: 0, y: 18, blur: 48, spread: -8, opacity: 28, color: "shadowTint", inset: false },
+                        popoverShadow: { recipe: "raised", x: 0, y: 12, blur: 32, spread: -4, opacity: 22, color: "shadowTint", inset: false },
+                        toastShadow: { recipe: "raised", x: 0, y: 12, blur: 32, spread: -4, opacity: 22, color: "shadowTint", inset: false },
+                    },
+                },
             },
         },
     },
@@ -299,8 +321,17 @@ const ThemeForge = {
         const defaultShadows = this.theme.shadows;
 
         return {
-            recipes: this.normalizeShadowCollection(shadows.recipes || defaultShadows.recipes, defaultShadows.recipes),
-            mappings: this.normalizeShadowCollection(shadows.mappings || defaultShadows.mappings, defaultShadows.mappings),
+            modes: {
+                light: this.normalizeShadowMode(shadows.modes?.light || defaultShadows.modes.light, defaultShadows.modes.light),
+                dark: this.normalizeShadowMode(shadows.modes?.dark || defaultShadows.modes.dark, defaultShadows.modes.dark),
+            },
+        };
+    },
+
+    normalizeShadowMode(shadowMode = {}, defaultShadowMode = {}) {
+        return {
+            recipes: this.normalizeShadowCollection(shadowMode.recipes || defaultShadowMode.recipes, defaultShadowMode.recipes),
+            mappings: this.normalizeShadowCollection(shadowMode.mappings || defaultShadowMode.mappings, defaultShadowMode.mappings),
         };
     },
 
@@ -420,6 +451,14 @@ const ThemeForge = {
 
     getActiveColors() {
         return this.theme.modes[this.getActiveMode()].colors;
+    },
+
+    getShadowsForMode(mode = this.getActiveMode(), sourceTheme = this.theme) {
+        return sourceTheme.shadows.modes[mode] || sourceTheme.shadows.modes.light;
+    },
+
+    getActiveShadows() {
+        return this.getShadowsForMode();
     },
 
     get colors() {
@@ -560,7 +599,7 @@ const ThemeForge = {
     },
 
     applyShadowVariables(root) {
-        const { recipes, mappings } = ThemeForge.theme.shadows;
+        const { recipes, mappings } = ThemeForge.getActiveShadows();
         const colors = ThemeForge.getActiveColors();
 
         Object.entries(recipes).forEach(([recipeName, recipe]) => {

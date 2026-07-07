@@ -1606,6 +1606,8 @@ ThemeForge.refreshThemeInterface = function refreshThemeInterface() {
     ThemeForge.theme = ThemeForge.normalizeTheme(ThemeForge.theme);
 
     syncThemeControlsFromState();
+    renderShadowRecipeList();
+    updateShadowSummaryRows();
     updateThemeModeControls();
     ThemeForge.applyTheme();
     ThemeForge.colorEditor.render();
@@ -1624,7 +1626,7 @@ function renderShadowRecipeList() {
 
     container.textContent = "";
 
-    Object.entries(ThemeForge.theme.shadows.recipes).forEach(([recipeName, recipe]) => {
+    Object.entries(ThemeForge.getActiveShadows().recipes).forEach(([recipeName, recipe]) => {
         const item = document.createElement("div");
 
         item.className = "shadow-summary-item";
@@ -1674,7 +1676,7 @@ function renderShadowMappingList() {
 function updateShadowSummaryRows() {
     document.querySelectorAll("[data-shadow-summary-mapping]").forEach((row) => {
         const mappingName = row.dataset.shadowSummaryMapping;
-        const shadow = ThemeForge.theme.shadows.mappings[mappingName];
+        const shadow = ThemeForge.getActiveShadows().mappings[mappingName];
 
         if (!shadow) return;
 
@@ -1688,7 +1690,7 @@ function updateShadowSummaryRows() {
 
 function openShadowEditor(mappingName) {
     const panel = document.querySelector("[data-shadow-editor-panel]");
-    const shadow = ThemeForge.theme.shadows.mappings[mappingName];
+    const shadow = ThemeForge.getActiveShadows().mappings[mappingName];
 
     if (!panel || !shadow) return;
 
@@ -1722,7 +1724,7 @@ function openShadowEditor(mappingName) {
                 Recipe
                 <select data-theme-control="shadow" data-shadow-mapping="${mappingName}" data-shadow-field="recipe">
                     <option value="none" ${shadow.recipe === "none" ? "selected" : ""}>None</option>
-                    ${Object.keys(ThemeForge.theme.shadows.recipes)
+                    ${Object.keys(ThemeForge.getActiveShadows().recipes)
                         .map(
                             (recipeName) =>
                                 `<option value="${recipeName}" ${recipeName === shadow.recipe ? "selected" : ""}>${getShadowRecipeLabel(recipeName)}</option>`,
@@ -1835,7 +1837,9 @@ function getShadowFieldLabel(fieldName) {
 }
 
 function getShadowFromControl(control, sourceTheme = ThemeForge.theme) {
-    return sourceTheme.shadows?.mappings?.[control.dataset.shadowMapping];
+    const mode = sourceTheme.activeMode || ThemeForge.getActiveMode();
+
+    return ThemeForge.getShadowsForMode(mode, sourceTheme).mappings?.[control.dataset.shadowMapping];
 }
 
 function updateShadowFromControl(control) {
@@ -1864,7 +1868,7 @@ function updateShadowFromControl(control) {
         }
 
         if (control.value !== "custom") {
-            Object.assign(shadow, ThemeForge.cloneValue(ThemeForge.theme.shadows.recipes[control.value]), { recipe: control.value });
+            Object.assign(shadow, ThemeForge.cloneValue(ThemeForge.getActiveShadows().recipes[control.value]), { recipe: control.value });
         }
 
         return;
