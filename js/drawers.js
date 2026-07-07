@@ -150,7 +150,7 @@
         return summary?.offsetHeight + 10 || 0;
     }
 
-    function scrollPanelToTop(panelName) {
+    function scrollPanelToTop(panelName, behavior = "smooth") {
         const drawerContent = leftDrawer.querySelector(".drawer-content");
         const panel = leftDrawer.querySelector(`[data-control-panel="${panelName}"]`);
 
@@ -158,12 +158,15 @@
             return;
         }
 
-        window.setTimeout(function () {
-            drawerContent.scrollTo({
-                top: panel.offsetTop - getControlCardSummaryHeight(panel),
-                behavior: "smooth",
-            });
-        }, controlCardAnimationDuration);
+        window.setTimeout(
+            function () {
+                drawerContent.scrollTo({
+                    top: panel.offsetTop - getControlCardSummaryHeight(panel),
+                    behavior,
+                });
+            },
+            behavior === "auto" ? 0 : controlCardAnimationDuration,
+        );
     }
 
     function togglePinnedDrawer() {
@@ -181,7 +184,18 @@
         const currentState = getLeftDrawerState();
 
         activatePanel(panelName);
-        scrollPanelToTop(panelName);
+
+        if (currentState === "collapsed") {
+            scrollPanelToTop(panelName, "auto");
+
+            window.setTimeout(function () {
+                setLeftDrawerState("temporary");
+            }, 100);
+
+            return;
+        }
+
+        scrollPanelToTop(panelName, "smooth");
 
         if (currentState === "pinned") {
             return;
