@@ -104,12 +104,12 @@ const SHAPE_CONTROLS = {
 };
 
 const SHADOW_MAPPING_CONTROLS = [
-    { key: "surfaceShadow", label: "Surface shadow" },
-    { key: "cardShadow", label: "Card shadow" },
-    { key: "buttonShadow", label: "Button shadow" },
-    { key: "dialogShadow", label: "Dialog shadow" },
-    { key: "popoverShadow", label: "Popover shadow" },
-    { key: "toastShadow", label: "Toast shadow" },
+    { key: "surfaceShadow", label: "Surface shadow", recipeScale: 1 },
+    { key: "cardShadow", label: "Card shadow", recipeScale: 1 },
+    { key: "buttonShadow", label: "Button shadow", recipeScale: 0.45 },
+    { key: "dialogShadow", label: "Dialog shadow", recipeScale: 1.35 },
+    { key: "popoverShadow", label: "Popover shadow", recipeScale: 0.85 },
+    { key: "toastShadow", label: "Toast shadow", recipeScale: 0.75 },
 ];
 
 const SHADOW_FIELDS = [
@@ -1836,6 +1836,20 @@ function getShadowFieldLabel(fieldName) {
     return labels[fieldName] || fieldName;
 }
 
+function getShadowMappingRecipeScale(mappingName) {
+    return SHADOW_MAPPING_CONTROLS.find((mapping) => mapping.key === mappingName)?.recipeScale || 1;
+}
+
+function getScaledShadowRecipe(recipe, scale = 1) {
+    return {
+        ...ThemeForge.cloneValue(recipe),
+        x: Math.round(recipe.x * scale),
+        y: Math.round(recipe.y * scale),
+        blur: Math.round(recipe.blur * scale),
+        spread: Math.round(recipe.spread * scale),
+    };
+}
+
 function getShadowFromControl(control, sourceTheme = ThemeForge.theme) {
     const mode = sourceTheme.activeMode || ThemeForge.getActiveMode();
 
@@ -1868,7 +1882,13 @@ function updateShadowFromControl(control) {
         }
 
         if (control.value !== "custom") {
-            Object.assign(shadow, ThemeForge.cloneValue(ThemeForge.getActiveShadows().recipes[control.value]), { recipe: control.value });
+            Object.assign(
+                shadow,
+                getScaledShadowRecipe(ThemeForge.getActiveShadows().recipes[control.value], getShadowMappingRecipeScale(control.dataset.shadowMapping)),
+                {
+                    recipe: control.value,
+                },
+            );
         }
 
         return;

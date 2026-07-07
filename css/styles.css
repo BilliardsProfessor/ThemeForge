@@ -1427,7 +1427,6 @@ body.drawer-is-initializing .control-card-content {
     inline-size: var(--active-tab-width, 0px);
     border-radius: calc(var(--radius) - 3px);
     background: var(--color-surface);
-    box-shadow: var(--shadow-soft);
     transform: translateX(var(--active-tab-offset, 0px));
     transition:
         inline-size 180ms ease,
@@ -1469,9 +1468,6 @@ body.drawer-is-initializing .control-card-content {
     border: var(--border-width) solid var(--color-border);
     border-radius: calc(var(--radius) * 1.2);
     font-size: var(--font-size-base);
-    /* box-shadow:
-        0 24px 60px rgb(15 23 42 / 0.14),
-        0 0 0 1px rgb(255 255 255 / 0.65); */
     transition: width var(--preview-width-transition);
 }
 
@@ -1485,6 +1481,8 @@ body.drawer-is-initializing .control-card-content {
     flex: 1 1 auto;
     min-height: 0;
     transition: width var(--preview-width-transition);
+    box-shadow: var(--surface-shadow);
+    border-radius: calc(var(--radius) * 1.2);
 }
 
 .preview-resize-frame .preview-panel {
@@ -1813,7 +1811,6 @@ a {
     inline-size: var(--active-tab-width, 0px);
     border-radius: 0.45rem;
     background: var(--control-surface-active);
-    box-shadow: var(--shadow-soft);
     transform: translateX(var(--active-tab-offset, 0px));
     transition:
         inline-size 180ms ease,
