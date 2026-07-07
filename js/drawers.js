@@ -144,6 +144,21 @@
         });
     }
 
+    function activatePanelImmediately(panelName) {
+        document.querySelectorAll("[data-control-panel]").forEach(function (panel) {
+            const content = getControlCardContent(panel);
+
+            panel.classList.remove("is-opening", "is-collapsing");
+
+            if (content) {
+                content.style.height = "";
+                content.style.opacity = "";
+            }
+
+            panel.open = panel.dataset.controlPanel === panelName;
+        });
+    }
+
     function getControlCardSummaryHeight(panel) {
         const summary = panel.querySelector("summary");
 
@@ -183,9 +198,8 @@
     function openPanelFromRail(panelName) {
         const currentState = getLeftDrawerState();
 
-        activatePanel(panelName);
-
         if (currentState === "collapsed") {
+            activatePanelImmediately(panelName);
             scrollPanelToTop(panelName, "auto");
 
             window.setTimeout(function () {
@@ -195,6 +209,7 @@
             return;
         }
 
+        activatePanel(panelName);
         scrollPanelToTop(panelName, "smooth");
 
         if (currentState === "pinned") {
