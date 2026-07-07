@@ -103,6 +103,23 @@ const SHAPE_CONTROLS = {
     },
 };
 
+const SHADOW_MAPPING_CONTROLS = [
+    { key: "surfaceShadow", label: "Surface shadow" },
+    { key: "cardShadow", label: "Card shadow" },
+    { key: "buttonShadow", label: "Button shadow" },
+    { key: "dialogShadow", label: "Dialog shadow" },
+    { key: "popoverShadow", label: "Popover shadow" },
+    { key: "toastShadow", label: "Toast shadow" },
+];
+
+const SHADOW_FIELDS = [
+    { key: "x", label: "X", min: -64, max: 64 },
+    { key: "y", label: "Y", min: -64, max: 96 },
+    { key: "blur", label: "Blur", min: 0, max: 128 },
+    { key: "spread", label: "Spread", min: -64, max: 64 },
+    { key: "opacity", label: "Opacity", min: 0, max: 100 },
+];
+
 const TOKEN_FEATURE_CONTROLS = {
     layout: FEATURE_CONTROLS.layout,
     components: FEATURE_CONTROLS.components,
@@ -1275,6 +1292,7 @@ function updateThemeFromControls(event) {
     updateBaseFontSizeValue();
     updateTypographyFromControls();
     updateTokensFromControls();
+    updateShadowsFromControls();
     updateTypographySummaryRows();
 
     if (!isPreviewOnly && !ThemeForge.history.themesMatch(startingSnapshot, ThemeForge.theme)) {
@@ -1434,7 +1452,10 @@ function getControlHistoryDetail(control, snapshot = null) {
     };
 
     const detail =
-        details[control.id] || getTokenControlHistoryDetail(control, normalizedSnapshot) || getTypographyControlHistoryDetail(control, normalizedSnapshot);
+        details[control.id] ||
+        getTokenControlHistoryDetail(control, normalizedSnapshot) ||
+        getShadowControlHistoryDetail(control, normalizedSnapshot) ||
+        getTypographyControlHistoryDetail(control, normalizedSnapshot);
 
     if (!detail) {
         return null;
@@ -1573,7 +1594,7 @@ function syncFeatureControlsFromState() {
 
         control.value = token[control.dataset.tokenField];
     });
-
+    syncShadowControlsFromState();
     updateNearestScaleButtons();
 }
 
@@ -1587,9 +1608,229 @@ ThemeForge.refreshThemeInterface = function refreshThemeInterface() {
     ThemeForge.accessibility.updateScoreBadge();
 };
 
+function renderShadowControls() {
+    renderShadowRecipeList();
+    renderShadowMappingControls();
+}
+
+function renderShadowRecipeList() {
+    const container = document.querySelector("[data-shadow-recipes]");
+
+    if (!container) return;
+
+    container.textContent = "";
+
+    Object.entries(ThemeForge.theme.shadows.recipes).forEach(([recipeName, recipe]) => {
+        const item = document.createElement("div");
+
+        item.className = "shadow-summary-item";
+        item.textContent = `${getShadowRecipeLabel(recipeName)}: ${ThemeForge.getShadowValue(recipe)}`;
+
+        container.append(item);
+    });
+}
+
+function renderShadowMappingControls() {
+    const container = document.querySelector("[data-shadow-mappings]");
+
+    if (!container) return;
+
+    container.textContent = "";
+
+    SHADOW_MAPPING_CONTROLS.forEach((mapping) => {
+        container.append(createShadowMappingControl(mapping));
+    });
+}
+
+function createShadowMappingControl(mapping) {
+    const section = document.createElement("section");
+    const title = document.createElement("h4");
+    const recipeSelect = document.createElement("select");
+    const fields = document.createElement("div");
+    const insetLabel = document.createElement("label");
+    const insetInput = document.createElement("input");
+    const insetText = document.createElement("span");
+
+    section.className = "shadow-mapping-control control-row";
+    title.className = "control-subsection-title";
+    title.textContent = mapping.label;
+
+    recipeSelect.className = "control-input";
+    recipeSelect.dataset.themeControl = "shadow";
+    recipeSelect.dataset.shadowMapping = mapping.key;
+    recipeSelect.dataset.shadowField = "recipe";
+    recipeSelect.setAttribute("aria-label", `${mapping.label} recipe`);
+
+    Object.keys(ThemeForge.theme.shadows.recipes).forEach((recipeName) => {
+        const option = document.createElement("option");
+
+        option.value = recipeName;
+        option.textContent = getShadowRecipeLabel(recipeName);
+        recipeSelect.append(option);
+    });
+
+    const customOption = document.createElement("option");
+    customOption.value = "custom";
+    customOption.textContent = "Custom";
+    recipeSelect.append(customOption);
+
+    fields.className = "shadow-field-grid";
+
+    SHADOW_FIELDS.forEach((field) => {
+        fields.append(createShadowFieldControl(mapping.key, mapping.label, field));
+    });
+
+    insetLabel.className = "shadow-inset-control";
+    insetInput.type = "checkbox";
+    insetInput.dataset.themeControl = "shadow";
+    insetInput.dataset.shadowMapping = mapping.key;
+    insetInput.dataset.shadowField = "inset";
+
+    insetText.textContent = "Inset";
+    insetLabel.append(insetInput, insetText);
+
+    section.append(title, recipeSelect, fields, insetLabel);
+
+    return section;
+}
+
+function createShadowFieldControl(mappingKey, mappingLabel, field) {
+    const label = document.createElement("label");
+    const text = document.createElement("span");
+    const input = createWorkspaceNumberInput({
+        className: "control-input shadow-value-input",
+        ariaLabel: `${mappingLabel} ${field.label}`,
+        min: field.min,
+        max: field.max,
+        step: 1,
+        fineStep: 1,
+        coarseStep: 4,
+        decimals: 0,
+        dataset: {
+            themeControl: "shadow",
+            shadowMapping: mappingKey,
+            shadowField: field.key,
+        },
+    });
+
+    label.className = "shadow-field-control";
+    text.textContent = field.label;
+
+    label.append(text, input);
+
+    return label;
+}
+
+function getShadowRecipeLabel(recipeName) {
+    return recipeName.replace(/([A-Z])/g, " $1").replace(/^./, (letter) => letter.toUpperCase());
+}
+
+function getShadowMappingLabel(mappingName) {
+    return SHADOW_MAPPING_CONTROLS.find((mapping) => mapping.key === mappingName)?.label || mappingName;
+}
+
+function getShadowFieldLabel(fieldName) {
+    const labels = {
+        recipe: "recipe",
+        x: "X offset",
+        y: "Y offset",
+        blur: "blur",
+        spread: "spread",
+        opacity: "opacity",
+        inset: "inset",
+    };
+
+    return labels[fieldName] || fieldName;
+}
+
+function getShadowFromControl(control, sourceTheme = ThemeForge.theme) {
+    return sourceTheme.shadows?.mappings?.[control.dataset.shadowMapping];
+}
+
+function updateShadowFromControl(control) {
+    const shadow = getShadowFromControl(control);
+
+    if (!shadow) return;
+
+    const field = control.dataset.shadowField;
+
+    if (field === "recipe") {
+        shadow.recipe = control.value;
+
+        if (control.value !== "custom") {
+            Object.assign(shadow, ThemeForge.cloneValue(ThemeForge.theme.shadows.recipes[control.value]), { recipe: control.value });
+        }
+
+        return;
+    }
+
+    if (field === "inset") {
+        shadow.inset = control.checked;
+        shadow.recipe = "custom";
+        return;
+    }
+
+    shadow[field] = getControlNumericValue(control, Number(shadow[field]));
+    shadow.recipe = "custom";
+}
+
+function updateShadowsFromControls() {
+    document.querySelectorAll("[data-theme-control='shadow']").forEach(updateShadowFromControl);
+}
+
+function syncShadowControlsFromState() {
+    document.querySelectorAll("[data-theme-control='shadow']").forEach((control) => {
+        const shadow = getShadowFromControl(control);
+
+        if (!shadow) return;
+
+        const field = control.dataset.shadowField;
+
+        if (field === "inset") {
+            control.checked = Boolean(shadow.inset);
+            return;
+        }
+
+        control.value = shadow[field];
+    });
+}
+
+function getShadowControlHistoryDetail(control, snapshot) {
+    if (control.dataset.themeControl !== "shadow") return null;
+
+    const mappingName = control.dataset.shadowMapping;
+    const fieldName = control.dataset.shadowField;
+    const beforeShadow = getShadowFromControl(control, snapshot);
+    const afterShadow = getShadowFromControl(control, ThemeForge.theme);
+
+    if (!beforeShadow || !afterShadow) return null;
+
+    return {
+        label: `${getShadowMappingLabel(mappingName)} ${getShadowFieldLabel(fieldName)}`,
+        before: formatShadowHistoryValue(fieldName, beforeShadow[fieldName]),
+        after: formatShadowHistoryValue(fieldName, afterShadow[fieldName]),
+    };
+}
+
+function formatShadowHistoryValue(fieldName, value) {
+    if (fieldName === "recipe") return getShadowRecipeLabel(value);
+    if (fieldName === "inset") return value ? "On" : "Off";
+    if (fieldName === "opacity") return `${value}%`;
+
+    return `${value}px`;
+}
+
 function bindControls() {
     const controls = document.querySelectorAll(
-        ["#baseFontSize", "#bodyFontFamily", "#headingFontFamily", "#monoFontFamily", "[data-theme-control='token']", "[data-typography-field]"].join(", "),
+        [
+            "#baseFontSize",
+            "#bodyFontFamily",
+            "#headingFontFamily",
+            "#monoFontFamily",
+            "[data-theme-control='token']",
+            "[data-theme-control='shadow']",
+            "[data-typography-field]",
+        ].join(", "),
     );
 
     controls.forEach((control) => {
@@ -1618,6 +1859,7 @@ document.addEventListener("DOMContentLoaded", () => {
     bindTypographyEditorDismissal();
     renderSpacingControls();
     renderShapeControls();
+    renderShadowControls();
     bindControls();
     bindDeferredHistoryControls();
     bindThemeModeControls();
