@@ -466,6 +466,9 @@ const ThemeForge = {
     },
 
     getShadowValue(shadow, colors = ThemeForge.getActiveColors()) {
+        if (shadow.recipe === "none") {
+            return "none";
+        }
         const opacity = Math.max(0, Math.min(100, Number(shadow.opacity))) / 100;
         const colorToken = colors[shadow.color] || colors.shadowTint;
         const shadowColor = {

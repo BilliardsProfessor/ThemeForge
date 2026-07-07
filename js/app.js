@@ -1721,6 +1721,7 @@ function openShadowEditor(mappingName) {
             <label>
                 Recipe
                 <select data-theme-control="shadow" data-shadow-mapping="${mappingName}" data-shadow-field="recipe">
+                    <option value="none" ${shadow.recipe === "none" ? "selected" : ""}>None</option>
                     ${Object.keys(ThemeForge.theme.shadows.recipes)
                         .map(
                             (recipeName) =>
@@ -1847,6 +1848,21 @@ function updateShadowFromControl(control) {
     if (field === "recipe") {
         shadow.recipe = control.value;
 
+        if (control.value === "none") {
+            Object.assign(shadow, {
+                recipe: "none",
+                x: 0,
+                y: 0,
+                blur: 0,
+                spread: 0,
+                opacity: 0,
+                color: "shadowTint",
+                inset: false,
+            });
+
+            return;
+        }
+
         if (control.value !== "custom") {
             Object.assign(shadow, ThemeForge.cloneValue(ThemeForge.theme.shadows.recipes[control.value]), { recipe: control.value });
         }
@@ -1899,10 +1915,10 @@ function getShadowControlHistoryDetail(control, snapshot) {
 }
 
 function formatShadowHistoryValue(fieldName, value) {
+    if (fieldName === "recipe" && value === "none") return "None";
     if (fieldName === "recipe") return getShadowRecipeLabel(value);
     if (fieldName === "inset") return value ? "On" : "Off";
     if (fieldName === "opacity") return `${value}%`;
-
     return `${value}px`;
 }
 

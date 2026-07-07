@@ -442,7 +442,7 @@
     border: var(--border-width) solid var(--card-state-color);
     /* border-radius: var(--card-radius); */
     background: var(--color-surface);
-    box-shadow: var(--shadow-soft);
+    box-shadow: var(--card-shadow);
 }
 
 .sample-card.success {
@@ -584,6 +584,7 @@
     width: fit-content;
     padding: var(--button-padding-y) var(--button-padding-x);
     border: var(--button-border-width) solid transparent;
+    box-shadow: var(--button-shadow);
     font: inherit;
     font-weight: 750;
     line-height: 1.2;
@@ -629,7 +630,7 @@
 .preview-toast {
     padding: 0.9rem 1rem;
     /* border-radius: var(--radius); */
-    box-shadow: var(--shadow-soft);
+    box-shadow: var(--toast-shadow);
 }
 
 .preview-toast strong {
@@ -705,7 +706,7 @@
     /* border-radius: var(--dialog-radius); */
     background: var(--color-surface);
     color: var(--color-text);
-    box-shadow: var(--shadow-soft);
+    box-shadow: var(--dialog-shadow);
 }
 
 .preview-modal-header,
