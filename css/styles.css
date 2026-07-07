@@ -13,6 +13,7 @@
     --drawer-sidebar-accent: var(--color-primary);
     --left-drawer-dock-width: 0px;
     --right-drawer-dock-width: 0px;
+    --control-card-summary-height: 3.5rem;
 
     --color-primary: hsl(221 83% 53%);
     --color-secondary: hsl(262 83% 58%);
@@ -827,6 +828,7 @@ body[data-app-mode="dark"] .preview-size-field select option {
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-gutter: stable;
+    padding-bottom: 45vh;
 }
 
 body[data-left-drawer-state="collapsed"] .left-drawer {
@@ -1098,6 +1100,7 @@ body[data-left-drawer-state="temporary"] .drawer-unlock-icon {
 .control-card > summary {
     position: sticky;
     top: 0;
+    min-height: var(--control-card-summary-height);
     z-index: 4;
     background: var(--color-surface);
     display: flex;
@@ -2144,7 +2147,7 @@ a {
     align-items: center;
     gap: 0.3rem;
     margin-inline: -0.35rem;
-    padding: 0.32rem 0.35rem;
+    padding: 0.1rem 0.3rem;
 }
 
 .spacing-token-label {

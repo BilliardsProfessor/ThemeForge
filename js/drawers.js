@@ -144,6 +144,28 @@
         });
     }
 
+    function getControlCardSummaryHeight(panel) {
+        const summary = panel.querySelector("summary");
+
+        return summary?.offsetHeight + 10 || 0;
+    }
+
+    function scrollPanelToTop(panelName) {
+        const drawerContent = leftDrawer.querySelector(".drawer-content");
+        const panel = leftDrawer.querySelector(`[data-control-panel="${panelName}"]`);
+
+        if (!drawerContent || !panel) {
+            return;
+        }
+
+        window.setTimeout(function () {
+            drawerContent.scrollTo({
+                top: panel.offsetTop - getControlCardSummaryHeight(panel),
+                behavior: "smooth",
+            });
+        }, controlCardAnimationDuration);
+    }
+
     function togglePinnedDrawer() {
         const currentState = getLeftDrawerState();
 
@@ -159,6 +181,7 @@
         const currentState = getLeftDrawerState();
 
         activatePanel(panelName);
+        scrollPanelToTop(panelName);
 
         if (currentState === "pinned") {
             return;
