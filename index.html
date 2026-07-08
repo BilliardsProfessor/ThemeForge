@@ -96,20 +96,9 @@
             </label>
 
             <button type="button" id="fullPreviewBtn">Full Preview</button>
-            <div class="export-menu" data-export-menu>
-                <button type="button" id="exportMenuBtn" aria-haspopup="true" aria-expanded="false">
-                    Export
-                </button>
-
-                <div class="export-menu-list" data-export-menu-list hidden>
-                    <button type="button" data-export-type="json">
-                        JSON Theme
-                    </button>
-                    <button type="button" data-export-type="css">
-                        Styles
-                    </button>
-                </div>
-            </div>
+            <button type="button" id="exportWorkspaceBtn" data-workspace-open="export">
+                Export
+            </button>
             <button type="button" class="score-badge" id="scoreBadge">
                 A11y 100
             </button>
@@ -203,6 +192,16 @@
                     viewBox="0 0 16 16">
                     <path
                         d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-8 7a.5.5 0 0 1 0-1h3.5q.048 0 .093.009A7 7 0 0 0 12.9 13H8a.5.5 0 0 1 0-1h5.745q.331-.474.581-1H8a.5.5 0 0 1 0-1h6.71a7 7 0 0 0 .22-1H8a.5.5 0 0 1 0-1h7q0-.51-.07-1H8a.5.5 0 0 1 0-1h6.71a7 7 0 0 0-.384-1H8a.5.5 0 0 1 0-1h5.745a7 7 0 0 0-.846-1H8a.5.5 0 0 1 0-1h3.608A7 7 0 1 0 8 15" />
+                </svg>
+            </button>
+
+            <button type="button" class="drawer-rail-button has-tooltip" data-drawer-panel="export"
+                data-workspace-open="export" data-tooltip="Export" data-tooltip-position="right"
+                aria-controls="leftDrawer" aria-label="Open export controls">
+                <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                    <path d="M12 3v12" />
+                    <path d="m7.5 10.5 4.5 4.5 4.5-4.5" />
+                    <path d="M5.25 19.5h13.5" />
                 </svg>
             </button>
         </nav>
@@ -572,512 +571,602 @@
                         </section>
                     </div>
                 </details>
+
+                <details class="control-card" data-control-panel="export">
+                    <summary>
+                        <span class="control-card-title">Export</span>
+                    </summary>
+
+                    <div class="control-card-content">
+                        <section class="control-section">
+                            <h3 class="control-section-title">Target</h3>
+
+                            <label class="control-field export-target-field">
+                                <span class="control-label">Export target</span>
+                                <select id="exportTargetSelect" class="control-input" data-export-target-select>
+                                    <option value="css">CSS</option>
+                                    <option value="scss">SCSS / Sass</option>
+                                    <option value="json">Theme Forge JSON</option>
+                                </select>
+                            </label>
+                        </section>
+
+                        <section class="control-section" data-export-options="css">
+                            <h3 class="control-section-title">CSS Options</h3>
+                            <p class="control-help-text">CSS export options land in Pass 2.</p>
+                        </section>
+
+                        <section class="control-section" data-export-options="scss" hidden>
+                            <h3 class="control-section-title">SCSS Options</h3>
+                            <p class="control-help-text">SCSS export options land in Pass 2.</p>
+                        </section>
+
+                        <section class="control-section" data-export-options="json" hidden>
+                            <h3 class="control-section-title">JSON Options</h3>
+                            <p class="control-help-text">Theme Forge JSON export options land in Pass 2.</p>
+                        </section>
+                    </div>
+                </details>
             </div>
         </aside>
 
         <div class="drawer-dock-spacer drawer-dock-spacer-left" aria-hidden="true"></div>
+        <section class="workspace-area" aria-label="Theme workspace">
+            <section class="preview-area" aria-label="Theme preview" data-workspace-panel="preview">
+                <div class="preview-custom-toolbar" id="previewCustomToolbar" hidden>
+                    <label class="preview-custom-width-field">
+                        <span>Custom width</span>
+                        <input type="number" id="previewCustomWidthInput" min="320" step="1" inputmode="numeric" />
+                        <span>px</span>
+                    </label>
 
-        <section class="preview-area" aria-label="Theme preview">
-            <div class="preview-custom-toolbar" id="previewCustomToolbar" hidden>
-                <label class="preview-custom-width-field">
-                    <span>Custom width</span>
-                    <input type="number" id="previewCustomWidthInput" min="320" step="1" inputmode="numeric" />
-                    <span>px</span>
-                </label>
+                    <button type="button" class="preview-custom-reset has-tooltip" id="previewCustomResetBtn"
+                        data-tooltip="Restore to 900px" data-tooltip-position="bottom"
+                        aria-label="Restore custom preview width to desktop width">
+                        Reset
+                    </button>
+                </div>
 
-                <button type="button" class="preview-custom-reset has-tooltip" id="previewCustomResetBtn"
-                    data-tooltip="Restore to 900px" data-tooltip-position="bottom"
-                    aria-label="Restore custom preview width to desktop width">
-                    Reset
-                </button>
-            </div>
+                <nav class="preview-tabs" aria-label="Preview tabs" data-active-preview-tab="page">
+                    <button type="button" class="active" data-preview-tab="page">
+                        Page
+                    </button>
+                    <button type="button" data-preview-tab="form">Form</button>
+                    <button type="button" data-preview-tab="table">
+                        Table
+                    </button>
+                    <button type="button" data-preview-tab="cards">
+                        Cards
+                    </button>
+                </nav>
 
-            <nav class="preview-tabs" aria-label="Preview tabs" data-active-preview-tab="page">
-                <button type="button" class="active" data-preview-tab="page">
-                    Page
-                </button>
-                <button type="button" data-preview-tab="form">Form</button>
-                <button type="button" data-preview-tab="table">
-                    Table
-                </button>
-                <button type="button" data-preview-tab="cards">
-                    Cards
-                </button>
-            </nav>
+                <div class="preview-resize-frame" id="previewResizeFrame">
+                    <button type="button" class="preview-resize-handle preview-resize-handle-left"
+                        data-preview-resize-handle="left" aria-label="Resize preview from left edge"></button>
 
-            <div class="preview-resize-frame" id="previewResizeFrame">
-                <button type="button" class="preview-resize-handle preview-resize-handle-left"
-                    data-preview-resize-handle="left" aria-label="Resize preview from left edge"></button>
+                    <section class="preview-panel">
+                        <div class="preview-tab-panel sample-page" data-preview-panel="page">
+                            <section class="sample-hero">
+                                <p class="eyebrow">Page Preview</p>
 
-                <section class="preview-panel">
-                    <div class="preview-tab-panel sample-page" data-preview-panel="page">
-                        <section class="sample-hero">
-                            <p class="eyebrow">Page Preview</p>
+                                <h2>Forge themes worthy of dwarven praise.</h2>
 
-                            <h2>Forge themes worthy of dwarven praise.</h2>
+                                <p>
+                                    Shape colors, typography, states, overlays,
+                                    cards, forms, and tables in one living
+                                    preview. No frameworks. No build step. No
+                                    innocent CSS harmed.
+                                </p>
 
-                            <p>
-                                Shape colors, typography, states, overlays,
-                                cards, forms, and tables in one living
-                                preview. No frameworks. No build step. No
-                                innocent CSS harmed.
-                            </p>
+                                <div class="button-row">
+                                    <button type="button" class="preview-button preview-button-primary"
+                                        id="openPreviewDialogBtn">
+                                        Light the beacons
+                                    </button>
+                                </div>
 
-                            <div class="button-row">
-                                <button type="button" class="preview-button preview-button-primary"
-                                    id="openPreviewDialogBtn">
-                                    Light the beacons
-                                </button>
-                            </div>
-
-                            <div class="sample-hero-visual" aria-hidden="true">
-                                <div class="hero-window">
-                                    <div class="hero-window-bar">
-                                        <span></span>
-                                        <span></span>
-                                        <span></span>
-                                    </div>
-
-                                    <div class="hero-window-body">
-                                        <div class="hero-sidebar">
+                                <div class="sample-hero-visual" aria-hidden="true">
+                                    <div class="hero-window">
+                                        <div class="hero-window-bar">
                                             <span></span>
                                             <span></span>
                                             <span></span>
                                         </div>
 
-                                        <div class="hero-content-card">
-                                            <div class="hero-line wide"></div>
-                                            <div class="hero-line medium"></div>
-                                            <div class="hero-pill-row">
-                                                <span class="hero-pill primary"></span>
-                                                <span class="hero-pill secondary"></span>
-                                                <span class="hero-pill success"></span>
+                                        <div class="hero-window-body">
+                                            <div class="hero-sidebar">
+                                                <span></span>
+                                                <span></span>
+                                                <span></span>
+                                            </div>
+
+                                            <div class="hero-content-card">
+                                                <div class="hero-line wide"></div>
+                                                <div class="hero-line medium"></div>
+                                                <div class="hero-pill-row">
+                                                    <span class="hero-pill primary"></span>
+                                                    <span class="hero-pill secondary"></span>
+                                                    <span class="hero-pill success"></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="hero-floating-card top"></div>
+                                    <div class="hero-floating-card bottom"></div>
                                 </div>
+                            </section>
 
-                                <div class="hero-floating-card top"></div>
-                                <div class="hero-floating-card bottom"></div>
-                            </div>
-                        </section>
+                            <section class="sample-section">
+                                <h3>Toast signals</h3>
 
-                        <section class="sample-section">
-                            <h3>Toast signals</h3>
-
-                            <p>
-                                Test the same message pattern across
-                                success, warning, danger, and info states.
-                                Like smoke signals, but with fewer mountains
-                                and more CSS variables.
-                            </p>
-
-                            <div class="toast-button-grid">
-                                <button type="button" class="preview-button toast-demo-button success"
-                                    data-toast-demo="success">
-                                    Success
-                                </button>
-
-                                <button type="button" class="preview-button toast-demo-button warning"
-                                    data-toast-demo="warning">
-                                    Warning
-                                </button>
-
-                                <button type="button" class="preview-button toast-demo-button danger"
-                                    data-toast-demo="danger">
-                                    Danger
-                                </button>
-
-                                <button type="button" class="preview-button toast-demo-button info"
-                                    data-toast-demo="info">
-                                    Info
-                                </button>
-                            </div>
-                        </section>
-
-                        <section class="preview-article-grid">
-                            <article class="preview-article">
-                                <p class="eyebrow">Color Systems</p>
-                                <h3>Every token earns its keep.</h3>
                                 <p>
-                                    Preview real interface pieces while
-                                    tuning surfaces, borders, focus rings,
-                                    overlays, and state colors.
+                                    Test the same message pattern across
+                                    success, warning, danger, and info states.
+                                    Like smoke signals, but with fewer mountains
+                                    and more CSS variables.
                                 </p>
-                            </article>
 
-                            <article class="preview-article">
-                                <p class="eyebrow">Component Checks</p>
-                                <h3>Pretty is suspicious. Test it.</h3>
-                                <p>
-                                    Cards, forms, tables, modals, and toast
-                                    messages reveal where a theme shines and
-                                    where it quietly trips over a rake.
-                                </p>
-                            </article>
-                        </section>
-
-                        <blockquote class="preview-quote">
-                            <p>
-                                “A theme should look good when nothing is
-                                happening, and still make sense when
-                                everything is on fire.”
-                            </p>
-                            <cite>Probably someone in a meeting</cite>
-                        </blockquote>
-                    </div>
-
-                    <div class="preview-tab-panel" data-preview-panel="form" hidden>
-                        <section class="sample-section">
-                            <p class="eyebrow">Form preview</p>
-
-                            <div class="preview-form">
-                                <label>
-                                    Display name
-                                    <input type="text" value="Aurora Dashboard" />
-                                </label>
-
-                                <label>
-                                    Theme category
-                                    <select>
-                                        <option>Admin dashboard</option>
-                                        <option>Marketing site</option>
-                                        <option>Documentation</option>
-                                        <option>Experimental UI</option>
-                                    </select>
-                                </label>
-
-                                <label class="preview-form-full">
-                                    Notes
-                                    <textarea rows="4">
-Testing form colors, spacing, radius, focus states, and control contrast.</textarea>
-                                </label>
-
-                                <fieldset class="preview-form-full">
-                                    <legend>Density</legend>
-
-                                    <label class="preview-choice">
-                                        <input type="radio" name="density" checked />
-                                        Comfortable
-                                    </label>
-
-                                    <label class="preview-choice">
-                                        <input type="radio" name="density" />
-                                        Compact
-                                    </label>
-                                </fieldset>
-
-                                <label class="preview-choice preview-form-full">
-                                    <input type="checkbox" checked />
-                                    Include themed focus and validation
-                                    states
-                                </label>
-
-                                <label>
-                                    Disabled field
-                                    <input type="text" value="Read-only sample" disabled />
-                                </label>
-
-                                <label>
-                                    Error state
-                                    <input class="preview-input-error" type="text" value="Needs attention"
-                                        aria-describedby="formErrorSample" />
-                                    <span class="preview-field-error" id="formErrorSample">This sample shows an error
-                                        message.</span>
-                                </label>
-                            </div>
-
-                            <div class="button-row">
-                                <button type="button" class="primary-button">
-                                    Save changes
-                                </button>
-                                <button type="button" class="secondary-button">
-                                    Cancel
-                                </button>
-                            </div>
-                        </section>
-                    </div>
-
-                    <div class="preview-tab-panel" data-preview-panel="table" hidden>
-                        <section class="sample-section">
-                            <p class="eyebrow">Table preview</p>
-
-                            <div class="preview-table-wrapper">
-                                <table class="preview-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Project</th>
-                                            <th>Owner</th>
-                                            <th>Status</th>
-                                            <th class="numeric">Issues</th>
-                                            <th class="numeric">
-                                                Caffeine
-                                            </th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        <tr>
-                                            <td>Aurora Dashboard</td>
-                                            <td>Michael</td>
-                                            <td>
-                                                <span class="table-badge success">Stable</span>
-                                            </td>
-                                            <td class="numeric">2</td>
-                                            <td class="numeric">
-                                                ☕☕☕☕
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>Project Icarus</td>
-                                            <td>Dave</td>
-                                            <td>
-                                                <span class="table-badge danger">On Fire</span>
-                                            </td>
-                                            <td class="numeric">37</td>
-                                            <td class="numeric">
-                                                ☕☕☕☕☕☕
-                                            </td>
-                                        </tr>
-
-                                        <tr class="selected">
-                                            <td>Theme Forge</td>
-                                            <td>You</td>
-                                            <td>
-                                                <span class="table-badge info">Building</span>
-                                            </td>
-                                            <td class="numeric">0</td>
-                                            <td class="numeric">☕☕☕</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>Quantum Toaster</td>
-                                            <td>Janet</td>
-                                            <td>
-                                                <span class="table-badge warning">Uncertain</span>
-                                            </td>
-                                            <td class="numeric">12</td>
-                                            <td class="numeric">
-                                                ☕☕☕☕☕
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>Operation Cat Herding</td>
-                                            <td>Steve</td>
-                                            <td>
-                                                <span class="table-badge danger">Impossible</span>
-                                            </td>
-                                            <td class="numeric">999</td>
-                                            <td class="numeric">∞</td>
-                                        </tr>
-                                    </tbody>
-
-                                    <tfoot>
-                                        <tr>
-                                            <td colspan="3">
-                                                Active projects
-                                            </td>
-                                            <td class="numeric">1050</td>
-                                            <td class="numeric">
-                                                13 cups/day
-                                            </td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                        </section>
-                    </div>
-
-                    <div class="preview-tab-panel" data-preview-panel="cards" hidden>
-                        <section class="sample-section">
-                            <p class="eyebrow">Cards preview</p>
-
-                            <div class="preview-cards-grid">
-                                <article class="preview-demo-card">
-                                    <div class="preview-demo-card-header">
-                                        <span class="table-badge success">Online</span>
-                                    </div>
-
-                                    <h4>AI Core</h4>
-
-                                    <p>
-                                        Successfully resisting the urge to
-                                        become self-aware before lunch.
-                                    </p>
-
-                                    <button type="button" class="secondary-button">
-                                        View status
+                                <div class="toast-button-grid">
+                                    <button type="button" class="preview-button toast-demo-button success"
+                                        data-toast-demo="success">
+                                        Success
                                     </button>
-                                </article>
 
-                                <article class="preview-demo-card">
-                                    <div class="preview-demo-card-header">
-                                        <span class="table-badge warning">Warning</span>
-                                    </div>
+                                    <button type="button" class="preview-button toast-demo-button warning"
+                                        data-toast-demo="warning">
+                                        Warning
+                                    </button>
 
-                                    <h4>Quantum Toaster</h4>
+                                    <button type="button" class="preview-button toast-demo-button danger"
+                                        data-toast-demo="danger">
+                                        Danger
+                                    </button>
 
+                                    <button type="button" class="preview-button toast-demo-button info"
+                                        data-toast-demo="info">
+                                        Info
+                                    </button>
+                                </div>
+                            </section>
+
+                            <section class="preview-article-grid">
+                                <article class="preview-article">
+                                    <p class="eyebrow">Color Systems</p>
+                                    <h3>Every token earns its keep.</h3>
                                     <p>
-                                        Toast quality has exceeded
-                                        expectations. Reality stability has
-                                        not.
+                                        Preview real interface pieces while
+                                        tuning surfaces, borders, focus rings,
+                                        overlays, and state colors.
                                     </p>
-
-                                    <div class="preview-stat">
-                                        <strong>97%</strong>
-                                        <span>Burn accuracy</span>
-                                    </div>
                                 </article>
 
-                                <article class="preview-demo-card">
-                                    <div class="preview-demo-card-header">
-                                        <span class="table-badge danger">Critical</span>
-                                    </div>
-
-                                    <h4>Project Icarus</h4>
-
+                                <article class="preview-article">
+                                    <p class="eyebrow">Component Checks</p>
+                                    <h3>Pretty is suspicious. Test it.</h3>
                                     <p>
-                                        Management requested a status
-                                        report. The project requested a
-                                        lawyer.
-                                    </p>
-
-                                    <ul class="preview-card-list">
-                                        <li>37 open issues</li>
-                                        <li>12 meetings scheduled</li>
-                                        <li>0 volunteers</li>
-                                    </ul>
-                                </article>
-
-                                <article class="preview-demo-card feature">
-                                    <p class="eyebrow">Featured</p>
-
-                                    <h4>Theme Forge</h4>
-
-                                    <p>
-                                        Build, test, randomize, evaluate,
-                                        and export themes without
-                                        sacrificing innocent CSS.
-                                    </p>
-
-                                    <div class="button-row">
-                                        <button type="button" class="primary-button">
-                                            Launch
-                                        </button>
-
-                                        <button type="button" class="secondary-button">
-                                            Learn more
-                                        </button>
-                                    </div>
-                                </article>
-
-                                <article class="preview-demo-card framed">
-                                    <header class="preview-card-band">
-                                        <span class="table-badge info">Report</span>
-                                        <strong>Weekly Weirdness</strong>
-                                    </header>
-
-                                    <div>
-                                        <h4>Office Gravity Audit</h4>
-                                        <p>
-                                            Three chairs rolled uphill, one
-                                            pen escaped, and the conference
-                                            room plant has begun issuing
-                                            demands.
-                                        </p>
-                                    </div>
-
-                                    <footer class="preview-card-footer">
-                                        <span>Last checked: 4:20 PM</span>
-                                        <button type="button" class="secondary-button">
-                                            Review
-                                        </button>
-                                    </footer>
-                                </article>
-
-                                <article class="preview-demo-card checklist">
-                                    <h4>Launch checklist</h4>
-
-                                    <ul class="preview-task-list">
-                                        <li>
-                                            <input type="checkbox" checked />
-                                            Name the buttons something
-                                            sensible
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" checked />
-                                            Pretend the first draft was
-                                            intentional
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" />
-                                            Remove console logs before
-                                            anyone notices
-                                        </li>
-                                    </ul>
-
-                                    <p class="sample-alert warning">
-                                        Final approval pending one heroic
-                                        cup of coffee.
+                                        Cards, forms, tables, modals, and toast
+                                        messages reveal where a theme shines and
+                                        where it quietly trips over a rake.
                                     </p>
                                 </article>
-                            </div>
-                        </section>
-                    </div>
-                    <div class="preview-dialog-layer" id="previewDialogLayer" hidden>
-                        <dialog class="preview-dialog" id="previewDialog">
-                            <header class="preview-dialog-header">
-                                <div class="preview-dialog-title">
-                                    <p class="eyebrow">
-                                        Emergency Notification System
-                                    </p>
-                                    <h3>The beacons are lit!</h3>
+                            </section>
+
+                            <blockquote class="preview-quote">
+                                <p>
+                                    “A theme should look good when nothing is
+                                    happening, and still make sense when
+                                    everything is on fire.”
+                                </p>
+                                <cite>Probably someone in a meeting</cite>
+                            </blockquote>
+                        </div>
+
+                        <div class="preview-tab-panel" data-preview-panel="form" hidden>
+                            <section class="sample-section">
+                                <p class="eyebrow">Form preview</p>
+
+                                <div class="preview-form">
+                                    <label>
+                                        Display name
+                                        <input type="text" value="Aurora Dashboard" />
+                                    </label>
+
+                                    <label>
+                                        Theme category
+                                        <select>
+                                            <option>Admin dashboard</option>
+                                            <option>Marketing site</option>
+                                            <option>Documentation</option>
+                                            <option>Experimental UI</option>
+                                        </select>
+                                    </label>
+
+                                    <label class="preview-form-full">
+                                        Notes
+                                        <textarea
+                                            rows="4">Testing form colors, spacing, radius, focus states, and control contrast.</textarea>
+                                    </label>
+
+                                    <fieldset class="preview-form-full">
+                                        <legend>Density</legend>
+
+                                        <label class="preview-choice">
+                                            <input type="radio" name="density" checked />
+                                            Comfortable
+                                        </label>
+
+                                        <label class="preview-choice">
+                                            <input type="radio" name="density" />
+                                            Compact
+                                        </label>
+                                    </fieldset>
+
+                                    <label class="preview-choice preview-form-full">
+                                        <input type="checkbox" checked />
+                                        Include themed focus and validation
+                                        states
+                                    </label>
+
+                                    <label>
+                                        Disabled field
+                                        <input type="text" value="Read-only sample" disabled />
+                                    </label>
+
+                                    <label>
+                                        Error state
+                                        <input class="preview-input-error" type="text" value="Needs attention"
+                                            aria-describedby="formErrorSample" />
+                                        <span class="preview-field-error" id="formErrorSample">This sample shows an
+                                            error
+                                            message.</span>
+                                    </label>
                                 </div>
 
-                                <button type="button" class="preview-modal-close" data-close-preview-dialog
-                                    aria-label="Close dialog">
-                                    <svg class="icon icon-x-mark" aria-hidden="true" focusable="false"
-                                        viewBox="0 0 24 24">
-                                        <path d="M6 18 18 6M6 6l12 12" />
+                                <div class="button-row">
+                                    <button type="button" class="primary-button">
+                                        Save changes
+                                    </button>
+                                    <button type="button" class="secondary-button">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </section>
+                        </div>
+
+                        <div class="preview-tab-panel" data-preview-panel="table" hidden>
+                            <section class="sample-section">
+                                <p class="eyebrow">Table preview</p>
+
+                                <div class="preview-table-wrapper">
+                                    <table class="preview-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Project</th>
+                                                <th>Owner</th>
+                                                <th>Status</th>
+                                                <th class="numeric">Issues</th>
+                                                <th class="numeric">
+                                                    Caffeine
+                                                </th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td>Aurora Dashboard</td>
+                                                <td>Michael</td>
+                                                <td>
+                                                    <span class="table-badge success">Stable</span>
+                                                </td>
+                                                <td class="numeric">2</td>
+                                                <td class="numeric">
+                                                    ☕☕☕☕
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>Project Icarus</td>
+                                                <td>Dave</td>
+                                                <td>
+                                                    <span class="table-badge danger">On Fire</span>
+                                                </td>
+                                                <td class="numeric">37</td>
+                                                <td class="numeric">
+                                                    ☕☕☕☕☕☕
+                                                </td>
+                                            </tr>
+
+                                            <tr class="selected">
+                                                <td>Theme Forge</td>
+                                                <td>You</td>
+                                                <td>
+                                                    <span class="table-badge info">Building</span>
+                                                </td>
+                                                <td class="numeric">0</td>
+                                                <td class="numeric">☕☕☕</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>Quantum Toaster</td>
+                                                <td>Janet</td>
+                                                <td>
+                                                    <span class="table-badge warning">Uncertain</span>
+                                                </td>
+                                                <td class="numeric">12</td>
+                                                <td class="numeric">
+                                                    ☕☕☕☕☕
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>Operation Cat Herding</td>
+                                                <td>Steve</td>
+                                                <td>
+                                                    <span class="table-badge danger">Impossible</span>
+                                                </td>
+                                                <td class="numeric">999</td>
+                                                <td class="numeric">∞</td>
+                                            </tr>
+                                        </tbody>
+
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="3">
+                                                    Active projects
+                                                </td>
+                                                <td class="numeric">1050</td>
+                                                <td class="numeric">
+                                                    13 cups/day
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </section>
+                        </div>
+
+                        <div class="preview-tab-panel" data-preview-panel="cards" hidden>
+                            <section class="sample-section">
+                                <p class="eyebrow">Cards preview</p>
+
+                                <div class="preview-cards-grid">
+                                    <article class="preview-demo-card">
+                                        <div class="preview-demo-card-header">
+                                            <span class="table-badge success">Online</span>
+                                        </div>
+
+                                        <h4>AI Core</h4>
+
+                                        <p>
+                                            Successfully resisting the urge to
+                                            become self-aware before lunch.
+                                        </p>
+
+                                        <button type="button" class="secondary-button">
+                                            View status
+                                        </button>
+                                    </article>
+
+                                    <article class="preview-demo-card">
+                                        <div class="preview-demo-card-header">
+                                            <span class="table-badge warning">Warning</span>
+                                        </div>
+
+                                        <h4>Quantum Toaster</h4>
+
+                                        <p>
+                                            Toast quality has exceeded
+                                            expectations. Reality stability has
+                                            not.
+                                        </p>
+
+                                        <div class="preview-stat">
+                                            <strong>97%</strong>
+                                            <span>Burn accuracy</span>
+                                        </div>
+                                    </article>
+
+                                    <article class="preview-demo-card">
+                                        <div class="preview-demo-card-header">
+                                            <span class="table-badge danger">Critical</span>
+                                        </div>
+
+                                        <h4>Project Icarus</h4>
+
+                                        <p>
+                                            Management requested a status
+                                            report. The project requested a
+                                            lawyer.
+                                        </p>
+
+                                        <ul class="preview-card-list">
+                                            <li>37 open issues</li>
+                                            <li>12 meetings scheduled</li>
+                                            <li>0 volunteers</li>
+                                        </ul>
+                                    </article>
+
+                                    <article class="preview-demo-card feature">
+                                        <p class="eyebrow">Featured</p>
+
+                                        <h4>Theme Forge</h4>
+
+                                        <p>
+                                            Build, test, randomize, evaluate,
+                                            and export themes without
+                                            sacrificing innocent CSS.
+                                        </p>
+
+                                        <div class="button-row">
+                                            <button type="button" class="primary-button">
+                                                Launch
+                                            </button>
+
+                                            <button type="button" class="secondary-button">
+                                                Learn more
+                                            </button>
+                                        </div>
+                                    </article>
+
+                                    <article class="preview-demo-card framed">
+                                        <header class="preview-card-band">
+                                            <span class="table-badge info">Report</span>
+                                            <strong>Weekly Weirdness</strong>
+                                        </header>
+
+                                        <div>
+                                            <h4>Office Gravity Audit</h4>
+                                            <p>
+                                                Three chairs rolled uphill, one
+                                                pen escaped, and the conference
+                                                room plant has begun issuing
+                                                demands.
+                                            </p>
+                                        </div>
+
+                                        <footer class="preview-card-footer">
+                                            <span>Last checked: 4:20 PM</span>
+                                            <button type="button" class="secondary-button">
+                                                Review
+                                            </button>
+                                        </footer>
+                                    </article>
+
+                                    <article class="preview-demo-card checklist">
+                                        <h4>Launch checklist</h4>
+
+                                        <ul class="preview-task-list">
+                                            <li>
+                                                <input type="checkbox" checked />
+                                                Name the buttons something
+                                                sensible
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" checked />
+                                                Pretend the first draft was
+                                                intentional
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" />
+                                                Remove console logs before
+                                                anyone notices
+                                            </li>
+                                        </ul>
+
+                                        <p class="sample-alert warning">
+                                            Final approval pending one heroic
+                                            cup of coffee.
+                                        </p>
+                                    </article>
+                                </div>
+                            </section>
+                        </div>
+                        <div class="preview-dialog-layer" id="previewDialogLayer" hidden>
+                            <dialog class="preview-dialog" id="previewDialog">
+                                <header class="preview-dialog-header">
+                                    <div class="preview-dialog-title">
+                                        <p class="eyebrow">
+                                            Emergency Notification System
+                                        </p>
+                                        <h3>The beacons are lit!</h3>
+                                    </div>
+
+                                    <button type="button" class="preview-modal-close" data-close-preview-dialog
+                                        aria-label="Close dialog">
+                                        <svg class="icon icon-x-mark" aria-hidden="true" focusable="false"
+                                            viewBox="0 0 24 24">
+                                            <path d="M6 18 18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </header>
+
+                                <div class="preview-dialog-body">
+                                    <p>
+                                        Gondor calls for aid. Check your Teams
+                                        inbox.
+                                    </p>
+
+                                    <p class="sample-alert info">
+                                        This is a simulated alert to test dialog
+                                        styles. No actual beacons have been lit,
+                                        and no meetings have been scheduled.
+                                        Contact HR if you see real beacons.
+                                    </p>
+                                </div>
+
+                                <footer class="preview-dialog-footer">
+                                    <button type="button" class="preview-button preview-button-secondary"
+                                        data-close-preview-dialog>
+                                        Let them Fall
+                                    </button>
+                                    <button type="button" class="preview-button preview-button-primary"
+                                        data-close-preview-dialog>
+                                        Answer the Call
+                                    </button>
+                                </footer>
+                            </dialog>
+                        </div>
+                    </section>
+
+                    <div class="preview-toast-region" aria-live="polite" aria-label="Preview notifications"></div>
+
+                    <button type="button" class="preview-resize-handle preview-resize-handle-right"
+                        data-preview-resize-handle="right" aria-label="Resize preview from right edge"></button>
+                </div>
+            </section>
+            <section class="export-area" aria-label="Theme export" data-workspace-panel="export" hidden>
+                <nav class="preview-tabs export-tabs" aria-label="Export targets" data-active-export-target="css">
+                    <button type="button" class="active" data-export-target-tab="css">CSS</button>
+                    <button type="button" data-export-target-tab="scss">SCSS</button>
+                    <button type="button" data-export-target-tab="json">Theme Forge JSON</button>
+                </nav>
+
+                <div class="preview-resize-frame export-resize-frame">
+                    <button type="button" class="preview-resize-handle preview-resize-handle-left"
+                        aria-label="Resize export workspace from left edge"></button>
+
+                    <section class="export-panel">
+                        <header class="export-panel-header">
+                            <div>
+                                <p class="eyebrow">Export Workspace</p>
+                                <h2 data-export-target-title>CSS</h2>
+                            </div>
+
+                            <div class="export-panel-actions">
+                                <button type="button" class="icon-button has-tooltip" data-export-copy
+                                    data-tooltip="Copy" data-tooltip-position="bottom" aria-label="Copy export output">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-clipboard" viewBox="0 0 16 16">
+                                        <path
+                                            d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z" />
+                                        <path
+                                            d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z" />
                                     </svg>
                                 </button>
-                            </header>
 
-                            <div class="preview-dialog-body">
-                                <p>
-                                    Gondor calls for aid. Check your Teams
-                                    inbox.
-                                </p>
-
-                                <p class="sample-alert info">
-                                    This is a simulated alert to test dialog
-                                    styles. No actual beacons have been lit,
-                                    and no meetings have been scheduled.
-                                    Contact HR if you see real beacons.
-                                </p>
+                                <button type="button" class="icon-button has-tooltip" data-export-download
+                                    data-tooltip="Download" data-tooltip-position="bottom"
+                                    aria-label="Download export output">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-download" viewBox="0 0 16 16">
+                                        <path
+                                            d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                                        <path
+                                            d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                                    </svg>
+                                </button>
                             </div>
+                        </header>
 
-                            <footer class="preview-dialog-footer">
-                                <button type="button" class="preview-button preview-button-secondary"
-                                    data-close-preview-dialog>
-                                    Let them Fall
-                                </button>
-                                <button type="button" class="preview-button preview-button-primary"
-                                    data-close-preview-dialog>
-                                    Answer the Call
-                                </button>
-                            </footer>
-                        </dialog>
-                    </div>
-                </section>
+                        <pre
+                            class="export-code-block"><code data-export-output tabindex="0">// Export output lands in Pass 2.</code></pre>
+                    </section>
 
-                <div class="preview-toast-region" aria-live="polite" aria-label="Preview notifications"></div>
-
-                <button type="button" class="preview-resize-handle preview-resize-handle-right"
-                    data-preview-resize-handle="right" aria-label="Resize preview from right edge"></button>
-            </div>
+                    <button type="button" class="preview-resize-handle preview-resize-handle-right"
+                        aria-label="Resize export workspace from right edge"></button>
+                </div>
+            </section>
         </section>
     </main>
 

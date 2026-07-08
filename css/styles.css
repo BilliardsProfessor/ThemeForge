@@ -346,6 +346,16 @@ body[data-app-mode="dark"] .preview-size-field select option {
     border-radius: calc(var(--radius) * 0.6);
 }
 
+#fullPreviewBtn {
+    min-width: 7.25rem;
+    text-align: center;
+}
+
+#exportWorkspaceBtn.active {
+    border-color: var(--color-primary);
+    background: color-mix(in srgb, var(--color-primary), transparent 88%);
+}
+
 .export-menu {
     position: relative;
 }
@@ -1328,9 +1338,19 @@ body.drawer-is-initializing .control-card-content {
     cursor: text;
 }
 
+.workspace-area {
+    display: grid;
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+}
+
+.workspace-area > [data-workspace-panel] {
+    grid-area: 1 / 1;
+}
+
 .preview-area {
     display: flex;
-    flex: 1 1 auto;
     flex-direction: column;
     height: 100%;
     gap: var(--space-2);
@@ -1342,6 +1362,80 @@ body.drawer-is-initializing .control-card-content {
         radial-gradient(circle at top left, rgb(37 99 235 / 0.08), transparent 28rem),
         linear-gradient(135deg, color-mix(in srgb, var(--color-background), #000 4%), var(--color-background));
     color: var(--color-text);
+}
+
+.export-area {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: var(--space-2);
+    min-width: 0;
+    min-height: 0;
+    padding: var(--workbench-gutter);
+    overflow: hidden;
+    background:
+        radial-gradient(circle at top left, rgb(124 58 237 / 0.08), transparent 28rem),
+        linear-gradient(135deg, color-mix(in srgb, var(--color-background), #000 4%), var(--color-background));
+    color: var(--color-text);
+}
+
+.export-area[hidden] {
+    display: none;
+}
+
+.export-panel {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    width: 100%;
+    min-height: 0;
+    overflow: hidden;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: calc(var(--radius) * 1.2);
+    background: var(--color-surface);
+    box-shadow: var(--surface-shadow);
+}
+
+.export-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.export-panel-header h2,
+.export-panel-header p {
+    margin: 0;
+}
+
+.export-panel-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.export-code-block {
+    min-height: 0;
+    margin: 0;
+    overflow: auto;
+    padding: var(--space-3);
+    background: color-mix(in srgb, var(--color-background), var(--color-text) 4%);
+    color: var(--color-text);
+    font-family: Consolas, Monaco, monospace;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    white-space: pre;
+}
+
+.export-code-block code {
+    display: block;
+    min-width: max-content;
+}
+
+.export-code-block code:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--color-primary), transparent 70%);
+    outline-offset: -3px;
 }
 
 .preview-custom-toolbar {
@@ -1861,6 +1955,11 @@ a {
     .preview-panel,
     .preview-resize-frame,
     .preview-tabs::before,
+    .export-area,
+    .export-panel,
+    .export-code-block,
+    .export-tabs,
+    .export-tabs::before,
     .color-group-tabs::before,
     .segmented-control::before {
         transition: none;
