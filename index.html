@@ -1116,10 +1116,13 @@
                 </div>
             </section>
             <section class="export-area" aria-label="Theme export" data-workspace-panel="export" hidden>
-                <nav class="preview-tabs export-tabs" aria-label="Export targets" data-active-export-target="css">
-                    <button type="button" class="active" data-export-target-tab="css">CSS</button>
-                    <button type="button" data-export-target-tab="scss">SCSS</button>
-                    <button type="button" data-export-target-tab="json">Theme Forge JSON</button>
+                <nav class="preview-tabs export-tabs" aria-label="Export targets" data-active-export-target="css"
+                    role="tablist">
+                    <button type="button" class="active" data-export-target-tab="css" role="tab"
+                        aria-selected="true">CSS</button>
+                    <button type="button" data-export-target-tab="scss" role="tab" aria-selected="false">SCSS</button>
+                    <button type="button" data-export-target-tab="json" role="tab" aria-selected="false">Theme Forge
+                        JSON</button>
                 </nav>
 
                 <div class="preview-resize-frame export-resize-frame">

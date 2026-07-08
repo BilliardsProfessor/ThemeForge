@@ -1612,6 +1612,7 @@ ThemeForge.refreshThemeInterface = function refreshThemeInterface() {
     ThemeForge.applyTheme();
     ThemeForge.colorEditor.render();
     ThemeForge.accessibility.updateScoreBadge();
+    ThemeForge.export.updateWorkspace();
 };
 
 function renderShadowControls() {

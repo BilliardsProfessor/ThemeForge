@@ -3,6 +3,20 @@ ThemeForge.export = {
     fallbackSlug: "theme",
     schemaVersion: 1,
 
+    activeTarget: localStorage.getItem("themeForge.export.activeTarget") || "css",
+
+    targets: {
+        css: {
+            label: "CSS",
+        },
+        scss: {
+            label: "SCSS",
+        },
+        json: {
+            label: "Theme Forge JSON",
+        },
+    },
+
     exportMenu: null,
     exportMenuButton: null,
     exportMenuList: null,
@@ -28,6 +42,7 @@ ThemeForge.export = {
 
     init() {
         this.initExportMenu();
+        this.initWorkspace();
     },
 
     initExportMenu() {
@@ -54,6 +69,108 @@ ThemeForge.export = {
         });
 
         this.closeExportMenu();
+    },
+
+    initWorkspace() {
+        document.querySelectorAll("[data-export-target-tab]").forEach((button) => {
+            button.addEventListener("click", () => {
+                this.setActiveTarget(button.dataset.exportTargetTab);
+            });
+        });
+
+        document.querySelector("[data-export-target-select]")?.addEventListener("change", (event) => {
+            this.setActiveTarget(event.target.value);
+        });
+
+        this.setActiveTarget(this.activeTarget);
+        this.updateWorkspace();
+    },
+
+    setActiveTarget(target) {
+        if (!this.targets[target]) {
+            target = "css";
+        }
+
+        this.activeTarget = target;
+        localStorage.setItem("themeForge.export.activeTarget", target);
+
+        document.querySelectorAll("[data-export-target-tab]").forEach((button) => {
+            const isActive = button.dataset.exportTargetTab === target;
+
+            button.classList.toggle("active", isActive);
+            button.setAttribute("aria-selected", String(isActive));
+        });
+
+        const tabs = document.querySelector(".export-tabs");
+
+        if (tabs) {
+            tabs.dataset.activeExportTarget = target;
+            this.updateTabIndicator(tabs);
+        }
+
+        const select = document.querySelector("[data-export-target-select]");
+
+        if (select) {
+            select.value = target;
+        }
+
+        document.querySelectorAll("[data-export-options]").forEach((section) => {
+            section.hidden = section.dataset.exportOptions !== target;
+        });
+
+        document.querySelector("[data-export-target-title]")?.replaceChildren(this.targets[target].label);
+
+        this.updateWorkspace();
+    },
+
+    updateWorkspace() {
+        const output = document.querySelector("[data-export-output]");
+
+        if (!output) {
+            return;
+        }
+
+        output.textContent = this.getActiveOutput();
+    },
+
+    getActiveOutput() {
+        const themeName = this.generateThemeNameSuggestion();
+        const options = this.getWorkspaceExportOptions();
+
+        if (this.activeTarget === "scss") {
+            return this.createScssExport(themeName, options);
+        }
+
+        if (this.activeTarget === "json") {
+            return JSON.stringify(this.createExportTheme(themeName), null, 2);
+        }
+
+        return this.createCssExport(themeName, options);
+    },
+
+    getWorkspaceExportOptions() {
+        return {
+            themeName: this.generateThemeNameSuggestion(),
+            selectorType: "root",
+            themeModes: ["light", "dark"],
+            colorFormat: "hsl",
+            includeComments: true,
+            includeExample: false,
+        };
+    },
+
+    updateTabIndicator(tabs) {
+        const activeButton = tabs.querySelector("[data-export-target-tab].active");
+
+        if (!activeButton) {
+            return;
+        }
+
+        const tabsRect = tabs.getBoundingClientRect();
+        const buttonRect = activeButton.getBoundingClientRect();
+
+        tabs.style.setProperty("--active-tab-width", `${buttonRect.width}px`);
+        tabs.style.setProperty("--active-tab-offset", `${buttonRect.left - tabsRect.left}px`);
     },
 
     toggleExportMenu() {
