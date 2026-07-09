@@ -1005,24 +1005,9 @@ body[data-left-drawer-state="temporary"] .drawer-unlock-icon {
     display: block;
 }
 
-.has-tooltip:not(.restore-workbench-button) {
-    position: relative;
-}
-
-.has-tooltip::before,
-.has-tooltip::after {
-    position: absolute;
-    z-index: 200;
-    opacity: 0;
-    pointer-events: none;
-    transition:
-        opacity 160ms ease,
-        transform 160ms ease;
-    transition-delay: 0ms;
-}
-
-.has-tooltip::before {
-    content: attr(data-tooltip);
+.global-tooltip {
+    position: fixed;
+    z-index: 10000;
     width: max-content;
     max-width: 16rem;
     padding: 0.45rem 0.6rem;
@@ -1037,116 +1022,59 @@ body[data-left-drawer-state="temporary"] .drawer-unlock-icon {
     line-height: 1.25;
     text-align: center;
     white-space: normal;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(0.25rem);
+    transition:
+        opacity 160ms ease,
+        transform 160ms ease;
 }
 
-.has-tooltip::after {
+.global-tooltip.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.global-tooltip[hidden] {
+    display: none;
+}
+
+.global-tooltip::after {
     content: "";
+    position: absolute;
+    display: none;
     width: 0.55rem;
     height: 0.55rem;
     background: var(--tooltip-background);
     transform: rotate(45deg);
 }
 
-.has-tooltip:hover::before,
-.has-tooltip:hover::after,
-.has-tooltip:focus-visible::before,
-.has-tooltip:focus-visible::after {
-    opacity: 1;
-    transition-delay: var(--tooltip-delay);
+.global-tooltip[data-tooltip-pointer="true"]::after {
+    display: block;
 }
 
-.has-tooltip[data-history-menu-open="true"]::before,
-.has-tooltip[data-history-menu-open="true"]::after {
-    opacity: 0;
-    transition-delay: 0ms;
-}
-
-.has-tooltip[data-tooltip-position="top"]::before {
+.global-tooltip[data-tooltip-placement="top"]::after {
     left: 50%;
-    bottom: calc(100% + var(--tooltip-offset));
-    transform: translate(-50%, 0.25rem);
+    bottom: -0.28rem;
+    transform: translateX(-50%) rotate(45deg);
 }
 
-.has-tooltip[data-tooltip-position="top"]::after {
+.global-tooltip[data-tooltip-placement="bottom"]::after {
     left: 50%;
-    bottom: calc(100% + var(--tooltip-offset) - 0.25rem);
-    transform: translate(-50%, 0.25rem) rotate(45deg);
+    top: -0.28rem;
+    transform: translateX(-50%) rotate(45deg);
 }
 
-.has-tooltip[data-tooltip-position="top"]:hover::before,
-.has-tooltip[data-tooltip-position="top"]:focus-visible::before {
-    transform: translate(-50%, 0);
-}
-
-.has-tooltip[data-tooltip-position="top"]:hover::after,
-.has-tooltip[data-tooltip-position="top"]:focus-visible::after {
-    transform: translate(-50%, 0) rotate(45deg);
-}
-
-.has-tooltip[data-tooltip-position="right"]::before {
-    left: calc(100% + var(--tooltip-offset));
+.global-tooltip[data-tooltip-placement="right"]::after {
+    left: -0.28rem;
     top: 50%;
-    transform: translate(-0.25rem, -50%);
+    transform: translateY(-50%) rotate(45deg);
 }
 
-.has-tooltip[data-tooltip-position="right"]::after {
-    left: calc(100% + var(--tooltip-offset) - 0.25rem);
+.global-tooltip[data-tooltip-placement="left"]::after {
+    right: -0.28rem;
     top: 50%;
-    transform: translate(-0.25rem, -50%) rotate(45deg);
-}
-
-.has-tooltip[data-tooltip-position="right"]:hover::before,
-.has-tooltip[data-tooltip-position="right"]:focus-visible::before {
-    transform: translate(0, -50%);
-}
-
-.has-tooltip[data-tooltip-position="right"]:hover::after,
-.has-tooltip[data-tooltip-position="right"]:focus-visible::after {
-    transform: translate(0, -50%) rotate(45deg);
-}
-
-.has-tooltip[data-tooltip-position="bottom"]::before {
-    left: 50%;
-    top: calc(100% + var(--tooltip-offset));
-    transform: translate(-50%, -0.25rem);
-}
-
-.has-tooltip[data-tooltip-position="bottom"]::after {
-    left: 50%;
-    top: calc(100% + var(--tooltip-offset) - 0.25rem);
-    transform: translate(-50%, -0.25rem) rotate(45deg);
-}
-
-.has-tooltip[data-tooltip-position="bottom"]:hover::before,
-.has-tooltip[data-tooltip-position="bottom"]:focus-visible::before {
-    transform: translate(-50%, 0);
-}
-
-.has-tooltip[data-tooltip-position="bottom"]:hover::after,
-.has-tooltip[data-tooltip-position="bottom"]:focus-visible::after {
-    transform: translate(-50%, 0) rotate(45deg);
-}
-
-.has-tooltip[data-tooltip-position="left"]::before {
-    right: calc(100% + var(--tooltip-offset));
-    top: 50%;
-    transform: translate(0.25rem, -50%);
-}
-
-.has-tooltip[data-tooltip-position="left"]::after {
-    right: calc(100% + var(--tooltip-offset) - 0.25rem);
-    top: 50%;
-    transform: translate(0.25rem, -50%) rotate(45deg);
-}
-
-.has-tooltip[data-tooltip-position="left"]:hover::before,
-.has-tooltip[data-tooltip-position="left"]:focus-visible::before {
-    transform: translate(0, -50%);
-}
-
-.has-tooltip[data-tooltip-position="left"]:hover::after,
-.has-tooltip[data-tooltip-position="left"]:focus-visible::after {
-    transform: translate(0, -50%) rotate(45deg);
+    transform: translateY(-50%) rotate(45deg);
 }
 
 .control-card {

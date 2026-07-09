@@ -27,6 +27,7 @@
         <script src="js/full-preview.js" defer></script>
         <script src="js/preview-size.js" defer></script>
         <script src="js/app.js" defer></script>
+        <script src="js/tooltips.js" defer></script>
     </head>
 
     <body
@@ -46,7 +47,7 @@
                     class="icon-button has-tooltip"
                     id="undoBtn"
                     data-tooltip="Hold for Undo list"
-                    data-tooltip-position="bottom"
+                    data-tooltip-placement="bottom"
                     aria-label="Undo"
                 >
                     <svg
@@ -64,7 +65,7 @@
                     class="icon-button has-tooltip"
                     id="redoBtn"
                     data-tooltip="Hold for Redo list"
-                    data-tooltip-position="bottom"
+                    data-tooltip-placement="bottom"
                     aria-label="Redo"
                 >
                     <svg
@@ -89,7 +90,7 @@
                     class="icon-button has-tooltip"
                     id="randomizeBtn"
                     data-tooltip="Randomize"
-                    data-tooltip-position="bottom"
+                    data-tooltip-placement="bottom"
                     aria-label="Randomize"
                 >
                     <svg
@@ -120,7 +121,7 @@
                     class="icon-button theme-mode-toggle has-tooltip"
                     id="themeModeToggle"
                     data-tooltip="Switch to dark mode"
-                    data-tooltip-position="bottom"
+                    data-tooltip-placement="bottom"
                     aria-label="Switch to dark mode"
                     data-theme-mode-toggle
                 >
@@ -179,7 +180,7 @@
                     class="icon-button app-appearance-toggle has-tooltip"
                     id="appAppearanceToggle"
                     data-tooltip="Switch app appearance to dark"
-                    data-tooltip-position="bottom"
+                    data-tooltip-placement="bottom"
                     aria-label="Switch app appearance to dark"
                     data-app-appearance-toggle
                 >
@@ -228,7 +229,7 @@
                     class="icon-button has-tooltip"
                     id="settingsBtn"
                     data-tooltip="Settings"
-                    data-tooltip-position="bottom"
+                    data-tooltip-placement="bottom"
                     aria-label="Settings"
                 >
                     <svg
@@ -267,7 +268,7 @@
                     class="drawer-rail-button drawer-rail-home has-tooltip"
                     data-drawer-open-pinned="left"
                     data-tooltip="Open controls"
-                    data-tooltip-position="right"
+                    data-tooltip-placement="right"
                     aria-controls="leftDrawer"
                     aria-expanded="false"
                     aria-label="Open controls drawer"
@@ -291,7 +292,7 @@
                     class="drawer-rail-button has-tooltip"
                     data-drawer-panel="colors"
                     data-tooltip="Colors"
-                    data-tooltip-position="right"
+                    data-tooltip-placement="right"
                     aria-controls="leftDrawer"
                     aria-label="Open colors controls"
                 >
@@ -303,7 +304,7 @@
                     class="drawer-rail-button has-tooltip"
                     data-drawer-panel="typography"
                     data-tooltip="Typography"
-                    data-tooltip-position="right"
+                    data-tooltip-placement="right"
                     aria-controls="leftDrawer"
                     aria-label="Open typography controls"
                 >
@@ -315,7 +316,7 @@
                     class="drawer-rail-button has-tooltip"
                     data-drawer-panel="spacing"
                     data-tooltip="Spacing"
-                    data-tooltip-position="right"
+                    data-tooltip-placement="right"
                     aria-controls="leftDrawer"
                     aria-label="Open spacing controls"
                 >
@@ -338,7 +339,7 @@
                     class="drawer-rail-button has-tooltip"
                     data-drawer-panel="shape"
                     data-tooltip="Shape"
-                    data-tooltip-position="right"
+                    data-tooltip-placement="right"
                     aria-controls="leftDrawer"
                     aria-label="Open shape controls"
                 >
@@ -364,7 +365,7 @@
                     class="drawer-rail-button has-tooltip"
                     data-drawer-panel="shadows"
                     data-tooltip="Shadows"
-                    data-tooltip-position="right"
+                    data-tooltip-placement="right"
                     aria-controls="leftDrawer"
                     aria-label="Open shadow controls"
                 >
@@ -388,7 +389,7 @@
                     data-drawer-panel="export"
                     data-workspace-open="export"
                     data-tooltip="Export"
-                    data-tooltip-position="right"
+                    data-tooltip-placement="right"
                     aria-controls="leftDrawer"
                     aria-label="Open export controls"
                 >
@@ -422,7 +423,7 @@
                             class="drawer-icon-button has-tooltip"
                             data-drawer-mode-toggle="left"
                             data-tooltip="Unlock drawer"
-                            data-tooltip-position="bottom"
+                            data-tooltip-placement="bottom"
                             aria-label="Unlock drawer"
                         >
                             <svg
@@ -466,7 +467,7 @@
                             class="drawer-icon-button has-tooltip"
                             data-drawer-close="left"
                             data-tooltip="Collapse drawer"
-                            data-tooltip-position="bottom"
+                            data-tooltip-placement="bottom"
                             aria-label="Collapse controls drawer"
                         >
                             <svg
@@ -814,7 +815,7 @@
                                                 data-rgb-channel="r"
                                                 class="has-tooltip"
                                                 data-tooltip="Red"
-                                                data-tooltip-position="bottom"
+                                                data-tooltip-placement="bottom"
                                             />
                                             <input
                                                 type="text"
@@ -839,7 +840,7 @@
                                                 data-rgb-channel="g"
                                                 class="has-tooltip"
                                                 data-tooltip="Green"
-                                                data-tooltip-position="bottom"
+                                                data-tooltip-placement="bottom"
                                             />
                                             <input
                                                 type="text"
@@ -864,7 +865,7 @@
                                                 data-rgb-channel="b"
                                                 class="has-tooltip"
                                                 data-tooltip="Blue"
-                                                data-tooltip-position="bottom"
+                                                data-tooltip-placement="bottom"
                                             />
                                             <input
                                                 type="text"
@@ -891,7 +892,7 @@
                                                 data-hsl-channel="h"
                                                 class="has-tooltip"
                                                 data-tooltip="Hue"
-                                                data-tooltip-position="bottom"
+                                                data-tooltip-placement="bottom"
                                             />
                                             <input
                                                 type="text"
@@ -916,7 +917,7 @@
                                                 data-hsl-channel="s"
                                                 class="has-tooltip"
                                                 data-tooltip="Saturation"
-                                                data-tooltip-position="bottom"
+                                                data-tooltip-placement="bottom"
                                             />
                                             <input
                                                 type="text"
@@ -941,7 +942,7 @@
                                                 data-hsl-channel="l"
                                                 class="has-tooltip"
                                                 data-tooltip="Lightness"
-                                                data-tooltip-position="bottom"
+                                                data-tooltip-placement="bottom"
                                             />
                                             <input
                                                 type="text"
@@ -967,7 +968,7 @@
                                             value="100"
                                             class="has-tooltip"
                                             data-tooltip="Alpha"
-                                            data-tooltip-position="bottom"
+                                            data-tooltip-placement="bottom"
                                         />
                                         <input
                                             type="text"
@@ -1392,7 +1393,7 @@
                             class="preview-custom-reset has-tooltip"
                             id="previewCustomResetBtn"
                             data-tooltip="Restore to 900px"
-                            data-tooltip-position="bottom"
+                            data-tooltip-placement="bottom"
                             aria-label="Restore custom preview width to desktop width"
                         >
                             Reset
@@ -2142,7 +2143,8 @@ Testing form colors, spacing, radius, focus states, and control contrast.</texta
                                         data-export-action-state="idle"
                                         data-export-copy
                                         data-tooltip="Copy"
-                                        data-tooltip-position="bottom"
+                                        data-tooltip-delay="500"
+                                        data-tooltip-placement="bottom"
                                         aria-label="Copy export output"
                                     >
                                         <svg
@@ -2193,7 +2195,8 @@ Testing form colors, spacing, radius, focus states, and control contrast.</texta
                                         data-export-action-state="idle"
                                         data-export-download
                                         data-tooltip="Download"
-                                        data-tooltip-position="bottom"
+                                        data-tooltip-delay="500"
+                                        data-tooltip-placement="bottom"
                                         aria-label="Download export output"
                                     >
                                         <svg
@@ -2261,7 +2264,7 @@ Testing form colors, spacing, radius, focus states, and control contrast.</texta
             class="restore-workbench-button has-tooltip"
             id="restoreWorkbenchBtn"
             data-tooltip="ESC to restore"
-            data-tooltip-position="left"
+            data-tooltip-placement="left"
             aria-label="Restore workbench. ESC also works."
             hidden
         >
@@ -2304,5 +2307,6 @@ Testing form colors, spacing, radius, focus states, and control contrast.</texta
                 <footer class="app-modal-footer" id="appModalFooter"></footer>
             </div>
         </div>
+        <div id="globalTooltip" class="global-tooltip" hidden></div>
     </body>
 </html>
