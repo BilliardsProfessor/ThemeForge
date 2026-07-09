@@ -28,6 +28,7 @@ ThemeForge.export = {
             colorFormat: "hsl",
             includeComments: true,
             includeExample: false,
+            variablePrefix: "tf",
         },
         json: { prettyPrint: true },
     },
@@ -125,7 +126,13 @@ ThemeForge.export = {
         document
             .querySelectorAll("[data-export-setting]")
             .forEach((control) => {
-                control.addEventListener("change", (event) => {
+                const eventName =
+                    control.tagName.toLowerCase() === "input" &&
+                    control.type === "text"
+                        ? "input"
+                        : "change";
+
+                control.addEventListener(eventName, (event) => {
                     this.handleExportSettingChange(event);
                 });
             });
@@ -168,6 +175,27 @@ ThemeForge.export = {
             .querySelectorAll("[data-export-options]")
             .forEach((section) => {
                 section.hidden = section.dataset.exportOptions !== target;
+            });
+
+        document
+            .querySelectorAll(
+                `[data-export-options="${target}"] [data-export-setting]`,
+            )
+            .forEach((control) => {
+                const settingName = control.dataset.exportSetting;
+                const settingValue = this.settings[target]?.[settingName];
+
+                if (control.type === "checkbox") {
+                    if (settingName !== "themeModes") {
+                        control.checked = Boolean(settingValue);
+                    }
+
+                    return;
+                }
+
+                if (settingValue !== undefined) {
+                    control.value = settingValue;
+                }
             });
 
         document
@@ -377,7 +405,19 @@ ThemeForge.export = {
             colorFormat: settings.colorFormat || "hsl",
             includeComments: settings.includeComments !== false,
             includeExample: settings.includeExample === true,
+            variablePrefix: this.normalizeScssVariablePrefix(
+                settings.variablePrefix || "",
+            ),
         };
+    },
+
+    normalizeScssVariablePrefix(prefix) {
+        return String(prefix)
+            .trim()
+            .replace(/^\$+/, "")
+            .replace(/[^a-zA-Z0-9_-]+/g, "-")
+            .replace(/-+/g, "-")
+            .replace(/^-+|-+$/g, "");
     },
 
     updateTabIndicator(tabs) {
@@ -757,12 +797,16 @@ ThemeForge.export = {
         const colorFormat = options.colorFormat || "hsl";
         const includeComments = options.includeComments !== false;
         const selectedModes = this.getSelectedThemeModes(options);
+        const variablePrefix = this.normalizeScssVariablePrefix(
+            options.variablePrefix || "",
+        );
         const declarations = this.getScssModeDeclarations(
             colorFormat,
             selectedModes,
+            variablePrefix,
         );
         const example = options.includeExample
-            ? `\n\n${this.getScssUsageExample()}`
+            ? `\n\n${this.getScssUsageExample(variablePrefix)}`
             : "";
 
         if (!includeComments) return `${declarations.join("\n")}${example}`;
@@ -828,43 +872,45 @@ ThemeForge.export = {
         ].join("\n");
     },
 
-    getScssUsageExample() {
+    getScssUsageExample(prefix = "") {
+        const variablePrefix = prefix ? `${prefix}-` : "";
+
         return [
             "// Example styles",
             "",
             "body {",
-            "  color: $color-text;",
-            "  background: $color-background;",
-            "  font-size: $font-size-base;",
+            `  color: $${variablePrefix}color-text;`,
+            `  background: $${variablePrefix}color-background;`,
+            `  font-size: $${variablePrefix}font-size-base;`,
             "}",
             "",
             "main {",
-            "  background: $color-surface;",
-            "  border: $border-width solid $color-border;",
-            "  border-radius: $radius;",
-            "  box-shadow: $shadow-soft;",
+            `  background: $${variablePrefix}color-surface;`,
+            `  border: $${variablePrefix}border-width solid $${variablePrefix}color-border;`,
+            `  border-radius: $${variablePrefix}radius;`,
+            `  box-shadow: $${variablePrefix}shadow-soft;`,
             "}",
             "",
             ".example-card {",
-            "  color: $color-text;",
-            "  background: $color-surface;",
-            "  border: $border-width solid $color-border;",
-            "  border-radius: $radius;",
+            `  color: $${variablePrefix}color-text;`,
+            `  background: $${variablePrefix}color-surface;`,
+            `  border: $${variablePrefix}border-width solid $${variablePrefix}color-border;`,
+            `  border-radius: $${variablePrefix}radius;`,
             "}",
             "",
             ".example-card a {",
-            "  color: $color-link;",
+            `  color: $${variablePrefix}color-link;`,
             "}",
             "",
             ".example-card a:focus-visible {",
-            "  outline: 2px solid $color-focus;",
+            `  outline: 2px solid $${variablePrefix}color-focus;`,
             "  outline-offset: 3px;",
             "}",
             "",
             ".example-alert {",
-            "  color: $color-text;",
-            "  background: $color-warning;",
-            "  border-radius: $radius;",
+            `  color: $${variablePrefix}color-text;`,
+            `  background: $${variablePrefix}color-warning;`,
+            `  border-radius: $${variablePrefix}radius;`,
             "}",
         ].join("\n");
     },
@@ -919,20 +965,21 @@ ThemeForge.export = {
         ].join("\n");
     },
 
-    getScssModeDeclarations(colorFormat, selectedModes) {
+    getScssModeDeclarations(colorFormat, selectedModes, prefix = "") {
         if (selectedModes.length === 1) {
             return this.getScssVariableDeclarations(
                 colorFormat,
                 selectedModes[0],
+                prefix,
             );
         }
 
         return [
             "// Light mode",
-            ...this.getScssVariableDeclarations(colorFormat, "light"),
+            ...this.getScssVariableDeclarations(colorFormat, "light", prefix),
             "",
             "// Dark mode",
-            ...this.getScssVariableDeclarations(colorFormat, "dark", "dark"),
+            ...this.getScssVariableDeclarations(colorFormat, "dark", prefix),
         ];
     },
 
