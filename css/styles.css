@@ -1398,7 +1398,7 @@ body[data-active-workspace="export"] .preview-area {
     overflow: hidden;
     border: var(--border-width) solid var(--color-border);
     border-radius: calc(var(--radius) * 1.2);
-    background: var(--color-surface);
+    background: var(--control-surface);
     box-shadow: var(--surface-shadow);
 }
 
@@ -1423,16 +1423,17 @@ body[data-active-workspace="export"] .preview-area {
 }
 
 .export-code-block {
+    --editor-bg: #1e1e1e;
+    --editor-fg: #d4d4d4;
+    --editor-border: #343434;
+
     min-height: 0;
     margin: 0;
     overflow: auto;
     padding: var(--space-3);
-    background: color-mix(
-        in srgb,
-        var(--color-background),
-        var(--color-text) 4%
-    );
-    color: var(--color-text);
+    background: var(--editor-bg);
+    color: var(--editor-fg);
+    border-top: var(--border-width) solid var(--editor-border);
     font-family: Consolas, Monaco, monospace;
     font-size: 0.9rem;
     line-height: 1.55;
