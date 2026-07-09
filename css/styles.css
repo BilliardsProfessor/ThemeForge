@@ -1368,6 +1368,10 @@ body[data-active-workspace="export"] .preview-area {
     min-height: 0;
     padding: var(--workbench-gutter);
     overflow: hidden;
+}
+
+.preview-area,
+.export-area {
     background:
         radial-gradient(
             circle at top left,
@@ -1379,6 +1383,7 @@ body[data-active-workspace="export"] .preview-area {
             color-mix(in srgb, var(--color-background), #000 4%),
             var(--color-background)
         );
+    color: var(--color-text);
 }
 
 .export-area[hidden] {
@@ -1541,18 +1546,6 @@ body[data-active-workspace="export"] .preview-area {
     min-height: 0;
     padding: var(--workbench-gutter);
     overflow: hidden;
-    background:
-        radial-gradient(
-            circle at top left,
-            rgb(37 99 235 / 0.08),
-            transparent 28rem
-        ),
-        linear-gradient(
-            135deg,
-            color-mix(in srgb, var(--color-background), #000 4%),
-            var(--color-background)
-        );
-    color: var(--color-text);
 }
 
 .preview-custom-toolbar {

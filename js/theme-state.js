@@ -4,9 +4,7 @@ const ThemeForge = {
         schemaVersion: 1,
         activeMode: "light",
 
-        settings: {
-            baseFontSize: { value: 16, unit: "px" },
-        },
+        settings: { baseFontSize: { value: 16, unit: "px" } },
 
         modes: {
             light: {
@@ -27,7 +25,13 @@ const ThemeForge = {
 
                     border: { h: 214, s: 32, l: 91, a: 1, locked: false },
                     focus: { h: 221, s: 83, l: 53, a: 1, locked: false },
-                    shadowTint: { h: 222, s: 47, l: 11, a: 0.08, locked: false },
+                    shadowTint: {
+                        h: 222,
+                        s: 47,
+                        l: 11,
+                        a: 0.08,
+                        locked: false,
+                    },
                     overlay: { h: 222, s: 47, l: 11, a: 0.55, locked: false },
                 },
             },
@@ -63,18 +67,78 @@ const ThemeForge = {
                 monoFontFamily: "mono",
             },
             elements: {
-                h1: { size: { value: 3, unit: "rem" }, weight: 800, lineHeight: 1.1, letterSpacing: -0.03 },
-                h2: { size: { value: 2.25, unit: "rem" }, weight: 700, lineHeight: 1.15, letterSpacing: -0.02 },
-                h3: { size: { value: 1.75, unit: "rem" }, weight: 700, lineHeight: 1.2, letterSpacing: -0.01 },
-                h4: { size: { value: 1.35, unit: "rem" }, weight: 600, lineHeight: 1.25, letterSpacing: 0 },
-                h5: { size: { value: 1.15, unit: "rem" }, weight: 600, lineHeight: 1.3, letterSpacing: 0 },
-                h6: { size: { value: 1, unit: "rem" }, weight: 600, lineHeight: 1.35, letterSpacing: 0.02 },
-                p: { size: { value: 1, unit: "rem" }, weight: 400, lineHeight: 1.6, letterSpacing: 0 },
-                small: { size: { value: 0.875, unit: "rem" }, weight: 400, lineHeight: 1.45, letterSpacing: 0 },
-                blockquote: { size: { value: 1.125, unit: "rem" }, weight: 400, lineHeight: 1.55, letterSpacing: 0 },
-                code: { size: { value: 0.9, unit: "rem" }, weight: 400, lineHeight: 1.45, letterSpacing: 0 },
-                label: { size: { value: 0.875, unit: "rem" }, weight: 600, lineHeight: 1.25, letterSpacing: 0.01 },
-                eyebrow: { size: { value: 0.75, unit: "rem" }, weight: 800, lineHeight: 1.2, letterSpacing: 0.08 },
+                h1: {
+                    size: { value: 3, unit: "rem" },
+                    weight: 800,
+                    lineHeight: 1.1,
+                    letterSpacing: -0.03,
+                },
+                h2: {
+                    size: { value: 2.25, unit: "rem" },
+                    weight: 700,
+                    lineHeight: 1.15,
+                    letterSpacing: -0.02,
+                },
+                h3: {
+                    size: { value: 1.75, unit: "rem" },
+                    weight: 700,
+                    lineHeight: 1.2,
+                    letterSpacing: -0.01,
+                },
+                h4: {
+                    size: { value: 1.35, unit: "rem" },
+                    weight: 600,
+                    lineHeight: 1.25,
+                    letterSpacing: 0,
+                },
+                h5: {
+                    size: { value: 1.15, unit: "rem" },
+                    weight: 600,
+                    lineHeight: 1.3,
+                    letterSpacing: 0,
+                },
+                h6: {
+                    size: { value: 1, unit: "rem" },
+                    weight: 600,
+                    lineHeight: 1.35,
+                    letterSpacing: 0.02,
+                },
+                p: {
+                    size: { value: 1, unit: "rem" },
+                    weight: 400,
+                    lineHeight: 1.6,
+                    letterSpacing: 0,
+                },
+                small: {
+                    size: { value: 0.875, unit: "rem" },
+                    weight: 400,
+                    lineHeight: 1.45,
+                    letterSpacing: 0,
+                },
+                blockquote: {
+                    size: { value: 1.125, unit: "rem" },
+                    weight: 400,
+                    lineHeight: 1.55,
+                    letterSpacing: 0,
+                },
+                code: {
+                    size: { value: 0.9, unit: "rem" },
+                    weight: 400,
+                    lineHeight: 1.45,
+                    letterSpacing: 0,
+                },
+                label: {
+                    size: { value: 0.875, unit: "rem" },
+                    weight: 600,
+                    lineHeight: 1.25,
+                    letterSpacing: 0.01,
+                },
+                eyebrow: {
+                    size: { value: 0.75, unit: "rem" },
+                    weight: 800,
+                    lineHeight: 1.2,
+                    letterSpacing: 0.08,
+                },
             },
         },
 
@@ -131,12 +195,28 @@ const ThemeForge = {
                     pill: { value: 999, unit: "px" },
                 },
                 mappings: {
-                    surfaceRadius: { value: 18, unit: "px", cornerShape: "round" },
+                    surfaceRadius: {
+                        value: 18,
+                        unit: "px",
+                        cornerShape: "round",
+                    },
                     cardRadius: { value: 12, unit: "px", cornerShape: "round" },
-                    buttonRadius: { value: 8, unit: "px", cornerShape: "squircle" },
+                    buttonRadius: {
+                        value: 8,
+                        unit: "px",
+                        cornerShape: "squircle",
+                    },
                     inputRadius: { value: 8, unit: "px", cornerShape: "round" },
-                    badgeRadius: { value: 999, unit: "px", cornerShape: "round" },
-                    dialogRadius: { value: 16, unit: "px", cornerShape: "round" },
+                    badgeRadius: {
+                        value: 999,
+                        unit: "px",
+                        cornerShape: "round",
+                    },
+                    dialogRadius: {
+                        value: 16,
+                        unit: "px",
+                        cornerShape: "round",
+                    },
                 },
             },
 
@@ -162,38 +242,242 @@ const ThemeForge = {
             modes: {
                 light: {
                     recipes: {
-                        subtle: { x: 0, y: 4, blur: 12, spread: 0, opacity: 12, color: "shadowTint", inset: false },
-                        soft: { x: 0, y: 8, blur: 24, spread: 0, opacity: 18, color: "shadowTint", inset: false },
-                        raised: { x: 0, y: 12, blur: 32, spread: -4, opacity: 22, color: "shadowTint", inset: false },
-                        floating: { x: 0, y: 18, blur: 48, spread: -8, opacity: 28, color: "shadowTint", inset: false },
-                        dramatic: { x: 0, y: 24, blur: 64, spread: -12, opacity: 36, color: "shadowTint", inset: false },
-                        inset: { x: 0, y: 2, blur: 8, spread: 0, opacity: 18, color: "shadowTint", inset: true },
+                        subtle: {
+                            x: 0,
+                            y: 4,
+                            blur: 12,
+                            spread: 0,
+                            opacity: 12,
+                            color: "shadowTint",
+                            inset: false,
+                        },
+                        soft: {
+                            x: 0,
+                            y: 8,
+                            blur: 24,
+                            spread: 0,
+                            opacity: 18,
+                            color: "shadowTint",
+                            inset: false,
+                        },
+                        raised: {
+                            x: 0,
+                            y: 12,
+                            blur: 32,
+                            spread: -4,
+                            opacity: 22,
+                            color: "shadowTint",
+                            inset: false,
+                        },
+                        floating: {
+                            x: 0,
+                            y: 18,
+                            blur: 48,
+                            spread: -8,
+                            opacity: 28,
+                            color: "shadowTint",
+                            inset: false,
+                        },
+                        dramatic: {
+                            x: 0,
+                            y: 24,
+                            blur: 64,
+                            spread: -12,
+                            opacity: 36,
+                            color: "shadowTint",
+                            inset: false,
+                        },
+                        inset: {
+                            x: 0,
+                            y: 2,
+                            blur: 8,
+                            spread: 0,
+                            opacity: 18,
+                            color: "shadowTint",
+                            inset: true,
+                        },
                     },
                     mappings: {
-                        surfaceShadow: { recipe: "soft", x: 0, y: 8, blur: 24, spread: 0, opacity: 18, color: "shadowTint", inset: false },
-                        cardShadow: { recipe: "soft", x: 0, y: 8, blur: 24, spread: 0, opacity: 18, color: "shadowTint", inset: false },
-                        buttonShadow: { recipe: "subtle", x: 0, y: 4, blur: 12, spread: 0, opacity: 12, color: "shadowTint", inset: false },
-                        dialogShadow: { recipe: "floating", x: 0, y: 18, blur: 48, spread: -8, opacity: 28, color: "shadowTint", inset: false },
-                        popoverShadow: { recipe: "raised", x: 0, y: 12, blur: 32, spread: -4, opacity: 22, color: "shadowTint", inset: false },
-                        toastShadow: { recipe: "raised", x: 0, y: 12, blur: 32, spread: -4, opacity: 22, color: "shadowTint", inset: false },
+                        surfaceShadow: {
+                            recipe: "soft",
+                            x: 0,
+                            y: 8,
+                            blur: 24,
+                            spread: 0,
+                            opacity: 18,
+                            color: "shadowTint",
+                            inset: false,
+                        },
+                        cardShadow: {
+                            recipe: "soft",
+                            x: 0,
+                            y: 8,
+                            blur: 24,
+                            spread: 0,
+                            opacity: 18,
+                            color: "shadowTint",
+                            inset: false,
+                        },
+                        buttonShadow: {
+                            recipe: "subtle",
+                            x: 0,
+                            y: 4,
+                            blur: 12,
+                            spread: 0,
+                            opacity: 12,
+                            color: "shadowTint",
+                            inset: false,
+                        },
+                        dialogShadow: {
+                            recipe: "floating",
+                            x: 0,
+                            y: 18,
+                            blur: 48,
+                            spread: -8,
+                            opacity: 28,
+                            color: "shadowTint",
+                            inset: false,
+                        },
+                        popoverShadow: {
+                            recipe: "raised",
+                            x: 0,
+                            y: 12,
+                            blur: 32,
+                            spread: -4,
+                            opacity: 22,
+                            color: "shadowTint",
+                            inset: false,
+                        },
+                        toastShadow: {
+                            recipe: "raised",
+                            x: 0,
+                            y: 12,
+                            blur: 32,
+                            spread: -4,
+                            opacity: 22,
+                            color: "shadowTint",
+                            inset: false,
+                        },
                     },
                 },
                 dark: {
                     recipes: {
-                        subtle: { x: 0, y: 4, blur: 12, spread: 0, opacity: 12, color: "shadowTint", inset: false },
-                        soft: { x: 0, y: 8, blur: 24, spread: 0, opacity: 18, color: "shadowTint", inset: false },
-                        raised: { x: 0, y: 12, blur: 32, spread: -4, opacity: 22, color: "shadowTint", inset: false },
-                        floating: { x: 0, y: 18, blur: 48, spread: -8, opacity: 28, color: "shadowTint", inset: false },
-                        dramatic: { x: 0, y: 24, blur: 64, spread: -12, opacity: 36, color: "shadowTint", inset: false },
-                        inset: { x: 0, y: 2, blur: 8, spread: 0, opacity: 18, color: "shadowTint", inset: true },
+                        subtle: {
+                            x: 0,
+                            y: 4,
+                            blur: 12,
+                            spread: 0,
+                            opacity: 12,
+                            color: "shadowTint",
+                            inset: false,
+                        },
+                        soft: {
+                            x: 0,
+                            y: 8,
+                            blur: 24,
+                            spread: 0,
+                            opacity: 18,
+                            color: "shadowTint",
+                            inset: false,
+                        },
+                        raised: {
+                            x: 0,
+                            y: 12,
+                            blur: 32,
+                            spread: -4,
+                            opacity: 22,
+                            color: "shadowTint",
+                            inset: false,
+                        },
+                        floating: {
+                            x: 0,
+                            y: 18,
+                            blur: 48,
+                            spread: -8,
+                            opacity: 28,
+                            color: "shadowTint",
+                            inset: false,
+                        },
+                        dramatic: {
+                            x: 0,
+                            y: 24,
+                            blur: 64,
+                            spread: -12,
+                            opacity: 36,
+                            color: "shadowTint",
+                            inset: false,
+                        },
+                        inset: {
+                            x: 0,
+                            y: 2,
+                            blur: 8,
+                            spread: 0,
+                            opacity: 18,
+                            color: "shadowTint",
+                            inset: true,
+                        },
                     },
                     mappings: {
-                        surfaceShadow: { recipe: "soft", x: 0, y: 8, blur: 24, spread: 0, opacity: 18, color: "shadowTint", inset: false },
-                        cardShadow: { recipe: "soft", x: 0, y: 8, blur: 24, spread: 0, opacity: 18, color: "shadowTint", inset: false },
-                        buttonShadow: { recipe: "subtle", x: 0, y: 4, blur: 12, spread: 0, opacity: 12, color: "shadowTint", inset: false },
-                        dialogShadow: { recipe: "floating", x: 0, y: 18, blur: 48, spread: -8, opacity: 28, color: "shadowTint", inset: false },
-                        popoverShadow: { recipe: "raised", x: 0, y: 12, blur: 32, spread: -4, opacity: 22, color: "shadowTint", inset: false },
-                        toastShadow: { recipe: "raised", x: 0, y: 12, blur: 32, spread: -4, opacity: 22, color: "shadowTint", inset: false },
+                        surfaceShadow: {
+                            recipe: "soft",
+                            x: 0,
+                            y: 8,
+                            blur: 24,
+                            spread: 0,
+                            opacity: 18,
+                            color: "shadowTint",
+                            inset: false,
+                        },
+                        cardShadow: {
+                            recipe: "soft",
+                            x: 0,
+                            y: 8,
+                            blur: 24,
+                            spread: 0,
+                            opacity: 18,
+                            color: "shadowTint",
+                            inset: false,
+                        },
+                        buttonShadow: {
+                            recipe: "subtle",
+                            x: 0,
+                            y: 4,
+                            blur: 12,
+                            spread: 0,
+                            opacity: 12,
+                            color: "shadowTint",
+                            inset: false,
+                        },
+                        dialogShadow: {
+                            recipe: "floating",
+                            x: 0,
+                            y: 18,
+                            blur: 48,
+                            spread: -8,
+                            opacity: 28,
+                            color: "shadowTint",
+                            inset: false,
+                        },
+                        popoverShadow: {
+                            recipe: "raised",
+                            x: 0,
+                            y: 12,
+                            blur: 32,
+                            spread: -4,
+                            opacity: 22,
+                            color: "shadowTint",
+                            inset: false,
+                        },
+                        toastShadow: {
+                            recipe: "raised",
+                            x: 0,
+                            y: 12,
+                            blur: 32,
+                            spread: -4,
+                            opacity: 22,
+                            color: "shadowTint",
+                            inset: false,
+                        },
                     },
                 },
             },
@@ -201,7 +485,9 @@ const ThemeForge = {
     },
 
     cloneValue(value) {
-        return typeof structuredClone === "function" ? structuredClone(value) : JSON.parse(JSON.stringify(value));
+        return typeof structuredClone === "function"
+            ? structuredClone(value)
+            : JSON.parse(JSON.stringify(value));
     },
 
     normalizeTheme(theme) {
@@ -213,12 +499,8 @@ const ThemeForge = {
 
         if (!normalizedTheme.modes) {
             normalizedTheme.modes = {
-                light: {
-                    colors: normalizedTheme.colors,
-                },
-                dark: {
-                    colors: defaultTheme.modes.dark.colors,
-                },
+                light: { colors: normalizedTheme.colors },
+                dark: { colors: defaultTheme.modes.dark.colors },
             };
 
             delete normalizedTheme.colors;
@@ -230,16 +512,26 @@ const ThemeForge = {
         };
 
         if (typeof normalizedTheme.settings.baseFontSize === "number") {
-            normalizedTheme.settings.baseFontSize = { value: normalizedTheme.settings.baseFontSize, unit: "px" };
+            normalizedTheme.settings.baseFontSize = {
+                value: normalizedTheme.settings.baseFontSize,
+                unit: "px",
+            };
         }
 
         if (normalizedTheme.typography?.baseFontSize !== undefined) {
-            normalizedTheme.settings.baseFontSize = { value: normalizedTheme.typography.baseFontSize, unit: "px" };
+            normalizedTheme.settings.baseFontSize = {
+                value: normalizedTheme.typography.baseFontSize,
+                unit: "px",
+            };
         }
 
-        normalizedTheme.typography = this.normalizeTypography(normalizedTheme.typography);
+        normalizedTheme.typography = this.normalizeTypography(
+            normalizedTheme.typography,
+        );
         normalizedTheme.shape = this.normalizeShape(normalizedTheme.shape);
-        normalizedTheme.shadows = this.normalizeShadows(normalizedTheme.shadows);
+        normalizedTheme.shadows = this.normalizeShadows(
+            normalizedTheme.shadows,
+        );
 
         this.normalizeFeature(normalizedTheme, "layout");
         this.normalizeFeature(normalizedTheme, "components");
@@ -260,7 +552,9 @@ const ThemeForge = {
                 ...this.cloneValue(defaultTypography.settings),
                 ...(typography.settings || {}),
             },
-            elements: this.normalizeTypographyElements(typography.elements || defaultTypography.elements),
+            elements: this.normalizeTypographyElements(
+                typography.elements || defaultTypography.elements,
+            ),
         };
     },
 
@@ -268,10 +562,15 @@ const ThemeForge = {
         const defaultElements = this.theme.typography.elements;
 
         return Object.fromEntries(
-            Object.entries(defaultElements).map(([elementName, defaultElement]) => [
-                elementName,
-                this.normalizeTypographyElement(elements[elementName] || defaultElement, defaultElement),
-            ]),
+            Object.entries(defaultElements).map(
+                ([elementName, defaultElement]) => [
+                    elementName,
+                    this.normalizeTypographyElement(
+                        elements[elementName] || defaultElement,
+                        defaultElement,
+                    ),
+                ],
+            ),
         );
     },
 
@@ -279,8 +578,12 @@ const ThemeForge = {
         return {
             size: this.normalizeValueToken(element.size || defaultElement.size),
             weight: Number(element.weight ?? defaultElement.weight ?? 400),
-            lineHeight: Number(element.lineHeight ?? defaultElement.lineHeight ?? 1.5),
-            letterSpacing: Number(element.letterSpacing ?? defaultElement.letterSpacing ?? 0),
+            lineHeight: Number(
+                element.lineHeight ?? defaultElement.lineHeight ?? 1.5,
+            ),
+            letterSpacing: Number(
+                element.letterSpacing ?? defaultElement.letterSpacing ?? 0,
+            ),
         };
     },
 
@@ -290,8 +593,12 @@ const ThemeForge = {
 
         theme[featureName] = {
             settings: feature.settings || {},
-            scale: this.normalizeValueCollection(feature.scale || defaultFeature.scale),
-            mappings: this.normalizeValueCollection(feature.mappings || defaultFeature.mappings),
+            scale: this.normalizeValueCollection(
+                feature.scale || defaultFeature.scale,
+            ),
+            mappings: this.normalizeValueCollection(
+                feature.mappings || defaultFeature.mappings,
+            ),
         };
     },
 
@@ -304,13 +611,21 @@ const ThemeForge = {
 
         return {
             corners: {
-                scale: this.normalizeValueCollection(shape.corners?.scale || defaultShape.corners.scale),
-                mappings: this.normalizeCornerMappingCollection(shape.corners?.mappings || defaultShape.corners.mappings),
+                scale: this.normalizeValueCollection(
+                    shape.corners?.scale || defaultShape.corners.scale,
+                ),
+                mappings: this.normalizeCornerMappingCollection(
+                    shape.corners?.mappings || defaultShape.corners.mappings,
+                ),
             },
 
             borders: {
-                scale: this.normalizeValueCollection(shape.borders?.scale || defaultShape.borders.scale),
-                mappings: this.normalizeValueCollection(shape.borders?.mappings || defaultShape.borders.mappings),
+                scale: this.normalizeValueCollection(
+                    shape.borders?.scale || defaultShape.borders.scale,
+                ),
+                mappings: this.normalizeValueCollection(
+                    shape.borders?.mappings || defaultShape.borders.mappings,
+                ),
             },
 
             overlayBlur: Number(shape.overlayBlur ?? defaultShape.overlayBlur),
@@ -322,23 +637,41 @@ const ThemeForge = {
 
         return {
             modes: {
-                light: this.normalizeShadowMode(shadows.modes?.light || defaultShadows.modes.light, defaultShadows.modes.light),
-                dark: this.normalizeShadowMode(shadows.modes?.dark || defaultShadows.modes.dark, defaultShadows.modes.dark),
+                light: this.normalizeShadowMode(
+                    shadows.modes?.light || defaultShadows.modes.light,
+                    defaultShadows.modes.light,
+                ),
+                dark: this.normalizeShadowMode(
+                    shadows.modes?.dark || defaultShadows.modes.dark,
+                    defaultShadows.modes.dark,
+                ),
             },
         };
     },
 
     normalizeShadowMode(shadowMode = {}, defaultShadowMode = {}) {
         return {
-            recipes: this.normalizeShadowCollection(shadowMode.recipes || defaultShadowMode.recipes, defaultShadowMode.recipes),
-            mappings: this.normalizeShadowCollection(shadowMode.mappings || defaultShadowMode.mappings, defaultShadowMode.mappings),
+            recipes: this.normalizeShadowCollection(
+                shadowMode.recipes || defaultShadowMode.recipes,
+                defaultShadowMode.recipes,
+            ),
+            mappings: this.normalizeShadowCollection(
+                shadowMode.mappings || defaultShadowMode.mappings,
+                defaultShadowMode.mappings,
+            ),
         };
     },
 
     normalizeShadowCollection(collection = {}, defaultCollection = {}) {
         return Object.fromEntries(
             Object.entries(defaultCollection).map(([key, defaultShadow]) => {
-                return [key, this.normalizeShadowRecipe(collection[key] || defaultShadow, defaultShadow)];
+                return [
+                    key,
+                    this.normalizeShadowRecipe(
+                        collection[key] || defaultShadow,
+                        defaultShadow,
+                    ),
+                ];
             }),
         );
     },
@@ -367,7 +700,9 @@ const ThemeForge = {
                     key,
                     {
                         ...this.normalizeValueToken(token),
-                        cornerShape: this.normalizeCornerShapeValue(token.cornerShape || defaultToken.cornerShape),
+                        cornerShape: this.normalizeCornerShapeValue(
+                            token.cornerShape || defaultToken.cornerShape,
+                        ),
                     },
                 ];
             }),
@@ -386,27 +721,41 @@ const ThemeForge = {
         const migratedShape = this.cloneValue(this.theme.shape);
 
         if (shape.radius !== undefined) {
-            Object.keys(migratedShape.corners.mappings).forEach((mappingName) => {
-                migratedShape.corners.mappings[mappingName] = { value: Number(shape.radius), unit: "px" };
-            });
+            Object.keys(migratedShape.corners.mappings).forEach(
+                (mappingName) => {
+                    migratedShape.corners.mappings[mappingName] = {
+                        value: Number(shape.radius),
+                        unit: "px",
+                    };
+                },
+            );
         }
 
         if (shape.borderWidth !== undefined) {
-            Object.keys(migratedShape.borders.mappings).forEach((mappingName) => {
-                migratedShape.borders.mappings[mappingName] = {
-                    value: Number(shape.borderWidth),
-                    unit: "px",
-                };
-            });
+            Object.keys(migratedShape.borders.mappings).forEach(
+                (mappingName) => {
+                    migratedShape.borders.mappings[mappingName] = {
+                        value: Number(shape.borderWidth),
+                        unit: "px",
+                    };
+                },
+            );
         }
 
-        migratedShape.overlayBlur = Number(shape.overlayBlur ?? migratedShape.overlayBlur);
+        migratedShape.overlayBlur = Number(
+            shape.overlayBlur ?? migratedShape.overlayBlur,
+        );
 
         return migratedShape;
     },
 
     normalizeValueCollection(collection) {
-        return Object.fromEntries(Object.entries(collection).map(([key, token]) => [key, this.normalizeValueToken(token)]));
+        return Object.fromEntries(
+            Object.entries(collection).map(([key, token]) => [
+                key,
+                this.normalizeValueToken(token),
+            ]),
+        );
     },
 
     normalizeValueToken(token) {
@@ -414,35 +763,44 @@ const ThemeForge = {
             return { value: token, unit: "px" };
         }
 
-        return {
-            value: Number(token?.value ?? 0),
-            unit: token?.unit || "px",
-        };
+        return { value: Number(token?.value ?? 0), unit: token?.unit || "px" };
     },
 
     migrateSpacing(theme) {
         const spacing = theme.spacing;
         const spacingUnit = spacing.unit || "px";
         const oldScale = Object.fromEntries(
-            Object.entries(spacing.scale || {}).map(([key, value]) => [key, this.normalizeValueToken({ value, unit: spacingUnit })]),
+            Object.entries(spacing.scale || {}).map(([key, value]) => [
+                key,
+                this.normalizeValueToken({ value, unit: spacingUnit }),
+            ]),
         );
 
         ["layout", "components"].forEach((featureName) => {
             Object.keys(theme[featureName].scale).forEach((tokenName) => {
                 if (oldScale[tokenName]) {
-                    theme[featureName].scale[tokenName] = this.cloneValue(oldScale[tokenName]);
+                    theme[featureName].scale[tokenName] = this.cloneValue(
+                        oldScale[tokenName],
+                    );
                 }
             });
         });
 
-        Object.entries(spacing.assignments || {}).forEach(([mappingName, tokenName]) => {
-            const featureName = theme.layout.mappings[mappingName] ? "layout" : theme.components.mappings[mappingName] ? "components" : null;
-            const token = oldScale[tokenName];
+        Object.entries(spacing.assignments || {}).forEach(
+            ([mappingName, tokenName]) => {
+                const featureName = theme.layout.mappings[mappingName]
+                    ? "layout"
+                    : theme.components.mappings[mappingName]
+                      ? "components"
+                      : null;
+                const token = oldScale[tokenName];
 
-            if (featureName && token) {
-                theme[featureName].mappings[mappingName] = this.cloneValue(token);
-            }
-        });
+                if (featureName && token) {
+                    theme[featureName].mappings[mappingName] =
+                        this.cloneValue(token);
+                }
+            },
+        );
     },
 
     getActiveMode() {
@@ -454,7 +812,9 @@ const ThemeForge = {
     },
 
     getShadowsForMode(mode = this.getActiveMode(), sourceTheme = this.theme) {
-        return sourceTheme.shadows.modes[mode] || sourceTheme.shadows.modes.light;
+        return (
+            sourceTheme.shadows.modes[mode] || sourceTheme.shadows.modes.light
+        );
     },
 
     getActiveShadows() {
@@ -470,11 +830,15 @@ const ThemeForge = {
         const hex = rgbToHex(rgb);
 
         if (format === "hex") {
-            return colorToken.a === 1 ? hex : `${hex}${ThemeForge.alphaToHex(colorToken.a)}`;
+            return colorToken.a === 1
+                ? hex
+                : `${hex}${ThemeForge.alphaToHex(colorToken.a)}`;
         }
 
         if (format === "rgb") {
-            return colorToken.a === 1 ? `rgb(${rgb.r} ${rgb.g} ${rgb.b})` : `rgb(${rgb.r} ${rgb.g} ${rgb.b} / ${ThemeForge.formatAlpha(colorToken.a)})`;
+            return colorToken.a === 1
+                ? `rgb(${rgb.r} ${rgb.g} ${rgb.b})`
+                : `rgb(${rgb.r} ${rgb.g} ${rgb.b} / ${ThemeForge.formatAlpha(colorToken.a)})`;
         }
 
         return colorToken.a === 1
@@ -497,7 +861,10 @@ const ThemeForge = {
     },
 
     getCssVariableName(tokenName) {
-        return tokenName.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+        return tokenName.replace(
+            /[A-Z]/g,
+            (letter) => `-${letter.toLowerCase()}`,
+        );
     },
 
     getTokenValue(token) {
@@ -508,12 +875,10 @@ const ThemeForge = {
         if (shadow.recipe === "none") {
             return "none";
         }
-        const opacity = Math.max(0, Math.min(100, Number(shadow.opacity))) / 100;
+        const opacity =
+            Math.max(0, Math.min(100, Number(shadow.opacity))) / 100;
         const colorToken = colors[shadow.color] || colors.shadowTint;
-        const shadowColor = {
-            ...colorToken,
-            a: opacity,
-        };
+        const shadowColor = { ...colorToken, a: opacity };
         const inset = shadow.inset ? "inset " : "";
 
         return `${inset}${shadow.x}px ${shadow.y}px ${shadow.blur}px ${shadow.spread}px ${ThemeForge.getColorValue(shadowColor)}`;
@@ -522,7 +887,8 @@ const ThemeForge = {
     getFontFamilyValue(fontFamilyKey) {
         const fontFamilies = {
             inherit: "inherit",
-            systemSans: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+            systemSans:
+                'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
             serif: 'Georgia, "Times New Roman", serif',
             mono: 'Consolas, Monaco, "Courier New", monospace',
         };
@@ -533,20 +899,40 @@ const ThemeForge = {
     applyTypographyVariables(root) {
         const { settings, elements } = ThemeForge.theme.typography;
 
-        root.style.setProperty("--font-family-body", ThemeForge.getFontFamilyValue(settings.bodyFontFamily));
+        root.style.setProperty(
+            "--font-family-body",
+            ThemeForge.getFontFamilyValue(settings.bodyFontFamily),
+        );
         root.style.setProperty(
             "--font-family-heading",
-            settings.headingFontFamily === "inherit" ? "var(--font-family-body)" : ThemeForge.getFontFamilyValue(settings.headingFontFamily),
+            settings.headingFontFamily === "inherit"
+                ? "var(--font-family-body)"
+                : ThemeForge.getFontFamilyValue(settings.headingFontFamily),
         );
-        root.style.setProperty("--font-family-mono", ThemeForge.getFontFamilyValue(settings.monoFontFamily));
+        root.style.setProperty(
+            "--font-family-mono",
+            ThemeForge.getFontFamilyValue(settings.monoFontFamily),
+        );
 
         Object.entries(elements).forEach(([elementName, element]) => {
             const cssName = ThemeForge.getCssVariableName(elementName);
 
-            root.style.setProperty(`--typography-${cssName}-size`, ThemeForge.getTokenValue(element.size));
-            root.style.setProperty(`--typography-${cssName}-weight`, element.weight);
-            root.style.setProperty(`--typography-${cssName}-line-height`, element.lineHeight);
-            root.style.setProperty(`--typography-${cssName}-letter-spacing`, `${element.letterSpacing}em`);
+            root.style.setProperty(
+                `--typography-${cssName}-size`,
+                ThemeForge.getTokenValue(element.size),
+            );
+            root.style.setProperty(
+                `--typography-${cssName}-weight`,
+                element.weight,
+            );
+            root.style.setProperty(
+                `--typography-${cssName}-line-height`,
+                element.lineHeight,
+            );
+            root.style.setProperty(
+                `--typography-${cssName}-letter-spacing`,
+                `${element.letterSpacing}em`,
+            );
         });
     },
 
@@ -555,18 +941,30 @@ const ThemeForge = {
             return null;
         }
 
-        return Object.entries(scale).find(([, token]) => Number(token.value) === Number(mapping.value) && token.unit === mapping.unit)?.[0] || null;
+        return (
+            Object.entries(scale).find(
+                ([, token]) =>
+                    Number(token.value) === Number(mapping.value) &&
+                    token.unit === mapping.unit,
+            )?.[0] || null
+        );
     },
 
     applyFeatureVariables(root, featureName) {
         const feature = ThemeForge.theme[featureName];
 
         Object.entries(feature.scale).forEach(([tokenName, token]) => {
-            root.style.setProperty(`--${featureName}-${tokenName}`, ThemeForge.getTokenValue(token));
+            root.style.setProperty(
+                `--${featureName}-${tokenName}`,
+                ThemeForge.getTokenValue(token),
+            );
         });
 
         Object.entries(feature.mappings).forEach(([mappingName, token]) => {
-            root.style.setProperty(`--${ThemeForge.getCssVariableName(mappingName)}`, ThemeForge.getTokenValue(token));
+            root.style.setProperty(
+                `--${ThemeForge.getCssVariableName(mappingName)}`,
+                ThemeForge.getTokenValue(token),
+            );
         });
     },
 
@@ -574,28 +972,49 @@ const ThemeForge = {
         const { corners, borders, overlayBlur } = ThemeForge.theme.shape;
 
         Object.entries(corners.scale).forEach(([tokenName, token]) => {
-            root.style.setProperty(`--radius-${tokenName}`, ThemeForge.getTokenValue(token));
+            root.style.setProperty(
+                `--radius-${tokenName}`,
+                ThemeForge.getTokenValue(token),
+            );
         });
 
         Object.entries(corners.mappings).forEach(([mappingName, token]) => {
             const cssName = ThemeForge.getCssVariableName(mappingName);
-            const cornerShapeName = cssName.replace(/-radius$/, "-corner-shape");
+            const cornerShapeName = cssName.replace(
+                /-radius$/,
+                "-corner-shape",
+            );
 
-            root.style.setProperty(`--${cssName}`, ThemeForge.getTokenValue(token));
+            root.style.setProperty(
+                `--${cssName}`,
+                ThemeForge.getTokenValue(token),
+            );
             root.style.setProperty(`--${cornerShapeName}`, token.cornerShape);
         });
 
         Object.entries(borders.scale).forEach(([tokenName, token]) => {
-            root.style.setProperty(`--border-width-${tokenName}`, ThemeForge.getTokenValue(token));
+            root.style.setProperty(
+                `--border-width-${tokenName}`,
+                ThemeForge.getTokenValue(token),
+            );
         });
 
         Object.entries(borders.mappings).forEach(([mappingName, token]) => {
-            root.style.setProperty(`--${ThemeForge.getCssVariableName(mappingName)}`, ThemeForge.getTokenValue(token));
+            root.style.setProperty(
+                `--${ThemeForge.getCssVariableName(mappingName)}`,
+                ThemeForge.getTokenValue(token),
+            );
         });
 
         root.style.setProperty("--overlay-blur", `${overlayBlur}px`);
-        root.style.setProperty("--radius", ThemeForge.getTokenValue(corners.mappings.cardRadius));
-        root.style.setProperty("--border-width", ThemeForge.getTokenValue(borders.mappings.cardBorderWidth));
+        root.style.setProperty(
+            "--radius",
+            ThemeForge.getTokenValue(corners.mappings.cardRadius),
+        );
+        root.style.setProperty(
+            "--border-width",
+            ThemeForge.getTokenValue(borders.mappings.cardBorderWidth),
+        );
     },
 
     applyShadowVariables(root) {
@@ -603,11 +1022,17 @@ const ThemeForge = {
         const colors = ThemeForge.getActiveColors();
 
         Object.entries(recipes).forEach(([recipeName, recipe]) => {
-            root.style.setProperty(`--shadow-recipe-${ThemeForge.getCssVariableName(recipeName)}`, ThemeForge.getShadowValue(recipe, colors));
+            root.style.setProperty(
+                `--shadow-recipe-${ThemeForge.getCssVariableName(recipeName)}`,
+                ThemeForge.getShadowValue(recipe, colors),
+            );
         });
 
         Object.entries(mappings).forEach(([mappingName, shadow]) => {
-            root.style.setProperty(`--${ThemeForge.getCssVariableName(mappingName)}`, ThemeForge.getShadowValue(shadow, colors));
+            root.style.setProperty(
+                `--${ThemeForge.getCssVariableName(mappingName)}`,
+                ThemeForge.getShadowValue(shadow, colors),
+            );
         });
 
         root.style.setProperty("--shadow-soft", "var(--card-shadow)");
@@ -616,34 +1041,83 @@ const ThemeForge = {
     applyTheme() {
         ThemeForge.theme = ThemeForge.normalizeTheme(ThemeForge.theme);
 
-        const root = document.querySelector(".preview-area");
+        const themedRoots = document.querySelectorAll(
+            ".preview-area, .export-area",
+        );
         const colors = ThemeForge.getActiveColors();
         const { settings, typography, shape } = ThemeForge.theme;
 
-        root.style.setProperty("--color-primary", ThemeForge.getColorValue(colors.primary));
-        root.style.setProperty("--color-secondary", ThemeForge.getColorValue(colors.secondary));
-        root.style.setProperty("--color-background", ThemeForge.getColorValue(colors.background));
-        root.style.setProperty("--color-surface", ThemeForge.getColorValue(colors.surface));
+        themedRoots.forEach((root) => {
+            root.style.setProperty(
+                "--color-primary",
+                ThemeForge.getColorValue(colors.primary),
+            );
+            root.style.setProperty(
+                "--color-secondary",
+                ThemeForge.getColorValue(colors.secondary),
+            );
+            root.style.setProperty(
+                "--color-background",
+                ThemeForge.getColorValue(colors.background),
+            );
+            root.style.setProperty(
+                "--color-surface",
+                ThemeForge.getColorValue(colors.surface),
+            );
 
-        root.style.setProperty("--color-success", ThemeForge.getColorValue(colors.success));
-        root.style.setProperty("--color-warning", ThemeForge.getColorValue(colors.warning));
-        root.style.setProperty("--color-danger", ThemeForge.getColorValue(colors.danger));
-        root.style.setProperty("--color-info", ThemeForge.getColorValue(colors.info));
+            root.style.setProperty(
+                "--color-success",
+                ThemeForge.getColorValue(colors.success),
+            );
+            root.style.setProperty(
+                "--color-warning",
+                ThemeForge.getColorValue(colors.warning),
+            );
+            root.style.setProperty(
+                "--color-danger",
+                ThemeForge.getColorValue(colors.danger),
+            );
+            root.style.setProperty(
+                "--color-info",
+                ThemeForge.getColorValue(colors.info),
+            );
 
-        root.style.setProperty("--color-text", ThemeForge.getColorValue(colors.text));
-        root.style.setProperty("--color-muted-text", ThemeForge.getColorValue(colors.mutedText));
-        root.style.setProperty("--color-link", ThemeForge.getColorValue(colors.link));
+            root.style.setProperty(
+                "--color-text",
+                ThemeForge.getColorValue(colors.text),
+            );
+            root.style.setProperty(
+                "--color-muted-text",
+                ThemeForge.getColorValue(colors.mutedText),
+            );
+            root.style.setProperty(
+                "--color-link",
+                ThemeForge.getColorValue(colors.link),
+            );
 
-        root.style.setProperty("--color-border", ThemeForge.getColorValue(colors.border));
-        root.style.setProperty("--color-focus", ThemeForge.getColorValue(colors.focus));
-        root.style.setProperty("--color-overlay", ThemeForge.getColorValue(colors.overlay));
+            root.style.setProperty(
+                "--color-border",
+                ThemeForge.getColorValue(colors.border),
+            );
+            root.style.setProperty(
+                "--color-focus",
+                ThemeForge.getColorValue(colors.focus),
+            );
+            root.style.setProperty(
+                "--color-overlay",
+                ThemeForge.getColorValue(colors.overlay),
+            );
 
-        root.style.setProperty("--font-size-base", ThemeForge.getTokenValue(settings.baseFontSize));
-        ThemeForge.applyTypographyVariables(root);
+            root.style.setProperty(
+                "--font-size-base",
+                ThemeForge.getTokenValue(settings.baseFontSize),
+            );
+            ThemeForge.applyTypographyVariables(root);
 
-        ThemeForge.applyShapeVariables(root);
-        ThemeForge.applyShadowVariables(root);
-        ThemeForge.applyFeatureVariables(root, "layout");
-        ThemeForge.applyFeatureVariables(root, "components");
+            ThemeForge.applyShapeVariables(root);
+            ThemeForge.applyShadowVariables(root);
+            ThemeForge.applyFeatureVariables(root, "layout");
+            ThemeForge.applyFeatureVariables(root, "components");
+        });
     },
 };
