@@ -83,6 +83,8 @@
     function openExportWorkspace() {
         setPreviewMode("workbench");
         setActiveWorkspace("export");
+
+        document.querySelector("[data-drawer-panel='export']")?.click();
     }
 
     function handlePreviewActionClick() {
@@ -102,11 +104,20 @@
     function handleDocumentClick(event) {
         const exportTrigger = event.target.closest("[data-workspace-open='export']");
 
-        if (!exportTrigger) {
+        if (exportTrigger) {
+            openExportWorkspace();
             return;
         }
 
-        openExportWorkspace();
+        const drawerPanelButton = event.target.closest("[data-drawer-panel]");
+
+        if (!drawerPanelButton) {
+            return;
+        }
+
+        if (drawerPanelButton.dataset.drawerPanel !== "export") {
+            setActiveWorkspace("preview");
+        }
     }
 
     function handleDocumentKeydown(event) {

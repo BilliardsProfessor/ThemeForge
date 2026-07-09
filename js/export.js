@@ -82,6 +82,14 @@ ThemeForge.export = {
             this.setActiveTarget(event.target.value);
         });
 
+        document.querySelector("[data-export-copy]")?.addEventListener("click", () => {
+            this.copyActiveOutput();
+        });
+
+        document.querySelector("[data-export-download]")?.addEventListener("click", () => {
+            this.downloadActiveOutput();
+        });
+
         this.setActiveTarget(this.activeTarget);
         this.updateWorkspace();
     },
@@ -125,12 +133,21 @@ ThemeForge.export = {
 
     updateWorkspace() {
         const output = document.querySelector("[data-export-output]");
+        const filename = document.querySelector("[data-export-filename]");
+        const scrollTop = output?.scrollTop || 0;
+        const scrollLeft = output?.scrollLeft || 0;
 
         if (!output) {
             return;
         }
 
         output.textContent = this.getActiveOutput();
+        output.scrollTop = scrollTop;
+        output.scrollLeft = scrollLeft;
+
+        if (filename) {
+            filename.textContent = this.getActiveFilename();
+        }
     },
 
     getActiveOutput() {
@@ -146,6 +163,67 @@ ThemeForge.export = {
         }
 
         return this.createCssExport(themeName, options);
+    },
+
+    getActiveFilename() {
+        const themeName = this.generateThemeNameSuggestion();
+
+        if (this.activeTarget === "scss") {
+            return this.getScssFilename(themeName);
+        }
+
+        if (this.activeTarget === "json") {
+            return this.getJsonFilename(themeName);
+        }
+
+        return this.getCssFilename(themeName);
+    },
+
+    getActiveMimeType() {
+        if (this.activeTarget === "scss") {
+            return "text/x-scss";
+        }
+
+        if (this.activeTarget === "json") {
+            return "application/json";
+        }
+
+        return "text/css";
+    },
+
+    async copyActiveOutput() {
+        try {
+            await navigator.clipboard.writeText(this.getActiveOutput());
+            this.setExportActionState("copy", "Copied");
+        } catch (error) {
+            this.setExportActionState("copy", "Copy failed");
+        }
+    },
+
+    downloadActiveOutput() {
+        this.downloadTextFile(this.getActiveOutput(), this.getActiveFilename(), this.getActiveMimeType());
+        this.setExportActionState("download", "Downloaded");
+    },
+
+    setExportActionState(actionName, message) {
+        const button = document.querySelector(`[data-export-${actionName}]`);
+
+        if (!button) {
+            return;
+        }
+
+        const originalTooltip = button.dataset.tooltip;
+        const originalLabel = button.getAttribute("aria-label");
+
+        button.dataset.exportActionState = "success";
+        button.dataset.tooltip = message;
+        button.setAttribute("aria-label", message);
+
+        window.setTimeout(() => {
+            button.dataset.exportActionState = "idle";
+            button.dataset.tooltip = originalTooltip;
+            button.setAttribute("aria-label", originalLabel);
+        }, 2000);
     },
 
     getWorkspaceExportOptions() {

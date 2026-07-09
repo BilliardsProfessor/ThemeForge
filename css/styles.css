@@ -1235,6 +1235,10 @@ body.drawer-is-initializing .control-card-content {
     border-color: var(--color-primary);
 }
 
+body[data-active-workspace="export"] .preview-area {
+    display: none;
+}
+
 .control-value {
     color: var(--control-muted);
     font-size: 0.8rem;
@@ -1436,6 +1440,24 @@ body.drawer-is-initializing .control-card-content {
 .export-code-block code:focus-visible {
     outline: 3px solid color-mix(in srgb, var(--color-primary), transparent 70%);
     outline-offset: -3px;
+}
+
+.export-filename-preview {
+    display: grid;
+    gap: 0.25rem;
+    margin: 0;
+    color: var(--control-muted);
+    font-size: 0.8rem;
+}
+
+.export-filename-preview code {
+    padding: 0.4rem 0.5rem;
+    overflow-wrap: anywhere;
+    border: var(--border-width) solid var(--control-border);
+    border-radius: 0.45rem;
+    background: var(--control-surface-raised);
+    color: var(--control-text);
+    font-family: Consolas, Monaco, monospace;
 }
 
 .preview-custom-toolbar {
