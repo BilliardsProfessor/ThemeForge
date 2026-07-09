@@ -271,22 +271,26 @@ ThemeForge.export = {
     async copyActiveOutput() {
         try {
             await navigator.clipboard.writeText(this.getActiveOutput());
-            this.setExportActionState("copy", "Copied");
+            this.setExportActionState("copy", "Copied", "success");
         } catch (error) {
-            this.setExportActionState("copy", "Copy failed");
+            this.setExportActionState("copy", "Copy failed", "error");
         }
     },
 
     downloadActiveOutput() {
-        this.downloadTextFile(
-            this.getActiveOutput(),
-            this.getActiveFilename(),
-            this.getActiveMimeType(),
-        );
-        this.setExportActionState("download", "Downloaded");
+        try {
+            this.downloadTextFile(
+                this.getActiveOutput(),
+                this.getActiveFilename(),
+                this.getActiveMimeType(),
+            );
+            this.setExportActionState("download", "Downloaded", "success");
+        } catch (error) {
+            this.setExportActionState("download", "Download failed", "error");
+        }
     },
 
-    setExportActionState(actionName, message) {
+    setExportActionState(actionName, message, state = "success") {
         const button = document.querySelector(`[data-export-${actionName}]`);
 
         if (!button) {
@@ -296,7 +300,7 @@ ThemeForge.export = {
         const originalTooltip = button.dataset.tooltip;
         const originalLabel = button.getAttribute("aria-label");
 
-        button.dataset.exportActionState = "success";
+        button.dataset.exportActionState = state;
         button.dataset.tooltip = message;
         button.setAttribute("aria-label", message);
 

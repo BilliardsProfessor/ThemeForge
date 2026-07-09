@@ -1429,7 +1429,9 @@ body[data-active-workspace="export"] .preview-area {
     grid-area: 1 / 1;
 }
 
-.preview-area {
+/* -- Export Styles ------------------------------------ */
+
+.export-area {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -1449,30 +1451,6 @@ body[data-active-workspace="export"] .preview-area {
             color-mix(in srgb, var(--color-background), #000 4%),
             var(--color-background)
         );
-    color: var(--color-text);
-}
-
-.export-area {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    gap: var(--space-2);
-    min-width: 0;
-    min-height: 0;
-    padding: var(--workbench-gutter);
-    overflow: hidden;
-    background:
-        radial-gradient(
-            circle at top left,
-            rgb(124 58 237 / 0.08),
-            transparent 28rem
-        ),
-        linear-gradient(
-            135deg,
-            color-mix(in srgb, var(--color-background), #000 4%),
-            var(--color-background)
-        );
-    color: var(--color-text);
 }
 
 .export-area[hidden] {
@@ -1578,6 +1556,75 @@ body[data-active-workspace="export"] .preview-area {
 
 .export-checkbox span {
     min-width: 0;
+}
+
+.export-panel-actions .icon-button {
+    width: 2rem;
+    min-width: 2rem;
+    height: 2rem;
+    border: 0;
+    background: transparent;
+    color: var(--color-text);
+    opacity: 0.55;
+    transition:
+        opacity 160ms ease,
+        color 160ms ease,
+        transform 160ms ease;
+}
+
+.export-panel-actions .icon-button:hover,
+.export-panel-actions .icon-button:focus-visible {
+    background: transparent;
+    opacity: 1;
+}
+
+.export-panel-actions .icon-button:active {
+    transform: scale(0.94);
+}
+
+.export-panel-actions .icon-button[data-export-action-state="success"] {
+    color: #22c55e;
+    opacity: 1;
+}
+
+.export-panel-actions .icon-button[data-export-action-state="error"] {
+    color: #ef4444;
+    opacity: 1;
+}
+
+.export-action-icon {
+    display: none;
+}
+
+.icon-button[data-export-action-state="idle"] .export-action-icon-idle,
+.icon-button[data-export-action-state="success"] .export-action-icon-success,
+.icon-button[data-export-action-state="error"] .export-action-icon-error {
+    display: block;
+}
+
+/* -- Preview Styles ----------------------------------- */
+
+.preview-area {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: var(--space-2);
+    min-width: 0;
+    min-height: 0;
+    padding: var(--workbench-gutter);
+    overflow: hidden;
+    background:
+        radial-gradient(
+            circle at top left,
+            rgb(37 99 235 / 0.08),
+            transparent 28rem
+        ),
+        linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--color-background), #000 4%),
+            var(--color-background)
+        );
+    color: var(--color-text);
 }
 
 .preview-custom-toolbar {
