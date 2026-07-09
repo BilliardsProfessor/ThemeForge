@@ -1450,6 +1450,10 @@ body[data-active-workspace="export"] .preview-area {
     outline-offset: -3px;
 }
 
+.export-filename-field {
+    gap: 0.35rem;
+}
+
 .export-filename-preview {
     display: grid;
     gap: 0.25rem;
@@ -1459,13 +1463,10 @@ body[data-active-workspace="export"] .preview-area {
 }
 
 .export-filename-preview code {
-    padding: 0.4rem 0.5rem;
     overflow-wrap: anywhere;
-    border: var(--border-width) solid var(--control-border);
-    border-radius: 0.45rem;
-    background: var(--control-surface-raised);
     color: var(--control-text);
     font-family: Consolas, Monaco, monospace;
+    font-size: 0.85rem;
 }
 
 [data-export-options][hidden] {

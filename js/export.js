@@ -6,6 +6,9 @@ ThemeForge.export = {
     activeTarget:
         localStorage.getItem("themeForge.export.activeTarget") || "css",
 
+    hasCustomFilename: false,
+    filenameBase: "",
+
     targets: {
         css: { label: "CSS" },
         scss: { label: "SCSS" },
@@ -97,6 +100,14 @@ ThemeForge.export = {
             .querySelector("[data-export-target-select]")
             ?.addEventListener("change", (event) => {
                 this.setActiveTarget(event.target.value);
+            });
+
+        document
+            .querySelector("[data-export-filename-base]")
+            ?.addEventListener("input", (event) => {
+                this.hasCustomFilename = true;
+                this.filenameBase = event.target.value;
+                this.updateWorkspace();
             });
 
         document
@@ -204,12 +215,19 @@ ThemeForge.export = {
 
     updateWorkspace() {
         const output = document.querySelector("[data-export-output]");
+        const filenameInput = document.querySelector(
+            "[data-export-filename-base]",
+        );
         const filename = document.querySelector("[data-export-filename]");
         const scrollTop = output?.scrollTop || 0;
         const scrollLeft = output?.scrollLeft || 0;
 
         if (!output) {
             return;
+        }
+
+        if (filenameInput && !this.hasCustomFilename) {
+            filenameInput.value = this.getSuggestedFilenameBase();
         }
 
         output.textContent = this.getActiveOutput();
@@ -243,17 +261,55 @@ ThemeForge.export = {
     },
 
     getActiveFilename() {
-        const themeName = this.generateThemeNameSuggestion();
+        return `${this.getActiveFilenameBase()}.${this.getActiveFilenameExtension()}`;
+    },
 
+    getActiveFilenameBase() {
+        const filenameBase = this.hasCustomFilename
+            ? this.filenameBase
+            : this.getSuggestedFilenameBase();
+
+        return this.normalizeFilenameBase(filenameBase);
+    },
+
+    getSuggestedFilenameBase() {
+        return `${this.filenamePrefix}-${this.slugifyThemeName(
+            this.generateThemeNameSuggestion(),
+        )}`;
+    },
+
+    getActiveFilenameExtension() {
         if (this.activeTarget === "scss") {
-            return this.getScssFilename(themeName);
+            return "scss";
         }
 
         if (this.activeTarget === "json") {
-            return this.getJsonFilename(themeName);
+            return "json";
         }
 
-        return this.getCssFilename(themeName);
+        return "css";
+    },
+
+    normalizeFilenameBase(filenameBase) {
+        const extension = this.getActiveFilenameExtension();
+        const cleanBase = String(filenameBase)
+            .trim()
+            .replace(/[\\/:*?"<>|]+/g, "-")
+            .replace(/\s+/g, "-")
+            .replace(/-+/g, "-")
+            .replace(/^-+|-+$/g, "");
+
+        const matchingExtension = `.${extension}`;
+
+        if (cleanBase.toLowerCase().endsWith(matchingExtension)) {
+            return (
+                cleanBase
+                    .slice(0, -matchingExtension.length)
+                    .replace(/^-+|-+$/g, "") || this.getSuggestedFilenameBase()
+            );
+        }
+
+        return cleanBase || this.getSuggestedFilenameBase();
     },
 
     getActiveMimeType() {
