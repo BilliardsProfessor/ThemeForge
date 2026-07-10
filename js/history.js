@@ -6,16 +6,19 @@ ThemeForge.history = {
     continuousTimerId: null,
     continuousChangeLabel: null,
     continuousDelay: 650,
-    holdDelay: 400,
+    menuOpenDelay: 1000,
+    menuCloseDelay: 150,
 
     menu: {
         element: null,
         action: null,
         activeButton: null,
         activeItem: null,
-        holdTimerId: null,
+        openTimerId: null,
+        closeTimerId: null,
         pointerStarted: false,
         menuOpenedFromHold: false,
+        openedFrom: null,
     },
 
     init() {
@@ -46,6 +49,16 @@ ThemeForge.history = {
             this.onMenuClick(event);
         });
 
+        this.menu.element.addEventListener("pointerenter", () => {
+            this.cancelMenuClose();
+        });
+
+        this.menu.element.addEventListener("pointerleave", () => {
+            if (this.menu.openedFrom === "hover") {
+                this.scheduleMenuClose();
+            }
+        });
+
         this.updateControls();
     },
 
@@ -55,13 +68,99 @@ ThemeForge.history = {
         button.setAttribute("aria-haspopup", "menu");
         button.setAttribute("aria-expanded", "false");
 
+        button.addEventListener("pointerenter", (event) => {
+            if (event.pointerType !== "mouse" || button.disabled) {
+                return;
+            }
+
+            this.scheduleMenuOpen(action, button, "hover");
+        });
+
+        button.addEventListener("pointerleave", () => {
+            this.cancelMenuOpen();
+
+            if (this.menu.openedFrom === "hover") {
+                this.scheduleMenuClose();
+            }
+        });
+
         button.addEventListener("pointerdown", (event) => {
+            this.cancelMenuOpen();
             this.onHistoryButtonPointerDown(event, action);
+        });
+
+        button.addEventListener("keydown", (event) => {
+            this.onHistoryButtonKeyDown(event, action);
         });
 
         button.addEventListener("click", (event) => {
             event.preventDefault();
         });
+    },
+
+    scheduleMenuOpen(action, button, openedFrom) {
+        this.cancelMenuOpen();
+        this.cancelMenuClose();
+
+        this.menu.openTimerId = window.setTimeout(() => {
+            this.openMenu(action, button, openedFrom);
+        }, this.menuOpenDelay);
+    },
+
+    cancelMenuOpen() {
+        window.clearTimeout(this.menu.openTimerId);
+        this.menu.openTimerId = null;
+    },
+
+    scheduleMenuClose() {
+        this.cancelMenuClose();
+
+        this.menu.closeTimerId = window.setTimeout(() => {
+            this.closeMenu();
+        }, this.menuCloseDelay);
+    },
+
+    cancelMenuClose() {
+        window.clearTimeout(this.menu.closeTimerId);
+        this.menu.closeTimerId = null;
+    },
+
+    executeHistoryAction(action) {
+        if (action === "undo") {
+            this.undo();
+        }
+
+        if (action === "redo") {
+            this.redo();
+        }
+    },
+
+    onHistoryButtonKeyDown(event, action) {
+        if (event.currentTarget.disabled || event.repeat) {
+            return;
+        }
+
+        if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+            event.preventDefault();
+
+            this.openMenu(action, event.currentTarget, "keyboard");
+
+            const menuItems = this.getMenuItems();
+            const menuItem = event.key === "ArrowDown" ? menuItems[0] : menuItems.at(-1);
+
+            menuItem?.focus();
+            return;
+        }
+
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            this.closeMenu();
+            this.executeHistoryAction(action);
+        }
+    },
+
+    getMenuItems() {
+        return [...this.menu.element.querySelectorAll("[role='menuitem']")];
     },
 
     restoreSession() {
@@ -264,10 +363,10 @@ ThemeForge.history = {
             button.setPointerCapture(event.pointerId);
         }
 
-        this.menu.holdTimerId = setTimeout(() => {
+        this.menu.openTimerId = window.setTimeout(() => {
             this.menu.menuOpenedFromHold = true;
-            this.openMenu(action, button);
-        }, this.holdDelay);
+            this.openMenu(action, button, "hold");
+        }, this.menuOpenDelay);
     },
 
     onDocumentPointerMove(event) {
@@ -285,7 +384,7 @@ ThemeForge.history = {
             return;
         }
 
-        clearTimeout(this.menu.holdTimerId);
+        this.cancelMenuOpen();
 
         if (this.menu.menuOpenedFromHold) {
             if (this.menu.activeItem) {
@@ -298,13 +397,7 @@ ThemeForge.history = {
             return;
         }
 
-        if (this.menu.action === "undo") {
-            this.undo();
-        }
-
-        if (this.menu.action === "redo") {
-            this.redo();
-        }
+        this.executeHistoryAction(this.menu.action);
 
         this.resetPointerState();
     },
@@ -322,11 +415,46 @@ ThemeForge.history = {
     },
 
     onDocumentKeyDown(event) {
-        if (event.key !== "Escape" || this.menu.element.hidden) {
+        if (this.menu.element.hidden) {
             return;
         }
 
-        this.closeMenu();
+        if (event.key === "Escape") {
+            event.preventDefault();
+
+            const activeButton = this.menu.activeButton;
+
+            this.closeMenu();
+            activeButton?.focus();
+            return;
+        }
+
+        const menuItems = this.getMenuItems();
+        const currentIndex = menuItems.indexOf(document.activeElement);
+
+        if (!menuItems.length || currentIndex === -1) {
+            return;
+        }
+
+        if (event.key === "ArrowDown") {
+            event.preventDefault();
+            menuItems[(currentIndex + 1) % menuItems.length].focus();
+        }
+
+        if (event.key === "ArrowUp") {
+            event.preventDefault();
+            menuItems[(currentIndex - 1 + menuItems.length) % menuItems.length].focus();
+        }
+
+        if (event.key === "Home") {
+            event.preventDefault();
+            menuItems[0].focus();
+        }
+
+        if (event.key === "End") {
+            event.preventDefault();
+            menuItems.at(-1).focus();
+        }
     },
 
     onMenuClick(event) {
@@ -339,12 +467,15 @@ ThemeForge.history = {
         this.activateMenuItem(menuItem);
     },
 
-    openMenu(action, button) {
+    openMenu(action, button, openedFrom = null) {
         this.renderMenu(action);
 
         this.menu.element.hidden = false;
         this.menu.action = action;
         this.menu.activeButton = button;
+        this.menu.openedFrom = openedFrom;
+        this.cancelMenuOpen();
+        this.cancelMenuClose();
 
         button.setAttribute("aria-expanded", "true");
         button.dataset.historyMenuOpen = "true";
@@ -535,6 +666,8 @@ ThemeForge.history = {
     },
 
     closeMenu() {
+        this.cancelMenuOpen();
+        this.cancelMenuClose();
         if (this.menu.activeItem) {
             this.menu.activeItem.classList.remove("active");
         }
@@ -550,12 +683,13 @@ ThemeForge.history = {
         this.menu.action = null;
         this.menu.activeButton = null;
         this.menu.activeItem = null;
+        this.menu.openedFrom = null;
     },
 
     resetPointerState() {
         this.menu.pointerStarted = false;
         this.menu.menuOpenedFromHold = false;
-        this.menu.holdTimerId = null;
+        this.menu.openTimerId = null;
     },
 
     updateControls() {
@@ -570,8 +704,11 @@ ThemeForge.history = {
         undoButton.setAttribute("aria-disabled", String(undoDisabled));
         redoButton.setAttribute("aria-disabled", String(redoDisabled));
 
-        undoButton.dataset.tooltip = undoDisabled ? "No undo available" : "Hold for Undo list";
-        redoButton.dataset.tooltip = redoDisabled ? "No redo available" : "Hold for Redo list";
+        undoButton.dataset.tooltip = undoDisabled ? "Undo is unavailable" : "";
+        redoButton.dataset.tooltip = redoDisabled ? "Redo is unavailable" : "";
+
+        undoButton.classList.toggle("has-tooltip", undoDisabled);
+        redoButton.classList.toggle("has-tooltip", redoDisabled);
 
         undoButton.setAttribute("aria-label", undoDisabled ? "No undo available" : "Undo");
         redoButton.setAttribute("aria-label", redoDisabled ? "No redo available" : "Redo");
