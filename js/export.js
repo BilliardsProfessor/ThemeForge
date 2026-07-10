@@ -3,8 +3,7 @@ ThemeForge.export = {
     fallbackSlug: "theme",
     schemaVersion: 1,
 
-    activeTarget:
-        localStorage.getItem("themeForge.export.activeTarget") || "css",
+    activeTarget: localStorage.getItem("themeForge.export.activeTarget") || "css",
 
     hasCustomFilename: false,
     filenameBase: "",
@@ -66,8 +65,7 @@ ThemeForge.export = {
         this.exportMenuButton = document.querySelector("#exportMenuBtn");
         this.exportMenuList = document.querySelector("[data-export-menu-list]");
 
-        if (!this.exportMenu || !this.exportMenuButton || !this.exportMenuList)
-            return;
+        if (!this.exportMenu || !this.exportMenuButton || !this.exportMenuList) return;
 
         this.exportMenuButton.addEventListener("click", () => {
             this.toggleExportMenu();
@@ -89,53 +87,37 @@ ThemeForge.export = {
     },
 
     initWorkspace() {
-        document
-            .querySelectorAll("[data-export-target-tab]")
-            .forEach((button) => {
-                button.addEventListener("click", () => {
-                    this.setActiveTarget(button.dataset.exportTargetTab);
-                });
+        document.querySelectorAll("[data-export-target-tab]").forEach((button) => {
+            button.addEventListener("click", () => {
+                this.setActiveTarget(button.dataset.exportTargetTab);
             });
+        });
 
-        document
-            .querySelector("[data-export-target-select]")
-            ?.addEventListener("change", (event) => {
-                this.setActiveTarget(event.target.value);
+        document.querySelector("[data-export-target-select]")?.addEventListener("change", (event) => {
+            this.setActiveTarget(event.target.value);
+        });
+
+        document.querySelector("[data-export-filename-base]")?.addEventListener("input", (event) => {
+            this.hasCustomFilename = true;
+            this.filenameBase = event.target.value;
+            this.updateWorkspace();
+        });
+
+        document.querySelector("[data-export-copy]")?.addEventListener("click", () => {
+            this.copyActiveOutput();
+        });
+
+        document.querySelector("[data-export-download]")?.addEventListener("click", () => {
+            this.downloadActiveOutput();
+        });
+
+        document.querySelectorAll("[data-export-setting]").forEach((control) => {
+            const eventName = control.tagName.toLowerCase() === "input" && control.type === "text" ? "input" : "change";
+
+            control.addEventListener(eventName, (event) => {
+                this.handleExportSettingChange(event);
             });
-
-        document
-            .querySelector("[data-export-filename-base]")
-            ?.addEventListener("input", (event) => {
-                this.hasCustomFilename = true;
-                this.filenameBase = event.target.value;
-                this.updateWorkspace();
-            });
-
-        document
-            .querySelector("[data-export-copy]")
-            ?.addEventListener("click", () => {
-                this.copyActiveOutput();
-            });
-
-        document
-            .querySelector("[data-export-download]")
-            ?.addEventListener("click", () => {
-                this.downloadActiveOutput();
-            });
-
-        document
-            .querySelectorAll("[data-export-setting]")
-            .forEach((control) => {
-                const eventName =
-                    control.tagName.toLowerCase() === "input" &&
-                    control.type === "text"
-                        ? "input"
-                        : "change";
-
-                control.addEventListener(eventName, (event) => {
-                    this.handleExportSettingChange(event);
-                });
-            });
+        });
 
         this.setActiveTarget(this.activeTarget);
         this.updateWorkspace();
@@ -149,14 +131,12 @@ ThemeForge.export = {
         this.activeTarget = target;
         localStorage.setItem("themeForge.export.activeTarget", target);
 
-        document
-            .querySelectorAll("[data-export-target-tab]")
-            .forEach((button) => {
-                const isActive = button.dataset.exportTargetTab === target;
+        document.querySelectorAll("[data-export-target-tab]").forEach((button) => {
+            const isActive = button.dataset.exportTargetTab === target;
 
-                button.classList.toggle("active", isActive);
-                button.setAttribute("aria-selected", String(isActive));
-            });
+            button.classList.toggle("active", isActive);
+            button.setAttribute("aria-selected", String(isActive));
+        });
 
         const tabs = document.querySelector(".export-tabs");
 
@@ -171,36 +151,28 @@ ThemeForge.export = {
             select.value = target;
         }
 
-        document
-            .querySelectorAll("[data-export-options]")
-            .forEach((section) => {
-                section.hidden = section.dataset.exportOptions !== target;
-            });
+        document.querySelectorAll("[data-export-options]").forEach((section) => {
+            section.hidden = section.dataset.exportOptions !== target;
+        });
 
-        document
-            .querySelectorAll(
-                `[data-export-options="${target}"] [data-export-setting]`,
-            )
-            .forEach((control) => {
-                const settingName = control.dataset.exportSetting;
-                const settingValue = this.settings[target]?.[settingName];
+        document.querySelectorAll(`[data-export-options="${target}"] [data-export-setting]`).forEach((control) => {
+            const settingName = control.dataset.exportSetting;
+            const settingValue = this.settings[target]?.[settingName];
 
-                if (control.type === "checkbox") {
-                    if (settingName !== "themeModes") {
-                        control.checked = Boolean(settingValue);
-                    }
-
-                    return;
+            if (control.type === "checkbox") {
+                if (settingName !== "themeModes") {
+                    control.checked = Boolean(settingValue);
                 }
 
-                if (settingValue !== undefined) {
-                    control.value = settingValue;
-                }
-            });
+                return;
+            }
 
-        document
-            .querySelector("[data-export-target-title]")
-            ?.replaceChildren(this.targets[target].label);
+            if (settingValue !== undefined) {
+                control.value = settingValue;
+            }
+        });
+
+        document.querySelector("[data-export-target-title]")?.replaceChildren(this.targets[target].label);
 
         this.updateWorkspace();
     },
@@ -221,11 +193,9 @@ ThemeForge.export = {
         }
 
         if (settingName === "themeModes") {
-            this.settings[target].themeModes = Array.from(
-                optionSection.querySelectorAll(
-                    "[data-export-setting='themeModes']:checked",
-                ),
-            ).map((input) => input.value);
+            this.settings[target].themeModes = Array.from(optionSection.querySelectorAll("[data-export-setting='themeModes']:checked")).map(
+                (input) => input.value,
+            );
 
             this.updateWorkspace();
             return;
@@ -243,9 +213,7 @@ ThemeForge.export = {
 
     updateWorkspace() {
         const output = document.querySelector("[data-export-output]");
-        const filenameInput = document.querySelector(
-            "[data-export-filename-base]",
-        );
+        const filenameInput = document.querySelector("[data-export-filename-base]");
         const filename = document.querySelector("[data-export-filename]");
         const scrollTop = output?.scrollTop || 0;
         const scrollLeft = output?.scrollLeft || 0;
@@ -278,11 +246,7 @@ ThemeForge.export = {
         if (this.activeTarget === "json") {
             const spacing = this.settings.json.prettyPrint ? 2 : 0;
 
-            return JSON.stringify(
-                this.createExportTheme(themeName),
-                null,
-                spacing,
-            );
+            return JSON.stringify(this.createExportTheme(themeName), null, spacing);
         }
 
         return this.createCssExport(themeName, options);
@@ -293,17 +257,13 @@ ThemeForge.export = {
     },
 
     getActiveFilenameBase() {
-        const filenameBase = this.hasCustomFilename
-            ? this.filenameBase
-            : this.getSuggestedFilenameBase();
+        const filenameBase = this.hasCustomFilename ? this.filenameBase : this.getSuggestedFilenameBase();
 
         return this.normalizeFilenameBase(filenameBase);
     },
 
     getSuggestedFilenameBase() {
-        return `${this.filenamePrefix}-${this.slugifyThemeName(
-            this.generateThemeNameSuggestion(),
-        )}`;
+        return `${this.filenamePrefix}-${this.slugifyThemeName(this.generateThemeNameSuggestion())}`;
     },
 
     getActiveFilenameExtension() {
@@ -330,11 +290,7 @@ ThemeForge.export = {
         const matchingExtension = `.${extension}`;
 
         if (cleanBase.toLowerCase().endsWith(matchingExtension)) {
-            return (
-                cleanBase
-                    .slice(0, -matchingExtension.length)
-                    .replace(/^-+|-+$/g, "") || this.getSuggestedFilenameBase()
-            );
+            return cleanBase.slice(0, -matchingExtension.length).replace(/^-+|-+$/g, "") || this.getSuggestedFilenameBase();
         }
 
         return cleanBase || this.getSuggestedFilenameBase();
@@ -363,11 +319,7 @@ ThemeForge.export = {
 
     downloadActiveOutput() {
         try {
-            this.downloadTextFile(
-                this.getActiveOutput(),
-                this.getActiveFilename(),
-                this.getActiveMimeType(),
-            );
+            this.downloadTextFile(this.getActiveOutput(), this.getActiveFilename(), this.getActiveMimeType());
             this.setExportActionState("download", "Downloaded", "success");
         } catch (error) {
             this.setExportActionState("download", "Download failed", "error");
@@ -405,9 +357,7 @@ ThemeForge.export = {
             colorFormat: settings.colorFormat || "hsl",
             includeComments: settings.includeComments !== false,
             includeExample: settings.includeExample === true,
-            variablePrefix: this.normalizeScssVariablePrefix(
-                settings.variablePrefix || "",
-            ),
+            variablePrefix: this.normalizeScssVariablePrefix(settings.variablePrefix || ""),
         };
     },
 
@@ -421,9 +371,7 @@ ThemeForge.export = {
     },
 
     updateTabIndicator(tabs) {
-        const activeButton = tabs.querySelector(
-            "[data-export-target-tab].active",
-        );
+        const activeButton = tabs.querySelector("[data-export-target-tab].active");
 
         if (!activeButton) {
             return;
@@ -433,10 +381,7 @@ ThemeForge.export = {
         const buttonRect = activeButton.getBoundingClientRect();
 
         tabs.style.setProperty("--active-tab-width", `${buttonRect.width}px`);
-        tabs.style.setProperty(
-            "--active-tab-offset",
-            `${buttonRect.left - tabsRect.left}px`,
-        );
+        tabs.style.setProperty("--active-tab-offset", `${buttonRect.left - tabsRect.left}px`);
     },
 
     toggleExportMenu() {
@@ -467,8 +412,7 @@ ThemeForge.export = {
     handleExportMenuClick(event) {
         const exportTypeButton = event.target.closest("[data-export-type]");
 
-        if (!exportTypeButton || !this.exportMenu?.contains(exportTypeButton))
-            return;
+        if (!exportTypeButton || !this.exportMenu?.contains(exportTypeButton)) return;
 
         const exportType = exportTypeButton.dataset.exportType;
 
@@ -491,12 +435,7 @@ ThemeForge.export = {
     },
 
     handleDocumentKeydown(event) {
-        if (
-            event.key !== "Escape" ||
-            !this.exportMenuList ||
-            this.exportMenuList.hidden
-        )
-            return;
+        if (event.key !== "Escape" || !this.exportMenuList || this.exportMenuList.hidden) return;
 
         this.closeExportMenu();
         this.exportMenuButton?.focus();
@@ -522,11 +461,7 @@ ThemeForge.export = {
         const exportTheme = this.createExportTheme(themeName);
         const json = JSON.stringify(exportTheme, null, 2);
 
-        this.downloadTextFile(
-            json,
-            this.getJsonFilename(themeName),
-            "application/json",
-        );
+        this.downloadTextFile(json, this.getJsonFilename(themeName), "application/json");
     },
 
     createExportTheme(themeName) {
@@ -538,10 +473,7 @@ ThemeForge.export = {
 
             settings: {
                 previewMode: ThemeForge.getActiveMode(),
-                appAppearance:
-                    document.body.dataset.appModePreference ||
-                    localStorage.getItem("themeForge.appAppearance") ||
-                    "system",
+                appAppearance: document.body.dataset.appModePreference || localStorage.getItem("themeForge.appAppearance") || "system",
             },
         };
     },
@@ -601,11 +533,9 @@ ThemeForge.export = {
 
             [
                 { value: "css", label: "CSS custom properties", checked: true },
-                { value: "scss", label: "SCSS variables" },
+                { value: "scss", label: "SCSS theme maps" },
             ].forEach((option) => {
-                outputOptions.append(
-                    this.createRadioOption("stylesheetOutput", option),
-                );
+                outputOptions.append(this.createRadioOption("stylesheetOutput", option));
             });
 
             outputGroup.append(outputLegend, outputOptions);
@@ -618,9 +548,7 @@ ThemeForge.export = {
                 { value: "themeClass", label: ".theme-{slug}" },
                 { value: "previewArea", label: ".preview-area" },
             ].forEach((option) => {
-                selectorOptions.append(
-                    this.createRadioOption("cssSelectorType", option),
-                );
+                selectorOptions.append(this.createRadioOption("cssSelectorType", option));
             });
             selectorGroup.append(selectorLegend, selectorOptions);
 
@@ -632,9 +560,7 @@ ThemeForge.export = {
                 { value: "light", label: "Light mode", checked: true },
                 { value: "dark", label: "Dark mode", checked: true },
             ].forEach((option) => {
-                modeOptions.append(
-                    this.createCheckboxOption("themeModes", option),
-                );
+                modeOptions.append(this.createCheckboxOption("themeModes", option));
             });
             modeGroup.append(modeLegend, modeOptions);
 
@@ -646,9 +572,7 @@ ThemeForge.export = {
                 { value: "hex", label: "HEX" },
                 { value: "rgb", label: "RGB" },
             ].forEach((option) => {
-                formatOptions.append(
-                    this.createRadioOption("cssColorFormat", option),
-                );
+                formatOptions.append(this.createRadioOption("cssColorFormat", option));
             });
             formatGroup.append(formatLegend, formatOptions);
 
@@ -693,15 +617,7 @@ ThemeForge.export = {
                 });
             });
 
-            form.append(
-                nameField,
-                outputGroup,
-                selectorGroup,
-                modeGroup,
-                formatGroup,
-                commentsLabel,
-                exampleLabel,
-            );
+            form.append(nameField, outputGroup, selectorGroup, modeGroup, formatGroup, commentsLabel, exampleLabel);
 
             ThemeForge.appModal.open({
                 eyebrow: "Export styles",
@@ -752,11 +668,7 @@ ThemeForge.export = {
         if (options.stylesheetOutput === "scss") {
             const scss = this.createScssExport(themeName, options);
 
-            this.downloadTextFile(
-                scss,
-                this.getScssFilename(themeName),
-                "text/x-scss",
-            );
+            this.downloadTextFile(scss, this.getScssFilename(themeName), "text/x-scss");
             return;
         }
 
@@ -769,15 +681,8 @@ ThemeForge.export = {
         const colorFormat = options.colorFormat || "hsl";
         const includeComments = options.includeComments !== false;
         const selectedModes = this.getSelectedThemeModes(options);
-        const block = this.getCssModeBlocks(
-            themeName,
-            options,
-            colorFormat,
-            selectedModes,
-        ).join("\n\n");
-        const example = options.includeExample
-            ? `\n\n${this.getCssUsageExample(themeName, options)}`
-            : "";
+        const block = this.getCssModeBlocks(themeName, options, colorFormat, selectedModes).join("\n\n");
+        const example = options.includeExample ? `\n\n${this.getCssUsageExample(themeName, options)}` : "";
 
         if (!includeComments) return `${block}${example}`;
 
@@ -797,37 +702,169 @@ ThemeForge.export = {
         const colorFormat = options.colorFormat || "hsl";
         const includeComments = options.includeComments !== false;
         const selectedModes = this.getSelectedThemeModes(options);
-        const variablePrefix = this.normalizeScssVariablePrefix(
-            options.variablePrefix || "",
-        );
-        const declarations = this.getScssModeDeclarations(
+        const variablePrefix = this.normalizeScssVariablePrefix(options.variablePrefix || "");
+        const selector = this.getCssSelector(options.selectorType || "root", themeName);
+        const output = this.getScssThemeOutput({
             colorFormat,
+            includeComments,
             selectedModes,
+            selector,
             variablePrefix,
-        );
-        const example = options.includeExample
-            ? `\n\n${this.getScssUsageExample(variablePrefix)}`
-            : "";
+        });
+        const example = options.includeExample ? `\n\n${this.getScssUsageExample(variablePrefix, includeComments)}` : "";
 
-        if (!includeComments) return `${declarations.join("\n")}${example}`;
+        const header = includeComments
+            ? [
+                  "// Theme Forge SCSS Export",
+                  `// Theme: ${this.getScssCommentValue(themeName)}`,
+                  `// Schema: ${this.schemaVersion}`,
+                  `// Modes: ${selectedModes.join(", ")}`,
+                  "//",
+                  "// Theme values are stored in Sass maps, then emitted as CSS custom",
+                  "// properties so the compiled stylesheet can switch themes at runtime.",
+                  "",
+                  "// Sass string utilities preserve complex CSS values, including",
+                  "// comma-separated shadow lists, as single map values.",
+                  '@use "sass:string";',
+                  "",
+              ]
+            : ['@use "sass:string";', ""];
 
-        return (
-            [
-                "// Theme Forge Export",
-                `// Theme: ${this.getScssCommentValue(themeName)}`,
-                `// Schema: ${this.schemaVersion}`,
-                `// Modes: ${selectedModes.join(", ")}`,
+        return `${[...header, ...output].join("\n")}${example}`;
+    },
+
+    getScssThemeOutput({ colorFormat, includeComments, selectedModes, selector, variablePrefix }) {
+        const names = this.getScssExportNames(variablePrefix);
+        const lines = [];
+        const singleMode = selectedModes.length === 1;
+
+        if (singleMode) {
+            const mode = selectedModes[0];
+
+            if (includeComments) {
+                lines.push(
+                    `// ${this.capitalize(mode)} mode was selected as the only exported theme.`,
+                    `// Because no alternate mode is included, ${mode} mode becomes the`,
+                    "// default color scheme wherever this stylesheet is applied.",
+                    "",
+                );
+            }
+
+            lines.push(
+                ...this.getScssThemeMap(names.theme, this.getExportTokenGroups(colorFormat, mode), includeComments, `${this.capitalize(mode)} theme values`),
                 "",
-                ...declarations,
-            ].join("\n") + example
+            );
+        } else {
+            lines.push(
+                ...this.getScssThemeMap(names.lightTheme, this.getExportTokenGroups(colorFormat, "light"), includeComments, "Light-mode theme values"),
+                "",
+                ...this.getScssThemeMap(names.darkTheme, this.getExportTokenGroups(colorFormat, "dark"), includeComments, "Dark-mode theme values"),
+                "",
+            );
+        }
+
+        if (includeComments) {
+            lines.push(
+                "// Converts a theme map into runtime CSS custom properties.",
+                "// Sass variables disappear during compilation; custom properties remain",
+                "// available to the browser and can therefore change with the active mode.",
+            );
+        }
+
+        lines.push(
+            `@mixin ${names.mixin}($theme) {`,
+            "  @each $token, $value in $theme {",
+            `    --${names.customPropertyPrefix}#{\$token}: #{\$value};`,
+            "  }",
+            "}",
+            "",
         );
+
+        if (singleMode) {
+            const mode = selectedModes[0];
+
+            if (includeComments) {
+                lines.push(`// Applies the selected ${mode} theme as the default theme.`);
+            }
+
+            lines.push(`${selector} {`, `  color-scheme: ${mode};`, `  @include ${names.mixin}(${names.theme});`, "}");
+
+            return lines;
+        }
+
+        if (includeComments) {
+            lines.push("// Light mode is the default when both modes are exported.");
+        }
+
+        lines.push(`${selector} {`, "  color-scheme: light;", `  @include ${names.mixin}(${names.lightTheme});`, "}", "");
+
+        if (includeComments) {
+            lines.push("// Replaces the custom properties when the operating system requests", "// a dark color scheme.");
+        }
+
+        lines.push(
+            "@media (prefers-color-scheme: dark) {",
+            `  ${selector} {`,
+            "    color-scheme: dark;",
+            `    @include ${names.mixin}(${names.darkTheme});`,
+            "  }",
+            "}",
+        );
+
+        return lines;
+    },
+
+    getScssExportNames(prefix = "") {
+        const namePrefix = prefix ? `${prefix}-` : "";
+
+        return {
+            theme: `$${namePrefix}theme`,
+            lightTheme: `$${namePrefix}theme-light`,
+            darkTheme: `$${namePrefix}theme-dark`,
+            mixin: `${namePrefix}theme-properties`,
+            customPropertyPrefix: namePrefix,
+        };
+    },
+
+    getScssThemeMap(mapName, groups, includeComments, description) {
+        const lines = [];
+
+        if (includeComments) {
+            lines.push(`// ${description}.`);
+        }
+
+        lines.push(`${mapName}: (`);
+
+        groups.forEach((group, groupIndex) => {
+            if (includeComments) {
+                lines.push(`  // ${group.label}: ${group.description}`);
+            }
+
+            group.tokens.forEach((token, tokenIndex) => {
+                const isLastToken = groupIndex === groups.length - 1 && tokenIndex === group.tokens.length - 1;
+                const comma = isLastToken ? "" : ",";
+
+                lines.push(`  ${token.name}: ${this.getScssMapValue(token.value)}${comma}`);
+            });
+
+            if (groupIndex < groups.length - 1) {
+                lines.push("");
+            }
+        });
+
+        lines.push(");");
+
+        return lines;
+    },
+
+    getScssMapValue(value) {
+        const escapedValue = String(value).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+
+        return `string.unquote("${escapedValue}")`;
     },
 
     getCssUsageExample(themeName, options = {}) {
-        const selector = this.getCssSelector(
-            options.selectorType || "root",
-            themeName,
-        );
+        const selector = this.getCssSelector(options.selectorType || "root", themeName);
         const scopeSelector = selector === ":root" ? "body" : selector;
 
         return [
@@ -872,83 +909,76 @@ ThemeForge.export = {
         ].join("\n");
     },
 
-    getScssUsageExample(prefix = "") {
-        const variablePrefix = prefix ? `${prefix}-` : "";
+    getScssUsageExample(prefix = "", includeComments = true) {
+        const customPropertyPrefix = prefix ? `${prefix}-` : "";
+        const lines = [];
 
-        return [
-            "// Example styles",
-            "",
+        if (includeComments) {
+            lines.push(
+                "// Example styles",
+                "// Consume the generated CSS custom properties with var().",
+                "// These values update automatically when the active theme changes.",
+                "",
+            );
+        }
+
+        lines.push(
             "body {",
-            `  color: $${variablePrefix}color-text;`,
-            `  background: $${variablePrefix}color-background;`,
-            `  font-size: $${variablePrefix}font-size-base;`,
+            `  color: var(--${customPropertyPrefix}color-text);`,
+            `  background: var(--${customPropertyPrefix}color-background);`,
+            `  font-size: var(--${customPropertyPrefix}font-size-base);`,
             "}",
             "",
             "main {",
-            `  background: $${variablePrefix}color-surface;`,
-            `  border: $${variablePrefix}border-width solid $${variablePrefix}color-border;`,
-            `  border-radius: $${variablePrefix}radius;`,
-            `  box-shadow: $${variablePrefix}shadow-soft;`,
+            `  background: var(--${customPropertyPrefix}color-surface);`,
+            `  border: var(--${customPropertyPrefix}border-width) solid var(--${customPropertyPrefix}color-border);`,
+            `  border-radius: var(--${customPropertyPrefix}radius);`,
+            `  box-shadow: var(--${customPropertyPrefix}shadow-soft);`,
             "}",
             "",
             ".example-card {",
-            `  color: $${variablePrefix}color-text;`,
-            `  background: $${variablePrefix}color-surface;`,
-            `  border: $${variablePrefix}border-width solid $${variablePrefix}color-border;`,
-            `  border-radius: $${variablePrefix}radius;`,
+            `  color: var(--${customPropertyPrefix}color-text);`,
+            `  background: var(--${customPropertyPrefix}color-surface);`,
+            `  border: var(--${customPropertyPrefix}border-width) solid var(--${customPropertyPrefix}color-border);`,
+            `  border-radius: var(--${customPropertyPrefix}radius);`,
             "}",
             "",
             ".example-card a {",
-            `  color: $${variablePrefix}color-link;`,
+            `  color: var(--${customPropertyPrefix}color-link);`,
             "}",
             "",
             ".example-card a:focus-visible {",
-            `  outline: 2px solid $${variablePrefix}color-focus;`,
+            `  outline: 2px solid var(--${customPropertyPrefix}color-focus);`,
             "  outline-offset: 3px;",
             "}",
             "",
             ".example-alert {",
-            `  color: $${variablePrefix}color-text;`,
-            `  background: $${variablePrefix}color-warning;`,
-            `  border-radius: $${variablePrefix}radius;`,
+            `  color: var(--${customPropertyPrefix}color-text);`,
+            `  background: var(--${customPropertyPrefix}color-warning);`,
+            `  border-radius: var(--${customPropertyPrefix}radius);`,
             "}",
-        ].join("\n");
+        );
+
+        return lines.join("\n");
     },
 
     getSelectedThemeModes(options = {}) {
-        const modes = Array.isArray(options.themeModes)
-            ? options.themeModes
-            : [];
-        const validModes = modes.filter((mode) =>
-            ["light", "dark"].includes(mode),
-        );
+        const modes = Array.isArray(options.themeModes) ? options.themeModes : [];
+        const validModes = modes.filter((mode) => ["light", "dark"].includes(mode));
 
         return validModes.length ? validModes : [ThemeForge.getActiveMode()];
     },
 
     getCssModeBlocks(themeName, options, colorFormat, selectedModes) {
-        const selector = this.getCssSelector(
-            options.selectorType || "root",
-            themeName,
-        );
+        const selector = this.getCssSelector(options.selectorType || "root", themeName);
 
         if (selectedModes.length === 1) {
-            return [
-                this.getCssDeclarationBlock(
-                    selector,
-                    colorFormat,
-                    selectedModes[0],
-                ),
-            ];
+            return [this.getCssDeclarationBlock(selector, colorFormat, selectedModes[0])];
         }
 
         return [
             this.getCssDeclarationBlock(selector, colorFormat, "light"),
-            [
-                "@media (prefers-color-scheme: dark) {",
-                this.getCssDeclarationBlock(selector, colorFormat, "dark", 2),
-                "}",
-            ].join("\n"),
+            ["@media (prefers-color-scheme: dark) {", this.getCssDeclarationBlock(selector, colorFormat, "dark", 2), "}"].join("\n"),
         ];
     },
 
@@ -956,260 +986,207 @@ ThemeForge.export = {
         const pad = " ".repeat(indent);
         const declarations = this.getCssVariableDeclarations(colorFormat, mode);
 
-        return [
-            `${pad}${selector} {`,
-            ...declarations.map((declaration) =>
-                declaration ? `${pad}  ${declaration}` : "",
-            ),
-            `${pad}}`,
-        ].join("\n");
-    },
-
-    getScssModeDeclarations(colorFormat, selectedModes, prefix = "") {
-        if (selectedModes.length === 1) {
-            return this.getScssVariableDeclarations(
-                colorFormat,
-                selectedModes[0],
-                prefix,
-            );
-        }
-
-        return [
-            "// Light mode",
-            ...this.getScssVariableDeclarations(colorFormat, "light", prefix),
-            "",
-            "// Dark mode",
-            ...this.getScssVariableDeclarations(colorFormat, "dark", prefix),
-        ];
+        return [`${pad}${selector} {`, ...declarations.map((declaration) => (declaration ? `${pad}  ${declaration}` : "")), `${pad}}`].join("\n");
     },
 
     getCssVariableDeclarations(format, mode = ThemeForge.getActiveMode()) {
-        const { settings, typography, shape } = ThemeForge.theme;
+        return this.getExportTokenGroups(format, mode).flatMap((group, index, groups) => {
+            const declarations = group.tokens.map((token) => `--${token.name}: ${token.cssValue};`);
 
-        return [
-            ...this.getColorVariableDeclarations(format, mode),
-            "",
-            ...this.getShadowCssDeclarations(mode),
-            "",
-            `--font-size-base: ${ThemeForge.getTokenValue(settings.baseFontSize)};`,
-            "",
-            ...this.getFeatureCssDeclarations("layout"),
-            "",
-            ...this.getFeatureCssDeclarations("components"),
-            "",
-            ...this.getShapeCssDeclarations(),
-        ];
+            return index < groups.length - 1 ? [...declarations, ""] : declarations;
+        });
     },
 
-    getScssVariableDeclarations(
-        format,
-        mode = ThemeForge.getActiveMode(),
-        prefix = "",
-    ) {
-        const { settings, typography, shape } = ThemeForge.theme;
-        const variablePrefix = prefix ? `${prefix}-` : "";
-
-        return [
-            ...this.getScssColorVariableDeclarations(
-                format,
-                mode,
-                variablePrefix,
-            ),
-            "",
-            ...this.getShadowScssDeclarations(mode, variablePrefix),
-            "",
-            `$${variablePrefix}font-size-base: ${ThemeForge.getTokenValue(settings.baseFontSize)};`,
-            "",
-            ...this.getFeatureScssDeclarations("layout", variablePrefix),
-            "",
-            ...this.getFeatureScssDeclarations("components", variablePrefix),
-            "",
-            ...this.getShapeScssDeclarations(variablePrefix),
-        ];
-    },
-
-    getShadowCssDeclarations(mode = ThemeForge.getActiveMode()) {
-        const { recipes, mappings } = ThemeForge.getShadowsForMode(mode);
+    getExportTokenGroups(format, mode = ThemeForge.getActiveMode()) {
+        const colorFormat = ["hsl", "hex", "rgb"].includes(format) ? format : "hsl";
+        const { settings, shape } = ThemeForge.theme;
         const colors = ThemeForge.theme.modes[mode].colors;
+        const { recipes, mappings: shadowMappings } = ThemeForge.getShadowsForMode(mode);
 
-        return [
+        const colorNames = [
+            "primary",
+            "secondary",
+            "background",
+            "surface",
+            "success",
+            "warning",
+            "danger",
+            "info",
+            "text",
+            "mutedText",
+            "link",
+            "border",
+            "focus",
+            "overlay",
+            "shadowTint",
+        ];
+        const colorTokens = colorNames.map((tokenName) => ({
+            name: `color-${this.getCssVariableName(tokenName)}`,
+            value: ThemeForge.getColorValue(colors[tokenName], colorFormat),
+            cssValue: ThemeForge.getColorValue(colors[tokenName], colorFormat),
+        }));
+
+        const shadowTokens = [
             ...Object.entries(recipes).map(([recipeName, recipe]) => {
-                return `--shadow-recipe-${this.getCssVariableName(recipeName)}: ${ThemeForge.getShadowValue(recipe, colors)};`;
-            }),
-            "",
-            ...Object.entries(mappings).map(([mappingName, shadow]) => {
-                return `--${this.getCssVariableName(mappingName)}: ${ThemeForge.getShadowValue(shadow, colors)};`;
-            }),
-            "",
-            "--shadow-soft: var(--card-shadow);",
-        ];
-    },
+                const value = ThemeForge.getShadowValue(recipe, colors);
 
-    getShadowScssDeclarations(mode = ThemeForge.getActiveMode(), prefix = "") {
-        const { recipes, mappings } = ThemeForge.getShadowsForMode(mode);
-        const colors = ThemeForge.theme.modes[mode].colors;
+                return {
+                    name: `shadow-recipe-${this.getCssVariableName(recipeName)}`,
+                    value,
+                    cssValue: value,
+                };
+            }),
+            ...Object.entries(shadowMappings).map(([mappingName, shadow]) => {
+                const value = ThemeForge.getShadowValue(shadow, colors);
+
+                return {
+                    name: this.getCssVariableName(mappingName),
+                    value,
+                    cssValue: value,
+                };
+            }),
+        ];
+
+        shadowTokens.push({
+            name: "shadow-soft",
+            value: "var(--card-shadow)",
+            cssValue: "var(--card-shadow)",
+        });
 
         return [
-            ...Object.entries(recipes).map(([recipeName, recipe]) => {
-                return `$${prefix}shadow-recipe-${this.getCssVariableName(recipeName)}: ${ThemeForge.getShadowValue(recipe, colors)};`;
-            }),
-            "",
-            ...Object.entries(mappings).map(([mappingName, shadow]) => {
-                return `$${prefix}${this.getCssVariableName(mappingName)}: ${ThemeForge.getShadowValue(shadow, colors)};`;
-            }),
-            "",
-            `$${prefix}shadow-soft: $${prefix}card-shadow;`,
+            {
+                label: "Colors",
+                description: "semantic colors used throughout the theme.",
+                tokens: colorTokens,
+            },
+            {
+                label: "Shadows",
+                description: "shadow recipes, component mappings, and aliases.",
+                tokens: shadowTokens,
+            },
+            {
+                label: "Typography",
+                description: "base text sizing shared by the preview components.",
+                tokens: [
+                    {
+                        name: "font-size-base",
+                        value: ThemeForge.getTokenValue(settings.baseFontSize),
+                        cssValue: ThemeForge.getTokenValue(settings.baseFontSize),
+                    },
+                ],
+            },
+            this.getFeatureExportTokenGroup("layout", "Layout"),
+            this.getFeatureExportTokenGroup("components", "Components"),
+            this.getShapeExportTokenGroup(shape),
         ];
     },
 
-    getShapeCssDeclarations() {
-        const { corners, borders, overlayBlur } = ThemeForge.theme.shape;
-
-        return [
-            ...Object.entries(corners.scale).map(
-                ([tokenName, token]) =>
-                    `--radius-${tokenName}: ${ThemeForge.getTokenValue(token)};`,
-            ),
-            "",
-            ...Object.entries(corners.mappings).flatMap(
-                ([mappingName, token]) => {
-                    const matchingScaleToken =
-                        ThemeForge.findMatchingScaleToken(corners.scale, token);
-                    const variableName = `--${this.getCssVariableName(mappingName)}`;
-                    const cornerShapeName = variableName.replace(
-                        /-radius$/,
-                        "-corner-shape",
-                    );
-
-                    return [
-                        matchingScaleToken
-                            ? `${variableName}: var(--radius-${matchingScaleToken});`
-                            : `${variableName}: ${ThemeForge.getTokenValue(token)};`,
-                        `${cornerShapeName}: ${token.cornerShape};`,
-                    ];
-                },
-            ),
-            "",
-            ...Object.entries(borders.scale).map(
-                ([tokenName, token]) =>
-                    `--border-width-${tokenName}: ${ThemeForge.getTokenValue(token)};`,
-            ),
-            "",
-            ...Object.entries(borders.mappings).map(([mappingName, token]) => {
-                const matchingScaleToken = ThemeForge.findMatchingScaleToken(
-                    borders.scale,
-                    token,
-                );
-                const variableName = `--${this.getCssVariableName(mappingName)}`;
-
-                return matchingScaleToken
-                    ? `${variableName}: var(--border-width-${matchingScaleToken});`
-                    : `${variableName}: ${ThemeForge.getTokenValue(token)};`;
-            }),
-            "",
-            `--overlay-blur: ${overlayBlur}px;`,
-            "",
-            "--radius: var(--card-radius);",
-            "--border-width: var(--card-border-width);",
-        ];
-    },
-
-    getShapeScssDeclarations(prefix = "") {
-        const { corners, borders, overlayBlur } = ThemeForge.theme.shape;
-
-        return [
-            ...Object.entries(corners.scale).map(
-                ([tokenName, token]) =>
-                    `$${prefix}radius-${tokenName}: ${ThemeForge.getTokenValue(token)};`,
-            ),
-            "",
-            ...Object.entries(corners.mappings).flatMap(
-                ([mappingName, token]) => {
-                    const matchingScaleToken =
-                        ThemeForge.findMatchingScaleToken(corners.scale, token);
-                    const variableName = `$${prefix}${this.getCssVariableName(mappingName)}`;
-                    const cornerShapeName = variableName.replace(
-                        /-radius$/,
-                        "-corner-shape",
-                    );
-
-                    return [
-                        matchingScaleToken
-                            ? `${variableName}: $${prefix}radius-${matchingScaleToken};`
-                            : `${variableName}: ${ThemeForge.getTokenValue(token)};`,
-                        `${cornerShapeName}: ${token.cornerShape};`,
-                    ];
-                },
-            ),
-            "",
-            ...Object.entries(borders.scale).map(
-                ([tokenName, token]) =>
-                    `$${prefix}border-width-${tokenName}: ${ThemeForge.getTokenValue(token)};`,
-            ),
-            "",
-            ...Object.entries(borders.mappings).map(([mappingName, token]) => {
-                const matchingScaleToken = ThemeForge.findMatchingScaleToken(
-                    borders.scale,
-                    token,
-                );
-                const variableName = `$${prefix}${this.getCssVariableName(mappingName)}`;
-
-                return matchingScaleToken
-                    ? `${variableName}: $${prefix}border-width-${matchingScaleToken};`
-                    : `${variableName}: ${ThemeForge.getTokenValue(token)};`;
-            }),
-            "",
-            `$${prefix}overlay-blur: ${overlayBlur}px;`,
-            "",
-            `$${prefix}radius: $${prefix}card-radius;`,
-            `$${prefix}border-width: $${prefix}card-border-width;`,
-        ];
-    },
-
-    getFeatureCssDeclarations(featureName) {
+    getFeatureExportTokenGroup(featureName, label) {
         const feature = ThemeForge.theme[featureName];
+        const scaleTokens = Object.entries(feature.scale).map(([tokenName, token]) => {
+            const value = ThemeForge.getTokenValue(token);
 
-        return [
-            ...Object.entries(feature.scale).map(
-                ([tokenName, token]) =>
-                    `--${featureName}-${tokenName}: ${ThemeForge.getTokenValue(token)};`,
-            ),
-            "",
-            ...Object.entries(feature.mappings).map(([mappingName, token]) => {
-                const matchingScaleToken = ThemeForge.findMatchingScaleToken(
-                    feature.scale,
-                    token,
-                );
-                const variableName = `--${this.getCssVariableName(mappingName)}`;
+            return {
+                name: `${featureName}-${tokenName}`,
+                value,
+                cssValue: value,
+            };
+        });
+        const mappingTokens = Object.entries(feature.mappings).map(([mappingName, token]) => {
+            const matchingScaleToken = ThemeForge.findMatchingScaleToken(feature.scale, token);
+            const value = ThemeForge.getTokenValue(token);
 
-                return matchingScaleToken
-                    ? `${variableName}: var(--${featureName}-${matchingScaleToken});`
-                    : `${variableName}: ${ThemeForge.getTokenValue(token)};`;
-            }),
-        ];
+            return {
+                name: this.getCssVariableName(mappingName),
+                value: matchingScaleToken ? `var(--${featureName}-${matchingScaleToken})` : value,
+                cssValue: matchingScaleToken ? `var(--${featureName}-${matchingScaleToken})` : value,
+            };
+        });
+
+        return {
+            label,
+            description: `${featureName} scales and their semantic mappings.`,
+            tokens: [...scaleTokens, ...mappingTokens],
+        };
     },
 
-    getFeatureScssDeclarations(featureName, prefix = "") {
-        const feature = ThemeForge.theme[featureName];
+    getShapeExportTokenGroup(shape) {
+        const { corners, borders, overlayBlur } = shape;
+        const tokens = [];
 
-        return [
-            ...Object.entries(feature.scale).map(
-                ([tokenName, token]) =>
-                    `$${prefix}${featureName}-${tokenName}: ${ThemeForge.getTokenValue(token)};`,
-            ),
-            "",
-            ...Object.entries(feature.mappings).map(([mappingName, token]) => {
-                const matchingScaleToken = ThemeForge.findMatchingScaleToken(
-                    feature.scale,
-                    token,
-                );
-                const variableName = `$${prefix}${this.getCssVariableName(mappingName)}`;
+        Object.entries(corners.scale).forEach(([tokenName, token]) => {
+            const value = ThemeForge.getTokenValue(token);
 
-                return matchingScaleToken
-                    ? `${variableName}: $${prefix}${featureName}-${matchingScaleToken};`
-                    : `${variableName}: ${ThemeForge.getTokenValue(token)};`;
-            }),
-        ];
+            tokens.push({
+                name: `radius-${tokenName}`,
+                value,
+                cssValue: value,
+            });
+        });
+
+        Object.entries(corners.mappings).forEach(([mappingName, token]) => {
+            const matchingScaleToken = ThemeForge.findMatchingScaleToken(corners.scale, token);
+            const name = this.getCssVariableName(mappingName);
+            const value = ThemeForge.getTokenValue(token);
+
+            tokens.push(
+                {
+                    name,
+                    value: matchingScaleToken ? `var(--radius-${matchingScaleToken})` : value,
+                    cssValue: matchingScaleToken ? `var(--radius-${matchingScaleToken})` : value,
+                },
+                {
+                    name: name.replace(/-radius$/, "-corner-shape"),
+                    value: token.cornerShape,
+                    cssValue: token.cornerShape,
+                },
+            );
+        });
+
+        Object.entries(borders.scale).forEach(([tokenName, token]) => {
+            const value = ThemeForge.getTokenValue(token);
+
+            tokens.push({
+                name: `border-width-${tokenName}`,
+                value,
+                cssValue: value,
+            });
+        });
+
+        Object.entries(borders.mappings).forEach(([mappingName, token]) => {
+            const matchingScaleToken = ThemeForge.findMatchingScaleToken(borders.scale, token);
+            const value = ThemeForge.getTokenValue(token);
+
+            tokens.push({
+                name: this.getCssVariableName(mappingName),
+                value: matchingScaleToken ? `var(--border-width-${matchingScaleToken})` : value,
+                cssValue: matchingScaleToken ? `var(--border-width-${matchingScaleToken})` : value,
+            });
+        });
+
+        tokens.push(
+            {
+                name: "overlay-blur",
+                value: `${overlayBlur}px`,
+                cssValue: `${overlayBlur}px`,
+            },
+            {
+                name: "radius",
+                value: "var(--card-radius)",
+                cssValue: "var(--card-radius)",
+            },
+            {
+                name: "border-width",
+                value: "var(--card-border-width)",
+                cssValue: "var(--card-border-width)",
+            },
+        );
+
+        return {
+            label: "Shape",
+            description: "corner radii, border widths, blur, and convenience aliases.",
+            tokens,
+        };
     },
 
     getCssSelector(selectorType, themeName) {
@@ -1224,67 +1201,12 @@ ThemeForge.export = {
         return ":root";
     },
 
-    getColorVariableDeclarations(format, mode = ThemeForge.getActiveMode()) {
-        const colorFormat = ["hsl", "hex", "rgb"].includes(format)
-            ? format
-            : "hsl";
-        const colors = ThemeForge.theme.modes[mode].colors;
-        const colorGroups = [
-            ["primary", "secondary", "background", "surface"],
-            ["success", "warning", "danger", "info"],
-            ["text", "mutedText", "link"],
-            ["border", "focus", "overlay", "shadowTint"],
-        ];
-
-        return colorGroups.flatMap((group, index) => {
-            const declarations = group.map((tokenName) => {
-                const colorToken = colors[tokenName];
-                const variableName = `--color-${this.getCssVariableName(tokenName)}`;
-
-                return `${variableName}: ${ThemeForge.getColorValue(colorToken, colorFormat)};`;
-            });
-
-            return index < colorGroups.length - 1
-                ? [...declarations, ""]
-                : declarations;
-        });
-    },
-
-    getScssColorVariableDeclarations(
-        format,
-        mode = ThemeForge.getActiveMode(),
-        prefix = "",
-    ) {
-        const colorFormat = ["hsl", "hex", "rgb"].includes(format)
-            ? format
-            : "hsl";
-        const colors = ThemeForge.theme.modes[mode].colors;
-        const colorGroups = [
-            ["primary", "secondary", "background", "surface"],
-            ["success", "warning", "danger", "info"],
-            ["text", "mutedText", "link"],
-            ["border", "focus", "overlay", "shadowTint"],
-        ];
-
-        return colorGroups.flatMap((group, index) => {
-            const declarations = group.map((tokenName) => {
-                const colorToken = colors[tokenName];
-                const variableName = `$${prefix}color-${this.getCssVariableName(tokenName)}`;
-
-                return `${variableName}: ${ThemeForge.getColorValue(colorToken, colorFormat)};`;
-            });
-
-            return index < colorGroups.length - 1
-                ? [...declarations, ""]
-                : declarations;
-        });
+    capitalize(value) {
+        return `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
     },
 
     getCssVariableName(tokenName) {
-        return tokenName.replace(
-            /[A-Z]/g,
-            (letter) => `-${letter.toLowerCase()}`,
-        );
+        return tokenName.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
     },
 
     downloadTextFile(content, filename, type = "text/plain") {
@@ -1311,9 +1233,7 @@ ThemeForge.export = {
         const hueFamily = this.getHueFamily(blendedHue);
         const adjectives = this.getAdjectivesForMood(saturation, lightness);
         const nouns = this.nounsByHue[hueFamily];
-        const seed = Math.round(
-            primary.h + secondary.h + saturation + lightness,
-        );
+        const seed = Math.round(primary.h + secondary.h + saturation + lightness);
         const adjective = adjectives[seed % adjectives.length];
         const noun = nouns[(seed + Math.round(secondary.h)) % nouns.length];
 
@@ -1329,12 +1249,8 @@ ThemeForge.export = {
         const secondaryRadians = (Number(secondary.h) * Math.PI) / 180;
         const primaryWeight = Math.max(1, Number(primary.s)) * 2;
         const secondaryWeight = Math.max(1, Number(secondary.s));
-        const x =
-            Math.cos(primaryRadians) * primaryWeight +
-            Math.cos(secondaryRadians) * secondaryWeight;
-        const y =
-            Math.sin(primaryRadians) * primaryWeight +
-            Math.sin(secondaryRadians) * secondaryWeight;
+        const x = Math.cos(primaryRadians) * primaryWeight + Math.cos(secondaryRadians) * secondaryWeight;
+        const y = Math.sin(primaryRadians) * primaryWeight + Math.sin(secondaryRadians) * secondaryWeight;
         const hue = Math.round((Math.atan2(y, x) * 180) / Math.PI);
 
         return (hue + 360) % 360;
