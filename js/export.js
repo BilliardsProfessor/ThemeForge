@@ -1028,7 +1028,7 @@ ThemeForge.export = {
 
         const shadowTokens = [
             ...Object.entries(recipes).map(([recipeName, recipe]) => {
-                const value = ThemeForge.getShadowValue(recipe, colors);
+                const value = ThemeForge.getShadowValue(recipe, colors, colorFormat);
 
                 return {
                     name: `shadow-recipe-${this.getCssVariableName(recipeName)}`,
@@ -1037,7 +1037,7 @@ ThemeForge.export = {
                 };
             }),
             ...Object.entries(shadowMappings).map(([mappingName, shadow]) => {
-                const value = ThemeForge.getShadowValue(shadow, colors);
+                const value = ThemeForge.getShadowValue(shadow, colors, colorFormat);
 
                 return {
                     name: this.getCssVariableName(mappingName),
