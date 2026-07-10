@@ -82,6 +82,7 @@
 
     function openExportWorkspace() {
         setPreviewMode("workbench");
+        ThemeForge.export.updateWorkspace();
         setActiveWorkspace("export");
 
         document.querySelector("[data-drawer-panel='export']")?.click();
