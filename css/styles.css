@@ -10,6 +10,7 @@
 
     /* drawer */
     --left-drawer-width: 400px;
+    --right-drawer-width: 360px;
     --drawer-min-width: 280px;
     --drawer-max-width: 640px;
     --drawer-transition: 500ms ease;
@@ -759,9 +760,16 @@ body[data-app-mode="dark"] .preview-size-field select option {
     width: var(--drawer-rail-width);
     min-width: var(--drawer-rail-width);
     padding: 0.65rem 0.4rem;
-    border-right: var(--border-width) solid var(--color-border);
     background: color-mix(in srgb, var(--color-surface), var(--color-background) 20%);
     box-shadow: var(--shadow-soft);
+}
+
+.drawer-rail-left {
+    border-right: var(--border-width) solid var(--color-border);
+}
+
+.drawer-rail-right {
+    border-left: var(--border-width) solid var(--color-border);
 }
 
 .drawer-rail-button {
@@ -844,18 +852,14 @@ body[data-app-mode="dark"] .preview-size-field select option {
     pointer-events: none;
 }
 
-.left-drawer {
+.drawer {
     position: fixed;
     top: var(--app-header-height);
     bottom: 0;
-    left: var(--drawer-rail-width);
     z-index: 40;
     display: flex;
     flex-direction: column;
-    width: var(--left-drawer-width);
-    min-width: var(--left-drawer-width);
     padding: var(--space-2) var(--space-1);
-    border-right: var(--border-width) solid var(--color-border);
     background: color-mix(in srgb, var(--color-surface), var(--color-background) 35%);
     box-shadow: var(--shadow-soft);
     overflow: hidden;
@@ -864,10 +868,23 @@ body[data-app-mode="dark"] .preview-size-field select option {
         opacity var(--drawer-transition);
 }
 
+.drawer-left {
+    left: var(--drawer-rail-width);
+    width: var(--left-drawer-width);
+    min-width: var(--left-drawer-width);
+    border-right: var(--border-width) solid var(--color-border);
+}
+
+.drawer-right {
+    right: var(--drawer-rail-width);
+    width: var(--right-drawer-width);
+    min-width: var(--right-drawer-width);
+    border-left: var(--border-width) solid var(--color-border);
+}
+
 .drawer-resize-handle {
     position: absolute;
     top: 0;
-    right: 0;
     bottom: 0;
     z-index: 5;
     width: 0.75rem;
@@ -878,11 +895,18 @@ body[data-app-mode="dark"] .preview-size-field select option {
     touch-action: none;
 }
 
+.drawer-left .drawer-resize-handle {
+    right: 0;
+}
+
+.drawer-right .drawer-resize-handle {
+    left: 0;
+}
+
 .drawer-resize-handle::before {
     content: "";
     position: absolute;
     top: 50%;
-    right: 0.15rem;
     width: 0.2rem;
     height: 3rem;
     border-radius: 999px;
@@ -890,6 +914,14 @@ body[data-app-mode="dark"] .preview-size-field select option {
     opacity: 0;
     transform: translateY(-50%);
     transition: opacity 160ms ease;
+}
+
+.drawer-left .drawer-resize-handle::before {
+    right: 0.15rem;
+}
+
+.drawer-right .drawer-resize-handle::before {
+    left: 0.15rem;
 }
 
 .drawer-resize-handle:hover::before,
@@ -903,7 +935,7 @@ body.is-resizing-drawer {
     user-select: none;
 }
 
-body.is-resizing-drawer .left-drawer,
+body.is-resizing-drawer .drawer,
 body.is-resizing-drawer .drawer-dock-spacer,
 body.is-resizing-drawer .preview-area {
     transition: none;
@@ -917,18 +949,30 @@ body.is-resizing-drawer .preview-area {
     padding-bottom: var(--drawer-content-padding-bottom);
 }
 
-body[data-left-drawer-state="collapsed"] .left-drawer {
+body[data-left-drawer-state="collapsed"] .drawer-left {
     pointer-events: none;
     opacity: 0;
     transform: translateX(calc(var(--left-drawer-width) * -1));
+}
+
+body[data-right-drawer-state="collapsed"] .drawer-right {
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(var(--right-drawer-width));
 }
 
 body[data-left-drawer-state="pinned"] {
     --left-drawer-dock-width: var(--left-drawer-width);
 }
 
-body[data-left-drawer-state="temporary"] .left-drawer,
-body[data-left-drawer-state="pinned"] .left-drawer {
+body[data-right-drawer-state="pinned"] {
+    --right-drawer-dock-width: var(--right-drawer-width);
+}
+
+body[data-left-drawer-state="temporary"] .drawer-left,
+body[data-left-drawer-state="pinned"] .drawer-left,
+body[data-right-drawer-state="temporary"] .drawer-right,
+body[data-right-drawer-state="pinned"] .drawer-right {
     opacity: 1;
     transform: translateX(0);
 }
@@ -956,7 +1000,7 @@ body.drawer-is-initializing .app-shell {
     width: var(--right-drawer-dock-width);
 }
 
-body.drawer-is-initializing .left-drawer,
+body.drawer-is-initializing .drawer,
 body.drawer-is-initializing .drawer-dock-spacer,
 body.drawer-is-initializing .preview-area {
     transition: none;
@@ -968,6 +1012,7 @@ body.drawer-is-initializing .preview-area {
     justify-content: space-between;
     gap: var(--space-1);
     margin-bottom: var(--space-2);
+    padding-inline: 0.5rem;
 }
 
 .drawer-title {
@@ -978,7 +1023,7 @@ body.drawer-is-initializing .preview-area {
 .drawer-header-actions {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.7rem;
 }
 
 .drawer-icon-button {
@@ -1023,12 +1068,45 @@ body.drawer-is-initializing .preview-area {
     display: none;
 }
 
-body[data-left-drawer-state="temporary"] .drawer-lock-icon {
+body[data-left-drawer-state="temporary"] .drawer-left .drawer-lock-icon,
+body[data-right-drawer-state="temporary"] .drawer-right .drawer-lock-icon {
     display: none;
 }
 
-body[data-left-drawer-state="temporary"] .drawer-unlock-icon {
+body[data-left-drawer-state="temporary"] .drawer-left .drawer-unlock-icon,
+body[data-right-drawer-state="temporary"] .drawer-right .drawer-unlock-icon {
     display: block;
+}
+
+.foundry-placeholder {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-1);
+    padding: var(--space-4) var(--space-2);
+    border: var(--border-width) dashed var(--color-border);
+    border-radius: var(--radius);
+    color: var(--color-muted);
+    text-align: center;
+}
+
+.foundry-placeholder .icon {
+    width: 2rem;
+    height: 2rem;
+    color: var(--color-primary);
+}
+
+.foundry-placeholder h3,
+.foundry-placeholder p {
+    margin: 0;
+}
+
+.foundry-placeholder h3 {
+    color: var(--color-text);
+}
+
+.foundry-placeholder p {
+    max-width: 18rem;
+    line-height: 1.5;
 }
 
 .global-tooltip {
@@ -1783,7 +1861,7 @@ body.is-resizing-preview .preview-resize-handle::before {
 }
 
 body[data-preview-mode="full"] .app-header,
-body[data-preview-mode="full"] .left-drawer,
+body[data-preview-mode="full"] .drawer,
 body[data-preview-mode="full"] .drawer-rail,
 body[data-preview-mode="full"] .drawer-dock-spacer,
 body[data-preview-mode="full"] .preview-tabs {
@@ -2139,7 +2217,7 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .left-drawer,
+    .drawer,
     .drawer-dock-spacer,
     .drawer-rail-button,
     .restore-workbench-button,

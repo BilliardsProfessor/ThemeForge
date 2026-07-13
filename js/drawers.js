@@ -126,9 +126,16 @@
         function getAvailableMaximumWidth() {
             const appShell = drawer.closest(".app-shell");
             const shellWidth = appShell?.getBoundingClientRect().width || window.innerWidth;
-            const railWidth = rail?.getBoundingClientRect().width || 0;
 
-            const availableWidth = shellWidth - railWidth - minimumWorkspaceWidth;
+            const totalRailWidth = Array.from(appShell?.querySelectorAll(".drawer-rail") || []).reduce(function (total, drawerRail) {
+                return total + drawerRail.getBoundingClientRect().width;
+            }, 0);
+
+            const oppositeSide = side === "left" ? "right" : "left";
+            const bodyStyles = window.getComputedStyle(body);
+            const oppositeDockWidth = parseWidth(bodyStyles.getPropertyValue(`--${oppositeSide}-drawer-dock-width`)) || 0;
+
+            const availableWidth = shellWidth - totalRailWidth - oppositeDockWidth - minimumWorkspaceWidth;
 
             return Math.max(minWidth, Math.min(maxWidth, availableWidth));
         }
@@ -438,6 +445,21 @@
 
     if (leftDrawerController) {
         drawerControllers.push(leftDrawerController);
+    }
+
+    const rightDrawerController = createDrawerController({
+        side: "right",
+        drawer: document.getElementById("rightDrawer"),
+        rail: document.querySelector(".drawer-rail-right"),
+        defaultState: "collapsed",
+        defaultWidth: 360,
+        minWidth: 280,
+        maxWidth: 640,
+        minimumWorkspaceWidth: 320,
+    });
+
+    if (rightDrawerController) {
+        drawerControllers.push(rightDrawerController);
     }
 
     document.addEventListener("click", function (event) {
