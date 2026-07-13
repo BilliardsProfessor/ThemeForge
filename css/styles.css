@@ -1,6 +1,5 @@
 :root {
     --app-header-height: 72px;
-    --left-drawer-width: 400px;
     --drawer-rail-width: 3.25rem;
     --preview-width: 900px;
     --preview-width-transition: 180ms ease;
@@ -8,6 +7,11 @@
     --workbench-gutter: clamp(1rem, 2vw, 2rem);
     --tooltip-offset: 0.65rem;
     --tooltip-delay: 1s;
+
+    /* drawer */
+    --left-drawer-width: 400px;
+    --drawer-min-width: 280px;
+    --drawer-max-width: 640px;
     --drawer-transition: 500ms ease;
     --drawer-lock-accent: var(--color-secondary);
     --drawer-sidebar-accent: var(--color-primary);
@@ -858,6 +862,51 @@ body[data-app-mode="dark"] .preview-size-field select option {
     transition:
         transform var(--drawer-transition),
         opacity var(--drawer-transition);
+}
+
+.drawer-resize-handle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+    width: 0.75rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: ew-resize;
+    touch-action: none;
+}
+
+.drawer-resize-handle::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0.15rem;
+    width: 0.2rem;
+    height: 3rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-primary), transparent 45%);
+    opacity: 0;
+    transform: translateY(-50%);
+    transition: opacity 160ms ease;
+}
+
+.drawer-resize-handle:hover::before,
+.drawer-resize-handle:focus-visible::before,
+body.is-resizing-drawer .drawer-resize-handle::before {
+    opacity: 1;
+}
+
+body.is-resizing-drawer {
+    cursor: ew-resize;
+    user-select: none;
+}
+
+body.is-resizing-drawer .left-drawer,
+body.is-resizing-drawer .drawer-dock-spacer,
+body.is-resizing-drawer .preview-area {
+    transition: none;
 }
 
 .drawer-content {
@@ -2106,6 +2155,7 @@ a {
     .export-tabs,
     .export-tabs::before,
     .color-group-tabs::before,
+    .drawer-resize-handle,
     .segmented-control::before {
         transition: none;
     }
