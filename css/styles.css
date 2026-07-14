@@ -2944,3 +2944,95 @@ a {
     color: var(--color-text);
     font-size: 0.85rem;
 }
+
+.workbench-preset-section {
+    display: grid;
+    gap: 1rem;
+}
+
+.workbench-section-header {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.workbench-section-header h3,
+.workbench-section-header p {
+    margin: 0;
+}
+
+.workbench-section-header h3 {
+    font-size: 0.95rem;
+}
+
+.workbench-section-header p {
+    color: var(--app-muted-text);
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.workbench-preset-groups,
+.workbench-preset-group {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.workbench-preset-group-title {
+    margin: 0;
+    color: var(--app-muted-text);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.workbench-preset-list {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.workbench-preset-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.7rem 0.75rem;
+    border: 1px solid var(--app-border);
+    border-radius: 0.5rem;
+    background: var(--app-surface);
+    color: var(--app-text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.workbench-preset-button:hover {
+    border-color: var(--app-focus);
+}
+
+.workbench-preset-button:focus-visible {
+    outline: 2px solid var(--app-focus);
+    outline-offset: 2px;
+}
+
+.workbench-preset-button[aria-pressed="true"] {
+    border-color: var(--app-focus);
+    box-shadow: inset 3px 0 0 var(--app-focus);
+}
+
+.workbench-preset-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.workbench-preset-source {
+    color: var(--app-muted-text);
+    font-size: 0.7rem;
+}
+
+.workbench-preset-empty {
+    margin: 0;
+    color: var(--app-muted-text);
+    font-size: 0.8rem;
+    font-style: italic;
+}

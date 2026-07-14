@@ -389,7 +389,10 @@ ThemeForge.history = {
         if (this.menu.menuOpenedFromHold) {
             if (this.menu.activeItem) {
                 this.activateMenuItem(this.menu.activeItem);
-            } else if (!this.isPointInsideMenu(event.clientX, event.clientY) && !this.isPointInsideButton(event.clientX, event.clientY)) {
+            } else if (
+                !this.isPointInsideMenu(event.clientX, event.clientY) &&
+                !this.isPointInsideButton(event.clientX, event.clientY)
+            ) {
                 this.closeMenu();
             }
 
@@ -485,7 +488,10 @@ ThemeForge.history = {
         const viewportPadding = 8;
 
         const top = buttonRect.bottom + 6;
-        const left = Math.min(Math.max(viewportPadding, buttonRect.left), window.innerWidth - menuRect.width - viewportPadding);
+        const left = Math.min(
+            Math.max(viewportPadding, buttonRect.left),
+            window.innerWidth - menuRect.width - viewportPadding,
+        );
 
         this.menu.element.style.top = `${top}px`;
         this.menu.element.style.left = `${left}px`;
@@ -540,7 +546,9 @@ ThemeForge.history = {
             this.renderTextHistoryItem(
                 button,
                 item.detail.label,
-                `${this.formatHistoryValue(item.detail.before)} → ${this.formatHistoryValue(item.detail.after)}`,
+                item.detail.before === undefined
+                    ? `→ ${this.formatHistoryValue(item.detail.after)}`
+                    : `${this.formatHistoryValue(item.detail.before)} → ${this.formatHistoryValue(item.detail.after)}`,
             );
             return;
         }
@@ -587,7 +595,10 @@ ThemeForge.history = {
 
         button.textContent = "";
         button.append(label, value);
-        button.setAttribute("aria-label", `${detail.label}: ${this.formatColorDetail(detail.before)} to ${this.formatColorDetail(detail.after)}`);
+        button.setAttribute(
+            "aria-label",
+            `${detail.label}: ${this.formatColorDetail(detail.before)} to ${this.formatColorDetail(detail.after)}`,
+        );
     },
 
     formatHistoryValue(value) {
@@ -605,7 +616,9 @@ ThemeForge.history = {
     },
 
     formatColorDetail(color) {
-        return color.a === 1 ? `hsl(${color.h} ${color.s}% ${color.l}%)` : `hsl(${color.h} ${color.s}% ${color.l}% / ${ThemeForge.formatAlpha(color.a)})`;
+        return color.a === 1
+            ? `hsl(${color.h} ${color.s}% ${color.l}%)`
+            : `hsl(${color.h} ${color.s}% ${color.l}% / ${ThemeForge.formatAlpha(color.a)})`;
     },
 
     activateMenuItem(menuItem) {
