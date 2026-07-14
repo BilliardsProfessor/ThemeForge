@@ -271,8 +271,16 @@
     min-height: 18rem;
     background:
         radial-gradient(circle at 20% 20%, color-mix(in srgb, var(--color-primary), transparent 65%), transparent 35%),
-        radial-gradient(circle at 80% 30%, color-mix(in srgb, var(--color-secondary), transparent 70%), transparent 34%),
-        linear-gradient(135deg, color-mix(in srgb, var(--color-background), var(--color-surface) 40%), var(--color-surface));
+        radial-gradient(
+            circle at 80% 30%,
+            color-mix(in srgb, var(--color-secondary), transparent 70%),
+            transparent 34%
+        ),
+        linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--color-background), var(--color-surface) 40%),
+            var(--color-surface)
+        );
     overflow: hidden;
 }
 
@@ -691,8 +699,8 @@
     padding: var(--page-padding);
     background: var(--color-overlay);
     /* border-radius: var(--dialog-radius); */
-    backdrop-filter: blur(var(--overlay-blur));
-    -webkit-backdrop-filter: blur(var(--overlay-blur));
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
 }
 
 .preview-modal-layer[hidden] {
@@ -1032,7 +1040,9 @@
 }
 
 .preview-demo-card.feature {
-    background: linear-gradient(135deg, color-mix(in srgb, var(--color-primary), transparent 50%), transparent), var(--color-surface);
+    background:
+        linear-gradient(135deg, color-mix(in srgb, var(--color-primary), transparent 50%), transparent),
+        var(--color-surface);
 }
 
 .preview-demo-card.framed {
@@ -1134,7 +1144,11 @@
 .preview-quote {
     margin: 0;
     background:
-        linear-gradient(135deg, color-mix(in srgb, var(--color-primary), transparent 92%), color-mix(in srgb, var(--color-secondary), transparent 94%)),
+        linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--color-primary), transparent 92%),
+            color-mix(in srgb, var(--color-secondary), transparent 94%)
+        ),
         var(--color-surface);
 }
 

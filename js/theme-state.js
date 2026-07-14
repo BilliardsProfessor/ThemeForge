@@ -235,8 +235,6 @@ const ThemeForge = {
                     focusRingWidth: { value: 2, unit: "px" },
                 },
             },
-
-            overlayBlur: 2,
         },
         shadows: {
             modes: {
@@ -591,15 +589,15 @@ const ThemeForge = {
         return {
             corners: {
                 scale: this.normalizeValueCollection(shape.corners?.scale || defaultShape.corners.scale),
-                mappings: this.normalizeCornerMappingCollection(shape.corners?.mappings || defaultShape.corners.mappings),
+                mappings: this.normalizeCornerMappingCollection(
+                    shape.corners?.mappings || defaultShape.corners.mappings,
+                ),
             },
 
             borders: {
                 scale: this.normalizeValueCollection(shape.borders?.scale || defaultShape.borders.scale),
                 mappings: this.normalizeValueCollection(shape.borders?.mappings || defaultShape.borders.mappings),
             },
-
-            overlayBlur: Number(shape.overlayBlur ?? defaultShape.overlayBlur),
         };
     },
 
@@ -608,16 +606,28 @@ const ThemeForge = {
 
         return {
             modes: {
-                light: this.normalizeShadowMode(shadows.modes?.light || defaultShadows.modes.light, defaultShadows.modes.light),
-                dark: this.normalizeShadowMode(shadows.modes?.dark || defaultShadows.modes.dark, defaultShadows.modes.dark),
+                light: this.normalizeShadowMode(
+                    shadows.modes?.light || defaultShadows.modes.light,
+                    defaultShadows.modes.light,
+                ),
+                dark: this.normalizeShadowMode(
+                    shadows.modes?.dark || defaultShadows.modes.dark,
+                    defaultShadows.modes.dark,
+                ),
             },
         };
     },
 
     normalizeShadowMode(shadowMode = {}, defaultShadowMode = {}) {
         return {
-            recipes: this.normalizeShadowCollection(shadowMode.recipes || defaultShadowMode.recipes, defaultShadowMode.recipes),
-            mappings: this.normalizeShadowCollection(shadowMode.mappings || defaultShadowMode.mappings, defaultShadowMode.mappings),
+            recipes: this.normalizeShadowCollection(
+                shadowMode.recipes || defaultShadowMode.recipes,
+                defaultShadowMode.recipes,
+            ),
+            mappings: this.normalizeShadowCollection(
+                shadowMode.mappings || defaultShadowMode.mappings,
+                defaultShadowMode.mappings,
+            ),
         };
     },
 
@@ -689,13 +699,13 @@ const ThemeForge = {
             });
         }
 
-        migratedShape.overlayBlur = Number(shape.overlayBlur ?? migratedShape.overlayBlur);
-
         return migratedShape;
     },
 
     normalizeValueCollection(collection) {
-        return Object.fromEntries(Object.entries(collection).map(([key, token]) => [key, this.normalizeValueToken(token)]));
+        return Object.fromEntries(
+            Object.entries(collection).map(([key, token]) => [key, this.normalizeValueToken(token)]),
+        );
     },
 
     normalizeValueToken(token) {
@@ -710,7 +720,10 @@ const ThemeForge = {
         const spacing = theme.spacing;
         const spacingUnit = spacing.unit || "px";
         const oldScale = Object.fromEntries(
-            Object.entries(spacing.scale || {}).map(([key, value]) => [key, this.normalizeValueToken({ value, unit: spacingUnit })]),
+            Object.entries(spacing.scale || {}).map(([key, value]) => [
+                key,
+                this.normalizeValueToken({ value, unit: spacingUnit }),
+            ]),
         );
 
         ["layout", "components"].forEach((featureName) => {
@@ -722,7 +735,11 @@ const ThemeForge = {
         });
 
         Object.entries(spacing.assignments || {}).forEach(([mappingName, tokenName]) => {
-            const featureName = theme.layout.mappings[mappingName] ? "layout" : theme.components.mappings[mappingName] ? "components" : null;
+            const featureName = theme.layout.mappings[mappingName]
+                ? "layout"
+                : theme.components.mappings[mappingName]
+                  ? "components"
+                  : null;
             const token = oldScale[tokenName];
 
             if (featureName && token) {
@@ -760,7 +777,9 @@ const ThemeForge = {
         }
 
         if (format === "rgb") {
-            return colorToken.a === 1 ? `rgb(${rgb.r} ${rgb.g} ${rgb.b})` : `rgb(${rgb.r} ${rgb.g} ${rgb.b} / ${ThemeForge.formatAlpha(colorToken.a)})`;
+            return colorToken.a === 1
+                ? `rgb(${rgb.r} ${rgb.g} ${rgb.b})`
+                : `rgb(${rgb.r} ${rgb.g} ${rgb.b} / ${ThemeForge.formatAlpha(colorToken.a)})`;
         }
 
         return colorToken.a === 1
@@ -820,7 +839,9 @@ const ThemeForge = {
         root.style.setProperty("--font-family-body", ThemeForge.getFontFamilyValue(settings.bodyFontFamily));
         root.style.setProperty(
             "--font-family-heading",
-            settings.headingFontFamily === "inherit" ? "var(--font-family-body)" : ThemeForge.getFontFamilyValue(settings.headingFontFamily),
+            settings.headingFontFamily === "inherit"
+                ? "var(--font-family-body)"
+                : ThemeForge.getFontFamilyValue(settings.headingFontFamily),
         );
         root.style.setProperty("--font-family-mono", ThemeForge.getFontFamilyValue(settings.monoFontFamily));
 
@@ -839,7 +860,11 @@ const ThemeForge = {
             return null;
         }
 
-        return Object.entries(scale).find(([, token]) => Number(token.value) === Number(mapping.value) && token.unit === mapping.unit)?.[0] || null;
+        return (
+            Object.entries(scale).find(
+                ([, token]) => Number(token.value) === Number(mapping.value) && token.unit === mapping.unit,
+            )?.[0] || null
+        );
     },
 
     applyFeatureVariables(root, featureName) {
@@ -855,7 +880,7 @@ const ThemeForge = {
     },
 
     applyShapeVariables(root) {
-        const { corners, borders, overlayBlur } = ThemeForge.theme.shape;
+        const { corners, borders } = ThemeForge.theme.shape;
 
         Object.entries(corners.scale).forEach(([tokenName, token]) => {
             root.style.setProperty(`--radius-${tokenName}`, ThemeForge.getTokenValue(token));
@@ -877,7 +902,6 @@ const ThemeForge = {
             root.style.setProperty(`--${ThemeForge.getCssVariableName(mappingName)}`, ThemeForge.getTokenValue(token));
         });
 
-        root.style.setProperty("--overlay-blur", `${overlayBlur}px`);
         root.style.setProperty("--radius", ThemeForge.getTokenValue(corners.mappings.cardRadius));
         root.style.setProperty("--border-width", ThemeForge.getTokenValue(borders.mappings.cardBorderWidth));
     },
@@ -887,11 +911,17 @@ const ThemeForge = {
         const colors = ThemeForge.getActiveColors();
 
         Object.entries(recipes).forEach(([recipeName, recipe]) => {
-            root.style.setProperty(`--shadow-recipe-${ThemeForge.getCssVariableName(recipeName)}`, ThemeForge.getShadowValue(recipe, colors));
+            root.style.setProperty(
+                `--shadow-recipe-${ThemeForge.getCssVariableName(recipeName)}`,
+                ThemeForge.getShadowValue(recipe, colors),
+            );
         });
 
         Object.entries(mappings).forEach(([mappingName, shadow]) => {
-            root.style.setProperty(`--${ThemeForge.getCssVariableName(mappingName)}`, ThemeForge.getShadowValue(shadow, colors));
+            root.style.setProperty(
+                `--${ThemeForge.getCssVariableName(mappingName)}`,
+                ThemeForge.getShadowValue(shadow, colors),
+            );
         });
 
         root.style.setProperty("--shadow-soft", "var(--card-shadow)");

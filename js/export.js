@@ -193,9 +193,9 @@ ThemeForge.export = {
         }
 
         if (settingName === "themeModes") {
-            this.settings[target].themeModes = Array.from(optionSection.querySelectorAll("[data-export-setting='themeModes']:checked")).map(
-                (input) => input.value,
-            );
+            this.settings[target].themeModes = Array.from(
+                optionSection.querySelectorAll("[data-export-setting='themeModes']:checked"),
+            ).map((input) => input.value);
 
             this.updateWorkspace();
             return;
@@ -290,7 +290,9 @@ ThemeForge.export = {
         const matchingExtension = `.${extension}`;
 
         if (cleanBase.toLowerCase().endsWith(matchingExtension)) {
-            return cleanBase.slice(0, -matchingExtension.length).replace(/^-+|-+$/g, "") || this.getSuggestedFilenameBase();
+            return (
+                cleanBase.slice(0, -matchingExtension.length).replace(/^-+|-+$/g, "") || this.getSuggestedFilenameBase()
+            );
         }
 
         return cleanBase || this.getSuggestedFilenameBase();
@@ -473,7 +475,10 @@ ThemeForge.export = {
 
             settings: {
                 previewMode: ThemeForge.getActiveMode(),
-                appAppearance: document.body.dataset.appModePreference || localStorage.getItem("themeForge.appAppearance") || "system",
+                appAppearance:
+                    document.body.dataset.appModePreference ||
+                    localStorage.getItem("themeForge.appAppearance") ||
+                    "system",
             },
         };
     },
@@ -711,7 +716,9 @@ ThemeForge.export = {
             selector,
             variablePrefix,
         });
-        const example = options.includeExample ? `\n\n${this.getScssUsageExample(variablePrefix, includeComments)}` : "";
+        const example = options.includeExample
+            ? `\n\n${this.getScssUsageExample(variablePrefix, includeComments)}`
+            : "";
 
         const header = includeComments
             ? [
@@ -751,14 +758,29 @@ ThemeForge.export = {
             }
 
             lines.push(
-                ...this.getScssThemeMap(names.theme, this.getExportTokenGroups(colorFormat, mode), includeComments, `${this.capitalize(mode)} theme values`),
+                ...this.getScssThemeMap(
+                    names.theme,
+                    this.getExportTokenGroups(colorFormat, mode),
+                    includeComments,
+                    `${this.capitalize(mode)} theme values`,
+                ),
                 "",
             );
         } else {
             lines.push(
-                ...this.getScssThemeMap(names.lightTheme, this.getExportTokenGroups(colorFormat, "light"), includeComments, "Light-mode theme values"),
+                ...this.getScssThemeMap(
+                    names.lightTheme,
+                    this.getExportTokenGroups(colorFormat, "light"),
+                    includeComments,
+                    "Light-mode theme values",
+                ),
                 "",
-                ...this.getScssThemeMap(names.darkTheme, this.getExportTokenGroups(colorFormat, "dark"), includeComments, "Dark-mode theme values"),
+                ...this.getScssThemeMap(
+                    names.darkTheme,
+                    this.getExportTokenGroups(colorFormat, "dark"),
+                    includeComments,
+                    "Dark-mode theme values",
+                ),
                 "",
             );
         }
@@ -796,10 +818,19 @@ ThemeForge.export = {
             lines.push("// Light mode is the default when both modes are exported.");
         }
 
-        lines.push(`${selector} {`, "  color-scheme: light;", `  @include ${names.mixin}(${names.lightTheme});`, "}", "");
+        lines.push(
+            `${selector} {`,
+            "  color-scheme: light;",
+            `  @include ${names.mixin}(${names.lightTheme});`,
+            "}",
+            "",
+        );
 
         if (includeComments) {
-            lines.push("// Replaces the custom properties when the operating system requests", "// a dark color scheme.");
+            lines.push(
+                "// Replaces the custom properties when the operating system requests",
+                "// a dark color scheme.",
+            );
         }
 
         lines.push(
@@ -978,7 +1009,11 @@ ThemeForge.export = {
 
         return [
             this.getCssDeclarationBlock(selector, colorFormat, "light"),
-            ["@media (prefers-color-scheme: dark) {", this.getCssDeclarationBlock(selector, colorFormat, "dark", 2), "}"].join("\n"),
+            [
+                "@media (prefers-color-scheme: dark) {",
+                this.getCssDeclarationBlock(selector, colorFormat, "dark", 2),
+                "}",
+            ].join("\n"),
         ];
     },
 
@@ -986,7 +1021,11 @@ ThemeForge.export = {
         const pad = " ".repeat(indent);
         const declarations = this.getCssVariableDeclarations(colorFormat, mode);
 
-        return [`${pad}${selector} {`, ...declarations.map((declaration) => (declaration ? `${pad}  ${declaration}` : "")), `${pad}}`].join("\n");
+        return [
+            `${pad}${selector} {`,
+            ...declarations.map((declaration) => (declaration ? `${pad}  ${declaration}` : "")),
+            `${pad}}`,
+        ].join("\n");
     },
 
     getCssVariableDeclarations(format, mode = ThemeForge.getActiveMode()) {
@@ -1111,7 +1150,7 @@ ThemeForge.export = {
     },
 
     getShapeExportTokenGroup(shape) {
-        const { corners, borders, overlayBlur } = shape;
+        const { corners, borders } = shape;
         const tokens = [];
 
         Object.entries(corners.scale).forEach(([tokenName, token]) => {
@@ -1166,11 +1205,6 @@ ThemeForge.export = {
 
         tokens.push(
             {
-                name: "overlay-blur",
-                value: `${overlayBlur}px`,
-                cssValue: `${overlayBlur}px`,
-            },
-            {
                 name: "radius",
                 value: "var(--card-radius)",
                 cssValue: "var(--card-radius)",
@@ -1184,7 +1218,7 @@ ThemeForge.export = {
 
         return {
             label: "Shape",
-            description: "corner radii, border widths, blur, and convenience aliases.",
+            description: "corner radii, border widths, and convenience aliases.",
             tokens,
         };
     },

@@ -1273,18 +1273,23 @@ body.drawer-is-initializing .control-card-content {
     font-weight: 750;
 }
 
+.control-card-heading {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .control-card-action {
     display: inline-grid;
     place-items: center;
     flex: 0 0 auto;
     width: 1.9rem;
     height: 1.9rem;
-    margin-inline-start: auto;
     padding: 0;
     border: var(--border-width) solid transparent;
     border-radius: 0.4rem;
     background: transparent;
-    color: var(--color-muted);
+    color: var(--color-accent);
 }
 
 .control-card-action:hover,
