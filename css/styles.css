@@ -1273,6 +1273,46 @@ body.drawer-is-initializing .control-card-content {
     font-weight: 750;
 }
 
+.control-card-action {
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 1.9rem;
+    height: 1.9rem;
+    margin-inline-start: auto;
+    padding: 0;
+    border: var(--border-width) solid transparent;
+    border-radius: 0.4rem;
+    background: transparent;
+    color: var(--color-muted);
+}
+
+.control-card-action:hover,
+.control-card-action:focus-visible {
+    border-color: color-mix(in srgb, var(--color-primary), transparent 55%);
+    background: color-mix(in srgb, var(--color-primary), transparent 88%);
+    color: var(--color-primary);
+}
+
+.control-card-action:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--color-primary), transparent 70%);
+    outline-offset: 2px;
+}
+
+.control-card-action[data-save-state="error"] {
+    color: var(--color-danger);
+}
+
+.control-card-action .icon {
+    width: 1rem;
+    height: 1rem;
+    pointer-events: none;
+}
+
+.control-card-action[hidden] {
+    display: none;
+}
+
 .control-card label {
     color: var(--color-muted);
 }
@@ -1406,26 +1446,6 @@ body[data-active-workspace="export"] .preview-area {
     color: var(--color-muted);
     font-size: 0.85rem;
     line-height: 1.4;
-}
-
-.preset-save-section {
-    margin-top: var(--space-2);
-    padding-top: var(--space-2);
-    border-top: var(--border-width) solid var(--color-border);
-}
-
-.preset-save-button {
-    width: 100%;
-}
-
-.preset-save-button[data-save-state="success"] {
-    border-color: var(--color-success);
-    color: var(--color-success);
-}
-
-.preset-save-button[data-save-state="error"] {
-    border-color: var(--color-danger);
-    color: var(--color-danger);
 }
 
 .token-summary-list {
@@ -2414,7 +2434,11 @@ a {
     margin: calc(var(--workspace-panel-padding) * -1) calc(var(--workspace-panel-padding) * -1) 0;
     padding: 0.65rem 0.75rem;
     border-radius: calc(var(--workspace-panel-radius) - 1px) calc(var(--workspace-panel-radius) - 1px) 0 0;
-    background: linear-gradient(135deg, var(--color-secondary), color-mix(in srgb, var(--color-secondary), var(--color-primary) 35%));
+    background: linear-gradient(
+        135deg,
+        var(--color-secondary),
+        color-mix(in srgb, var(--color-secondary), var(--color-primary) 35%)
+    );
     color: white;
 }
 
@@ -2691,11 +2715,11 @@ a {
     align-items: end;
 }
 
-.shape-feature:first-child .shape-scale {
+.shape-feature[data-shape-feature="corners"] .shape-scale {
     grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 
-.shape-feature:last-child .shape-scale {
+.shape-feature[data-shape-feature="borders"] .shape-scale {
     grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 

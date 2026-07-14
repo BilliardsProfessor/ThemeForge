@@ -2,6 +2,7 @@ ThemeForge.shapePresets = {
     type: "shape",
     schemaVersion: 1,
     saveButton: null,
+    baseline: null,
     feedbackTimerId: null,
 
     init() {
@@ -11,14 +12,19 @@ ThemeForge.shapePresets = {
             return;
         }
 
-        this.saveButton.addEventListener("click", () => {
+        this.setBaseline();
+
+        this.saveButton.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
             this.promptToSave();
         });
     },
 
     async promptToSave() {
         if (!ThemeForge.storage || !ThemeForge.appModal) {
-            this.showButtonFeedback("Save unavailable", "error");
+            this.showErrorFeedback("Shape preset saving is unavailable");
             return;
         }
 
@@ -41,12 +47,14 @@ ThemeForge.shapePresets = {
             const name = enteredName.trim() || suggestedName;
 
             await this.save(name);
-
-            this.showButtonFeedback("Preset Saved", "success");
+            this.setBaseline();
         } catch (error) {
-            console.error("Theme Forge could not save the Shape preset.", error);
+            console.error(
+                "Theme Forge could not save the Shape preset.",
+                error,
+            );
 
-            this.showButtonFeedback("Save Failed", "error");
+            this.showErrorFeedback("Shape preset could not be saved");
         }
     },
 
@@ -67,6 +75,30 @@ ThemeForge.shapePresets = {
         });
     },
 
+    setBaseline(shape = ThemeForge.theme.shape) {
+        this.baseline = this.cloneShapeValues(shape);
+        this.updateSaveButtonVisibility();
+    },
+
+    isDirty() {
+        if (!this.baseline) {
+            return false;
+        }
+
+        return (
+            JSON.stringify(this.baseline) !==
+            JSON.stringify(ThemeForge.theme.shape)
+        );
+    },
+
+    updateSaveButtonVisibility() {
+        if (!this.saveButton) {
+            return;
+        }
+
+        this.saveButton.hidden = !this.isDirty();
+    },
+
     cloneShapeValues(shape) {
         if (typeof structuredClone === "function") {
             return structuredClone(shape);
@@ -75,21 +107,21 @@ ThemeForge.shapePresets = {
         return JSON.parse(JSON.stringify(shape));
     },
 
-    showButtonFeedback(message, state) {
+    showErrorFeedback(message) {
         if (!this.saveButton) {
             return;
         }
 
         window.clearTimeout(this.feedbackTimerId);
 
-        this.saveButton.textContent = message;
-        this.saveButton.dataset.saveState = state;
-        this.saveButton.disabled = true;
+        this.saveButton.dataset.saveState = "error";
+        this.saveButton.dataset.tooltip = message;
+        this.saveButton.setAttribute("aria-label", message);
 
         this.feedbackTimerId = window.setTimeout(() => {
-            this.saveButton.textContent = "Save as Preset";
             delete this.saveButton.dataset.saveState;
-            this.saveButton.disabled = false;
+            this.saveButton.dataset.tooltip = "Save Shape preset";
+            this.saveButton.setAttribute("aria-label", "Save Shape preset");
         }, 1800);
     },
 };

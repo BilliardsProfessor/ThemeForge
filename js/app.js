@@ -408,7 +408,13 @@ function openTypographyEditor(elementName) {
     `;
 
     panel
-        .querySelectorAll(["[data-typography-field='size']", "[data-typography-field='lineHeight']", "[data-typography-field='letterSpacing']"].join(", "))
+        .querySelectorAll(
+            [
+                "[data-typography-field='size']",
+                "[data-typography-field='lineHeight']",
+                "[data-typography-field='letterSpacing']",
+            ].join(", "),
+        )
         .forEach((control) => {
             const fieldOptions = {
                 size: {
@@ -496,6 +502,7 @@ function createShapeFeatureControls(featureName) {
     const title = document.createElement("h3");
 
     section.className = "control-section shape-feature";
+    section.dataset.shapeFeature = featureName;
     title.className = "control-section-title";
     title.textContent = SHAPE_CONTROLS[featureName].label;
 
@@ -845,7 +852,10 @@ function getScaleTokenLabel(featureName, tokenKey) {
 }
 
 function getMappingLabel(featureName, mappingKey) {
-    return getFeatureControlConfig(featureName)?.mappings.find((mapping) => mapping.key === mappingKey)?.label || mappingKey;
+    return (
+        getFeatureControlConfig(featureName)?.mappings.find((mapping) => mapping.key === mappingKey)?.label ||
+        mappingKey
+    );
 }
 
 function getTokenLabel(featureName, tokenType, tokenName) {
@@ -897,7 +907,9 @@ function getTokenCollection(sourceTheme, featureName, tokenType) {
 }
 
 function getTokenFromControl(control, sourceTheme = ThemeForge.theme) {
-    return getTokenCollection(sourceTheme, control.dataset.featureName, control.dataset.tokenType)?.[control.dataset.tokenName];
+    return getTokenCollection(sourceTheme, control.dataset.featureName, control.dataset.tokenType)?.[
+        control.dataset.tokenName
+    ];
 }
 
 function cleanNumericText(value) {
@@ -1176,7 +1188,10 @@ function updateNearestScaleButtons() {
         nearestButton.hidden = Boolean(exactMatch);
         nearestButton.dataset.scaleToken = nearest || "";
         nearestButton.dataset.tooltip = nearest ? `Snap to ${getScaleTokenLabel(featureName, nearest)}` : "";
-        nearestButton.setAttribute("aria-label", nearest ? `Snap to ${getScaleTokenLabel(featureName, nearest)}` : "Snap to nearest scale");
+        nearestButton.setAttribute(
+            "aria-label",
+            nearest ? `Snap to ${getScaleTokenLabel(featureName, nearest)}` : "Snap to nearest scale",
+        );
         nearestButton.innerHTML = nearest
             ? `
         <svg class="icon icon-arrow-right" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
@@ -1203,8 +1218,12 @@ function getNearestScaleToken(scale, mapping) {
     const baseFontSize = ThemeForge.theme.settings.baseFontSize.value;
 
     return entries.reduce((nearest, current) => {
-        const nearestDistance = Math.abs(getComparableTokenValue(nearest[1], baseFontSize) - getComparableTokenValue(mapping, baseFontSize));
-        const currentDistance = Math.abs(getComparableTokenValue(current[1], baseFontSize) - getComparableTokenValue(mapping, baseFontSize));
+        const nearestDistance = Math.abs(
+            getComparableTokenValue(nearest[1], baseFontSize) - getComparableTokenValue(mapping, baseFontSize),
+        );
+        const currentDistance = Math.abs(
+            getComparableTokenValue(current[1], baseFontSize) - getComparableTokenValue(mapping, baseFontSize),
+        );
 
         return currentDistance < nearestDistance ? current : nearest;
     })[0];
@@ -1244,7 +1263,9 @@ function snapMappingToScale(select) {
     mapping.value = scaleToken.value;
     mapping.unit = scaleToken.unit;
 
-    ThemeForge.history.updateLatestChangeDetail(getMappingSnapshotDetail(featureName, mappingName, ThemeForge.history.getLatestUndoSnapshot()));
+    ThemeForge.history.updateLatestChangeDetail(
+        getMappingSnapshotDetail(featureName, mappingName, ThemeForge.history.getLatestUndoSnapshot()),
+    );
 
     ThemeForge.refreshThemeInterface();
     ThemeForge.history.saveSession();
@@ -1307,6 +1328,7 @@ function updateThemeFromControls(event) {
     updateNearestScaleButtons();
     syncShadowControlsFromState();
     updateShadowSummaryRows();
+    ThemeForge.shapePresets?.updateSaveButtonVisibility();
 }
 
 function updateTypographyFromControls() {
@@ -1355,7 +1377,11 @@ function getControlHistoryLabel(control) {
         const label = getTokenLabel(control.dataset.featureName, control.dataset.tokenType, control.dataset.tokenName);
 
         if (control.dataset.tokenType === "scale") {
-            const affectedCount = getAffectedMappingCount(control.dataset.featureName, control.dataset.tokenName, ThemeForge.theme);
+            const affectedCount = getAffectedMappingCount(
+                control.dataset.featureName,
+                control.dataset.tokenName,
+                ThemeForge.theme,
+            );
             return `Changed ${label}${affectedCount ? ` (${affectedCount})` : ""}`;
         }
 
@@ -1552,7 +1578,9 @@ function getAffectedMappingCount(featureName, scaleTokenName, snapshot) {
         return 0;
     }
 
-    return Object.values(feature.mappings).filter((mapping) => Number(mapping.value) === Number(scaleToken.value) && mapping.unit === scaleToken.unit).length;
+    return Object.values(feature.mappings).filter(
+        (mapping) => Number(mapping.value) === Number(scaleToken.value) && mapping.unit === scaleToken.unit,
+    ).length;
 }
 
 function syncThemeControlsFromState() {
@@ -1613,6 +1641,7 @@ ThemeForge.refreshThemeInterface = function refreshThemeInterface() {
     ThemeForge.colorEditor.render();
     ThemeForge.accessibility.updateScoreBadge();
     ThemeForge.export.updateWorkspace();
+    ThemeForge.shapePresets?.updateSaveButtonVisibility();
 };
 
 function renderShadowControls() {
@@ -1765,18 +1794,20 @@ function openShadowEditor(mappingName) {
         </div>
     `;
 
-    panel.querySelectorAll("[data-theme-control='shadow'][data-shadow-field]:not(select):not([type='checkbox'])").forEach((control) => {
-        const field = SHADOW_FIELDS.find((shadowField) => shadowField.key === control.dataset.shadowField);
+    panel
+        .querySelectorAll("[data-theme-control='shadow'][data-shadow-field]:not(select):not([type='checkbox'])")
+        .forEach((control) => {
+            const field = SHADOW_FIELDS.find((shadowField) => shadowField.key === control.dataset.shadowField);
 
-        enhanceWorkspaceNumberInput(control, {
-            min: field?.min,
-            max: field?.max,
-            step: 1,
-            fineStep: 1,
-            coarseStep: 4,
-            decimals: 0,
+            enhanceWorkspaceNumberInput(control, {
+                min: field?.min,
+                max: field?.max,
+                step: 1,
+                fineStep: 1,
+                coarseStep: 4,
+                decimals: 0,
+            });
         });
-    });
 
     panel.querySelectorAll("[data-theme-control='shadow']").forEach((control) => {
         control.addEventListener("input", updateThemeFromControls);
@@ -1885,10 +1916,11 @@ function updateShadowFromControl(control) {
         if (control.value !== "custom") {
             Object.assign(
                 shadow,
-                getScaledShadowRecipe(ThemeForge.getActiveShadows().recipes[control.value], getShadowMappingRecipeScale(control.dataset.shadowMapping)),
-                {
-                    recipe: control.value,
-                },
+                getScaledShadowRecipe(
+                    ThemeForge.getActiveShadows().recipes[control.value],
+                    getShadowMappingRecipeScale(control.dataset.shadowMapping),
+                ),
+                { recipe: control.value },
             );
         }
 
@@ -1949,7 +1981,14 @@ function formatShadowHistoryValue(fieldName, value) {
 
 function bindControls() {
     const controls = document.querySelectorAll(
-        ["#baseFontSize", "#bodyFontFamily", "#headingFontFamily", "#monoFontFamily", "[data-theme-control='token']", "[data-typography-field]"].join(", "),
+        [
+            "#baseFontSize",
+            "#bodyFontFamily",
+            "#headingFontFamily",
+            "#monoFontFamily",
+            "[data-theme-control='token']",
+            "[data-typography-field]",
+        ].join(", "),
     );
 
     controls.forEach((control) => {
