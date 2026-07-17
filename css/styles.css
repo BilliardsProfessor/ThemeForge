@@ -1666,67 +1666,35 @@ body[data-active-workspace="export"] .preview-area {
     gap: var(--space-2);
     min-width: 0;
     min-height: 0;
-    padding: var(--workbench-gutter);
+    padding: 0 var(--workbench-gutter) var(--workbench-gutter);
     overflow: hidden;
 }
 
-.preview-custom-toolbar {
+.preview-navigation {
+    position: relative;
+    isolation: isolate;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    flex: none;
-    gap: var(--space-1);
-    width: min(var(--preview-width), 100%);
     align-self: center;
-    padding: 0.45rem 0.55rem;
-    border: var(--border-width) solid color-mix(in srgb, var(--color-border), transparent 30%);
-    border-radius: var(--radius);
-    background: color-mix(in srgb, var(--color-surface), transparent 12%);
-    color: var(--color-muted);
+    flex: none;
+    gap: 2rem;
+    width: max-content;
+    max-width: 100%;
+    min-height: 3.25rem;
+    padding: 0.35rem 0.5rem;
+    border: var(--border-width) solid var(--control-border);
+    border-top: 0;
+    border-radius: 0 0 var(--workspace-panel-radius) var(--workspace-panel-radius);
+    background: var(--control-surface);
+    color: var(--control-text);
     box-shadow: var(--shadow-soft);
-}
-
-.preview-custom-toolbar[hidden] {
-    display: none;
-}
-
-.preview-custom-width-field {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    font-size: 0.85rem;
-    font-weight: 700;
-}
-
-.preview-custom-width-field input {
-    width: 5.5rem;
-    border: var(--border-width) solid var(--color-border);
-    border-radius: calc(var(--radius) * 0.7);
-    padding: 0.35rem 0.45rem;
-    background: var(--color-surface);
-    color: var(--color-text);
-    font: inherit;
-    font-weight: 700;
-}
-
-.preview-custom-width-field input:focus-visible {
-    outline: 3px solid rgb(37 99 235 / 0.25);
-    outline-offset: 2px;
-}
-
-.preview-custom-reset {
-    border: var(--border-width) solid var(--color-border);
-    border-radius: calc(var(--radius) * 0.8);
-    padding: 0.35rem 0.55rem;
-    background: var(--color-surface);
-    color: var(--color-text);
-    font-size: 0.8rem;
-    font-weight: 750;
-}
-
-.preview-custom-reset:hover,
-.preview-custom-reset:focus-visible {
-    border-color: var(--color-primary);
+    font-family:
+        Roboto,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
 }
 
 .preview-tabs {
@@ -1734,14 +1702,10 @@ body[data-active-workspace="export"] .preview-area {
     isolation: isolate;
     display: inline-flex;
     flex: none;
-    align-self: center;
     gap: 0.25rem;
-    width: auto;
-    max-width: min(var(--preview-width), 100%);
     padding: 0.25rem;
-    border-radius: var(--radius);
-    background: color-mix(in srgb, var(--color-border), var(--color-surface) 45%);
-    transition: max-width var(--preview-width-transition);
+    border-radius: calc(var(--workspace-panel-radius) * 0.75);
+    background: var(--control-surface-raised);
 }
 
 .preview-tabs::before {
@@ -1751,8 +1715,9 @@ body[data-active-workspace="export"] .preview-area {
     inset-block: 0.25rem;
     inset-inline-start: 0;
     inline-size: var(--active-tab-width, 0px);
-    border-radius: calc(var(--radius) - 3px);
-    background: var(--color-surface);
+    border: var(--border-width) solid var(--control-border);
+    border-radius: calc(var(--workspace-panel-radius) * 0.6);
+    background: var(--control-surface-active);
     transform: translateX(var(--active-tab-offset, 0px));
     transition:
         inline-size 180ms ease,
@@ -1763,10 +1728,11 @@ body[data-active-workspace="export"] .preview-area {
     position: relative;
     z-index: 1;
     border: 0;
-    border-radius: calc(var(--radius) - 3px);
-    padding: 0.45rem 0.5rem;
+    border-radius: calc(var(--workspace-panel-radius) * 0.6);
+    padding: 0.45rem 0.65rem;
     background: transparent;
-    color: var(--color-muted);
+    color: var(--control-muted);
+    font-size: 0.85rem;
     font-weight: 700;
 }
 
@@ -1775,13 +1741,136 @@ body[data-active-workspace="export"] .preview-area {
 }
 
 .preview-tabs button:focus-visible {
-    outline: 3px solid rgb(37 99 235 / 0.35);
+    outline: 3px solid color-mix(in srgb, var(--color-primary), transparent 65%);
     outline-offset: 2px;
 }
 
 .preview-tabs button:hover,
 .preview-tabs button.active {
-    color: var(--color-text);
+    color: var(--control-text);
+}
+
+.preview-navigation-controls {
+    display: flex;
+    align-items: center;
+    flex: none;
+    gap: 0.5rem;
+}
+
+.preview-size-field {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.35rem;
+    padding: 0 0.65rem;
+    border: var(--border-width) solid var(--control-border);
+    border-radius: calc(var(--workspace-panel-radius) * 0.75);
+    background: var(--control-surface-raised);
+    color: var(--control-muted);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.preview-size-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.preview-size-field select {
+    border: 0;
+    outline: 0;
+    background: var(--control-surface-raised);
+    color: var(--control-text);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.preview-size-field select option {
+    background: var(--control-surface);
+    color: var(--control-text);
+}
+
+.preview-size-field:focus-within {
+    outline: 3px solid color-mix(in srgb, var(--color-primary), transparent 70%);
+    outline-offset: 2px;
+}
+
+.preview-custom-toolbar {
+    display: flex;
+    align-items: center;
+    flex: none;
+    gap: 0.35rem;
+    width: 8.75rem;
+    min-width: 8.75rem;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.preview-custom-toolbar.is-visible {
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.preview-custom-width-field {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--control-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.preview-custom-width-field input {
+    width: 4.5rem;
+    min-height: 2.35rem;
+    padding: 0.35rem 0.45rem;
+    border: var(--border-width) solid var(--control-border);
+    border-radius: calc(var(--workspace-panel-radius) * 0.75);
+    background: var(--control-surface-raised);
+    color: var(--control-text);
+    font: inherit;
+    font-weight: 700;
+    text-align: right;
+}
+
+.preview-custom-width-field input:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--color-primary), transparent 70%);
+    outline-offset: 2px;
+}
+
+.preview-navigation-icon-button {
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 2.35rem;
+    height: 2.35rem;
+    padding: 0;
+    border: var(--border-width) solid var(--control-border);
+    border-radius: calc(var(--workspace-panel-radius) * 0.75);
+    background: var(--control-surface-raised);
+    color: var(--control-muted);
+}
+
+.preview-navigation-icon-button:hover,
+.preview-navigation-icon-button:focus-visible {
+    border-color: var(--color-primary);
+    color: var(--control-text);
+}
+
+.preview-navigation-icon-button:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--color-primary), transparent 70%);
+    outline-offset: 2px;
+}
+
+.preview-navigation-icon-button .icon {
+    width: 1rem;
+    height: 1rem;
+    pointer-events: none;
 }
 
 .preview-panel {
@@ -1910,10 +1999,9 @@ body[data-preview-mode="full"] .app-header,
 body[data-preview-mode="full"] .drawer,
 body[data-preview-mode="full"] .drawer-rail,
 body[data-preview-mode="full"] .drawer-dock-spacer,
-body[data-preview-mode="full"] .preview-tabs {
+body[data-preview-mode="full"] .preview-navigation {
     display: none;
 }
-
 body[data-preview-mode="full"] .app-shell {
     flex-basis: 100vh;
 }

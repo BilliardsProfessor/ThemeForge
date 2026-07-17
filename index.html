@@ -131,17 +131,6 @@
                     </svg>
                 </button>
 
-                <label class="preview-size-field">
-                    <span>Preview</span>
-                    <select id="previewSizeSelect">
-                        <option value="desktop" selected>Desktop</option>
-                        <option value="tablet">Tablet</option>
-                        <option value="mobile">Mobile</option>
-                        <option value="fluid">Fluid</option>
-                        <option value="custom">Custom</option>
-                    </select>
-                </label>
-
                 <button type="button" id="fullPreviewBtn">Full Preview</button>
                 <button type="button" id="exportWorkspaceBtn" data-workspace-open="export">Export</button>
                 <button type="button" class="score-badge" id="scoreBadge">A11y 100</button>
@@ -1066,31 +1055,75 @@
             <div class="drawer-dock-spacer drawer-dock-spacer-left" aria-hidden="true"></div>
             <section class="workspace-area" aria-label="Theme workspace">
                 <section class="preview-area" aria-label="Theme preview" data-workspace-panel="preview">
-                    <div class="preview-custom-toolbar" id="previewCustomToolbar" hidden>
-                        <label class="preview-custom-width-field">
-                            <span>Custom width</span>
-                            <input type="number" id="previewCustomWidthInput" min="320" step="1" inputmode="numeric" />
-                            <span>px</span>
-                        </label>
+                    <div class="preview-navigation">
+                        <nav class="preview-tabs" aria-label="Preview tabs" data-active-preview-tab="page">
+                            <button type="button" class="active" data-preview-tab="page">Page</button>
+                            <button type="button" data-preview-tab="form">Form</button>
+                            <button type="button" data-preview-tab="table">Table</button>
+                            <button type="button" data-preview-tab="cards">Cards</button>
+                        </nav>
 
-                        <button
-                            type="button"
-                            class="preview-custom-reset has-tooltip"
-                            id="previewCustomResetBtn"
-                            data-tooltip="Restore to 900px"
-                            data-tooltip-placement="bottom"
-                            aria-label="Restore custom preview width to desktop width"
-                        >
-                            Reset
-                        </button>
+                        <div class="preview-navigation-controls">
+                            <label class="preview-size-field">
+                                <span class="preview-size-label">Preview</span>
+
+                                <select id="previewSizeSelect" aria-label="Preview size">
+                                    <option value="desktop" selected>Desktop</option>
+                                    <option value="tablet">Tablet</option>
+                                    <option value="mobile">Mobile</option>
+                                    <option value="fluid">Fluid</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </label>
+
+                            <div class="preview-custom-toolbar" id="previewCustomToolbar" aria-hidden="true">
+                                <label class="preview-custom-width-field">
+                                    <input
+                                        type="number"
+                                        id="previewCustomWidthInput"
+                                        min="320"
+                                        step="1"
+                                        inputmode="numeric"
+                                        aria-label="Custom preview width"
+                                    />
+                                    <span>px</span>
+                                </label>
+
+                                <button
+                                    type="button"
+                                    class="preview-navigation-icon-button has-tooltip"
+                                    id="previewCustomResetBtn"
+                                    data-tooltip="Restore to 900px"
+                                    data-tooltip-placement="bottom"
+                                    aria-label="Restore custom preview width to desktop width"
+                                >
+                                    <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                                        <path d="M3 12a9 9 0 1 0 3-6.708" />
+                                        <path d="M3 3v6h6" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <button
+                                type="button"
+                                class="preview-navigation-icon-button has-tooltip"
+                                id="syncFeaturesBtn"
+                                data-tooltip="Sync features"
+                                data-tooltip-placement="bottom"
+                                aria-label="Sync Foundry, Workbench, and Preview features"
+                            >
+                                <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                                    <path d="M10.5 13.5 13.5 10.5" />
+                                    <path
+                                        d="M7.629 15.621 5.5 17.75a3.182 3.182 0 0 1-4.5-4.5l3.75-3.75a3.182 3.182 0 0 1 4.5 0"
+                                    />
+                                    <path
+                                        d="m16.371 8.379 2.129-2.13a3.182 3.182 0 0 1 4.5 4.5l-3.75 3.75a3.182 3.182 0 0 1-4.5 0"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-
-                    <nav class="preview-tabs" aria-label="Preview tabs" data-active-preview-tab="page">
-                        <button type="button" class="active" data-preview-tab="page">Page</button>
-                        <button type="button" data-preview-tab="form">Form</button>
-                        <button type="button" data-preview-tab="table">Table</button>
-                        <button type="button" data-preview-tab="cards">Cards</button>
-                    </nav>
 
                     <div class="preview-resize-frame" id="previewResizeFrame">
                         <button
