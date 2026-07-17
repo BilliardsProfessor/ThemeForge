@@ -1079,11 +1079,12 @@
                             <div class="preview-custom-toolbar" id="previewCustomToolbar" aria-hidden="true">
                                 <label class="preview-custom-width-field">
                                     <input
-                                        type="number"
+                                        type="text"
+                                        class="workspace-number-input"
                                         id="previewCustomWidthInput"
-                                        min="320"
-                                        step="1"
                                         inputmode="numeric"
+                                        autocomplete="off"
+                                        spellcheck="false"
                                         aria-label="Custom preview width"
                                     />
                                     <span>px</span>
@@ -1587,28 +1588,32 @@ Testing form colors, spacing, radius, focus states, and control contrast.</texta
                     </div>
                 </section>
                 <section class="export-area" aria-label="Theme export" data-workspace-panel="export" hidden>
-                    <nav
-                        class="preview-tabs export-tabs"
-                        aria-label="Export targets"
-                        data-active-export-target="css"
-                        role="tablist"
-                    >
-                        <button
-                            type="button"
-                            class="active"
-                            data-export-target-tab="css"
-                            role="tab"
-                            aria-selected="true"
+                    <div class="preview-navigation export-navigation">
+                        <nav
+                            class="preview-tabs export-tabs"
+                            aria-label="Export targets"
+                            data-active-export-target="css"
+                            role="tablist"
                         >
-                            CSS
-                        </button>
-                        <button type="button" data-export-target-tab="scss" role="tab" aria-selected="false">
-                            SCSS
-                        </button>
-                        <button type="button" data-export-target-tab="json" role="tab" aria-selected="false">
-                            Theme Forge JSON
-                        </button>
-                    </nav>
+                            <button
+                                type="button"
+                                class="active"
+                                data-export-target-tab="css"
+                                role="tab"
+                                aria-selected="true"
+                            >
+                                CSS
+                            </button>
+
+                            <button type="button" data-export-target-tab="scss" role="tab" aria-selected="false">
+                                SCSS
+                            </button>
+
+                            <button type="button" data-export-target-tab="json" role="tab" aria-selected="false">
+                                Theme Forge JSON
+                            </button>
+                        </nav>
+                    </div>
 
                     <div class="preview-resize-frame export-resize-frame">
                         <button

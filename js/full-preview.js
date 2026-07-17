@@ -52,7 +52,10 @@
         });
 
         previewActionButton.textContent = isPreviewWorkspace ? "Full Preview" : "Preview";
-        previewActionButton.setAttribute("aria-label", isPreviewWorkspace ? "Open full preview" : "Return to preview workspace");
+        previewActionButton.setAttribute(
+            "aria-label",
+            isPreviewWorkspace ? "Open full preview" : "Return to preview workspace",
+        );
 
         if (exportWorkspaceButton) {
             exportWorkspaceButton.classList.toggle("active", activeWorkspace === "export");
@@ -82,8 +85,8 @@
 
     function openExportWorkspace() {
         setPreviewMode("workbench");
-        ThemeForge.export.updateWorkspace();
         setActiveWorkspace("export");
+        ThemeForge.export.setActiveTarget(ThemeForge.export.activeTarget);
 
         document.querySelector("[data-drawer-panel='export']")?.click();
     }

@@ -1490,7 +1490,7 @@ body[data-active-workspace="export"] .preview-area {
     gap: var(--space-2);
     min-width: 0;
     min-height: 0;
-    padding: var(--workbench-gutter);
+    padding: 0 var(--workbench-gutter) var(--workbench-gutter);
     overflow: hidden;
 }
 

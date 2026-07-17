@@ -30,6 +30,9 @@
     };
 
     let activeResize = null;
+    let customWidthDrag = null;
+    const customWidthDragThreshold = 3;
+    const customWidthPixelsPerStep = 8;
 
     function parseWidthValue(value) {
         const numericValue = Number.parseInt(String(value).replace("px", ""), 10);
@@ -244,6 +247,14 @@
     });
 
     if (previewCustomWidthInput) {
+        previewCustomWidthInput.addEventListener("input", function () {
+            const width = parseWidthValue(previewCustomWidthInput.value);
+
+            if (width !== null) {
+                setCustomWidth(width);
+            }
+        });
+
         previewCustomWidthInput.addEventListener("keydown", function (event) {
             if (event.key !== "Enter") {
                 return;
@@ -256,6 +267,56 @@
 
         previewCustomWidthInput.addEventListener("blur", function () {
             setCustomWidth(previewCustomWidthInput.value);
+        });
+
+        previewCustomWidthInput.addEventListener("pointerdown", function (event) {
+            if (event.button !== 0) {
+                return;
+            }
+
+            customWidthDrag = {
+                pointerId: event.pointerId,
+                startX: event.clientX,
+                startWidth: parseWidthValue(previewCustomWidthInput.value) || desktopWidthValue,
+                isDragging: false,
+            };
+
+            previewCustomWidthInput.setPointerCapture(event.pointerId);
+        });
+
+        previewCustomWidthInput.addEventListener("pointermove", function (event) {
+            if (!customWidthDrag || event.pointerId !== customWidthDrag.pointerId) {
+                return;
+            }
+
+            const deltaX = event.clientX - customWidthDrag.startX;
+
+            if (!customWidthDrag.isDragging && Math.abs(deltaX) < customWidthDragThreshold) {
+                return;
+            }
+
+            customWidthDrag.isDragging = true;
+            event.preventDefault();
+
+            const nextWidth = customWidthDrag.startWidth + Math.round(deltaX / customWidthPixelsPerStep);
+
+            setCustomWidth(nextWidth);
+        });
+
+        previewCustomWidthInput.addEventListener("pointerup", function (event) {
+            if (!customWidthDrag || event.pointerId !== customWidthDrag.pointerId) {
+                return;
+            }
+
+            if (previewCustomWidthInput.hasPointerCapture(event.pointerId)) {
+                previewCustomWidthInput.releasePointerCapture(event.pointerId);
+            }
+
+            customWidthDrag = null;
+        });
+
+        previewCustomWidthInput.addEventListener("pointercancel", function () {
+            customWidthDrag = null;
         });
     }
 
